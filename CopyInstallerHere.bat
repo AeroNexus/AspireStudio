@@ -1,0 +1,1 @@
+copy Installer\Installer\Express\SingleImage\DiskImages\DISK1\AspireBrowserInstaller.exe .
