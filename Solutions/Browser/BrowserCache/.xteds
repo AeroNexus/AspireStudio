@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="AgentManager_xTEDS" version="1.1">
+
+<Application name="AgentManager" version="1.0" kind="AMM_Software" description="Manages Activity Agents using the Standard iAgentManager Interface"/>
+<Interface name="IAgentManager" id="1">
+<Variable name="Time" kind="Time" format="UINT32" units="s"/>
+<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+<Variable name="AgentName" kind="string" format="STRING" description="Agent String Name"/>
+<Variable name="ActivityPriority" kind="Priority" format="UINT16" description="Priority of activity (1-1000)"/>
+<Variable name="ActivityStartTime" kind="Time" format="UINT32" units="s" description="Activity Start Time"/>
+<Variable name="ActivityEndTime" kind="Time" format="UINT32" units="s" description="Activity End Time"/>
+<Variable name="EnergyNeeded" kind="ElectricalEnergy" format="FLOAT32" description="Estimated Electrical Energy for Activity"/>
+<Variable name="MaxPower" kind="Power" format="FLOAT32" description="Estimated Maximum Power for Activity"/>
+<Variable name="NeedAcsResource" kind="NeedAcsEnum" format="UINT8" description="1 if ACS Needed, 0 if not">
+<Drange name="NeedAcsEnum">
+<Option name="ACS_NOT_NEEDED" value="0"/>
+<Option name="ACS_NEEDED" value="1"/>
+</Drange>
+</Variable>
+<Variable name="AgentRegistrationCode" kind="AgentRegistrationCodeEnum" format="UINT8" description="Response code for initial agent registration">
+<Drange name="AgentRegistrationCodeEnum">
+<Option name="REGISTRATION_ACCEPTED" value="1"/>
+<Option name="ALREADY_REGISTERED" value="2"/>
+<Option name="INVALID_PARAMETER" value="3"/>
+</Drange>
+</Variable>
+<Variable name="ActivityExecuteCode" kind="ActivityExecuteCodeEnum" format="UINT8" description="Sent back to Agent when requesting activity">
+<Drange name="ActivityExecuteCodeEnum">
+<Option name="REJECTED" value="0"/>
+<Option name="GRANTED" value="1"/>
+<Option name="AWAIT_SIGNAL" value="2"/>
+<Option name="UNKNOWN_NAME" value="3"/>
+</Drange>
+</Variable>
+<Variable name="ActivityStatusCode" kind="ActivityStatusCodeEnum" format="UINT8" description="In AgentManager status message. Indicates current activity status">
+<Drange name="ActivityStatusCodeEnum">
+<Option name="NO_ACTIVITIES" value="0"/>
+<Option name="ACTIVITY_EXECUTING" value="1"/>
+<Option name="ABORT_REQUESTED" value="2"/>
+</Drange>
+</Variable>
+
+<Request>
+<CommandMsg name="RegisterAgent" id="1" description="Initial Agent Registration with option to set resource needs">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+<VariableRef name="ActivityPriority"/>
+<VariableRef name="ActivityStartTime"/>
+<VariableRef name="ActivityEndTime"/>
+<VariableRef name="EnergyNeeded"/>
+<VariableRef name="MaxPower"/>
+<VariableRef name="NeedAcsResource"/>
+</CommandMsg>
+<DataReplyMsg name="RegisterAgentReply" id="2">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentRegistrationCode"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name="SetPriority" id="3" description="Set actvity priority">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+<VariableRef name="ActivityPriority"/>
+</CommandMsg>
+<DataReplyMsg name="SetPriorityReply" id="4">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</DataReplyMsg>
+</Request>
+
+<!-- Add other resource setters here -->
+
+<Request>
+<CommandMsg name="RequestExecution" id="10" description="Used by Agent to Request Activity Execution">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+<VariableRef name="ActivityPriority"/>
+<VariableRef name="ActivityStartTime"/>
+<VariableRef name="ActivityEndTime"/>
+</CommandMsg>
+<DataReplyMsg name="RequestExecutionReply" id="11">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="ActivityExecuteCode"/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name="ActivityExecute" id="12" msgArrival="EVENT" description="If RequestExecution code was AWAIT_SIGNAL, agent with this ID may execute when this message is received">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</DataMsg>
+</Notification>
+
+<Request>
+<CommandMsg name="ActivityComplete" id="13" description="Agent uses this request to let AgentManager know that execution is complete">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</CommandMsg>
+<DataReplyMsg name="ActivityCompleteReply" id="14">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name="AbortActivity" id="15" msgArrival="EVENT" description="Agent with this ID should abort execution when this message is received">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</DataMsg>
+</Notification>
+
+<Request>
+<CommandMsg name="ConfirmAbort" id="16" description="Agent uses this request to let AgentManager know that execution has been gracefully terminated">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</CommandMsg>
+<DataReplyMsg name="ConfirmAbortReply" id="17">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name="ActivityStatus" id="18" msgArrival="PERIODIC" msgRate="1" description="Denotes the active activity and its resource usage (if any)">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="AgentName"/>
+<VariableRef name="ActivityPriority"/>
+<VariableRef name="ActivityStartTime"/>
+<VariableRef name="ActivityEndTime"/>
+<VariableRef name="EnergyNeeded"/>
+<VariableRef name="MaxPower"/>
+<VariableRef name="NeedAcsResource"/>
+<VariableRef name="ActivityStatusCode"/>
+</DataMsg>
+</Notification>
+
+</Interface>
+
+</xTEDS>

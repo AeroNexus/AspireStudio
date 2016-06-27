@@ -1,0 +1,45 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Aspire.Studio" GeneratedClassName="StudioSettings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Size" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">0, 0</Value>
+    </Setting>
+    <Setting Name="BlackboardExpand" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="LoadLastSolution" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="BlackboardToolTips" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="LastSolutionFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Browser\AspireBrowser.Asln</Value>
+    </Setting>
+    <Setting Name="BlackboardGeneratedCaptionRule" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Leaf</Value>
+    </Setting>
+    <Setting Name="DefaultSolutionDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">$(MyDocuments)\AspireStudio Solutions\</Value>
+    </Setting>
+    <Setting Name="ToolBoxFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ToolBox</Value>
+    </Setting>
+    <Setting Name="MessageLogResumes" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MonitorCaptionRules" Type="System.String" Scope="User">
+      <Value Profile="(Default)">VariableValue,Last2
+CommandMessage,Last2
+DataMessage,Last2
+DataReplyMessage,Last2</Value>
+    </Setting>
+    <Setting Name="FindComponentWithWholeAddress" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="PluginConfigFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Plugins.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

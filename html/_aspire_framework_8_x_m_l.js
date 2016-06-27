@@ -1,0 +1,25 @@
+var _aspire_framework_8_x_m_l =
+[
+    [ "TestClass", "class_test_class.html", null ],
+    [ "Publish", "_aspire_framework_8_x_m_l.html#a74efc0370edd55e0ea6ee3319cb42095", null ],
+    [ "Publish", "_aspire_framework_8_x_m_l.html#a1fb45bfcbd6138efeaee784acc887e5b", null ],
+    [ "WriteLine", "_aspire_framework_8_x_m_l.html#a74864a36efe884403eecb7b9d4cee44c", null ],
+    [ "background", "_aspire_framework_8_x_m_l.html#ab4bb11100b5216c51bc159adc251e308", null ],
+    [ "child", "_aspire_framework_8_x_m_l.html#ab85a55a7a62a2e17979e6382a3d7ed03", null ],
+    [ "dictionary", "_aspire_framework_8_x_m_l.html#a2563b35cadfd9c13042be0102164e10a", null ],
+    [ "Enabled", "_aspire_framework_8_x_m_l.html#abcfe213600d05cc9ecafa7d0bd61c3e4", null ],
+    [ "exists", "_aspire_framework_8_x_m_l.html#aca5523f0af1f2310d67a824301d4fd43", null ],
+    [ "font", "_aspire_framework_8_x_m_l.html#a1526a308249f0f6b3229081138feac89", null ],
+    [ "in", "_aspire_framework_8_x_m_l.html#ae7ed9212c6f173cf98495f70b1935867", null ],
+    [ "invoked", "_aspire_framework_8_x_m_l.html#a014be87a7c95b106a247d4ac598f2d45", null ],
+    [ "item", "_aspire_framework_8_x_m_l.html#abfa45c5c6037560e6475b7c84cf4d8d0", null ],
+    [ "method", "_aspire_framework_8_x_m_l.html#a38da1cecafbaa83e1e0cdc401e56788c", null ],
+    [ "moniker", "_aspire_framework_8_x_m_l.html#aba366395af0daf0517b23dcb75bfdd4b", null ],
+    [ "null", "_aspire_framework_8_x_m_l.html#ab339213a81a3882eddb541f8c4e0d36c", null ],
+    [ "parent", "_aspire_framework_8_x_m_l.html#a2f65c027bfada4b0f6807908e73859f3", null ],
+    [ "s", "_aspire_framework_8_x_m_l.html#a3691308f2a4c2f6983f2880d32e29c84", null ],
+    [ "successful", "_aspire_framework_8_x_m_l.html#abd7d316163082350253e4a90a7ecb151", null ],
+    [ "text", "_aspire_framework_8_x_m_l.html#ae6a7fc59aea0ee2423b8315927397a8d", null ],
+    [ "to< see cref=\"M:Aspire.Framework.Blackboard.GetExistingItem(System.String)\"/>", "_aspire_framework_8_x_m_l.html#a62a8b69d70ec5e273e4865c219304bcf", null ],
+    [ "with", "_aspire_framework_8_x_m_l.html#a31a3a13aa1fc0147ab10800e63690775", null ]
+];

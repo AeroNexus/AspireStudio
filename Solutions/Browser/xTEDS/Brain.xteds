@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Brain_xTEDS" version="1.0">
+<Application name="Brain" version="1.0" kind="BrainInterface" description="Implements the Top-Level Public Interface to an Asset's Brain"/>
+	<Interface name="IBrain" id="1" scope="Public">
+    <Variable name="Timestamp" kind="Time" format="FLOAT64" units="s" description="Data Timestamp (GPS Epoch Seconds)"/>
+    <Variable name="BrainletFilePrefix" kind="string" format="STRING" description="Prefix of Brainlet Filename (.drl extension is implied)"/>
+    <Variable name="BrainletMnemonic" kind="string" format="STRING" description="Mnemonic string used to manage brainlets"/>
+		<Variable name="BrainletString" kind="string" format="STRING" description="Brainlet rule based logic in encapsulated string"/>
+    <Variable name="LoadMode" kind="LoadModeEnum" format="UINT8" defaultValue="1" description="Brainlet Load Mode. Cannot use New if brainlet exists. Update forces an overwrite.">
+      <Drange name="LoadModeEnum">
+        <Option name="New" value="1"/>
+        <Option name="Update" value="2"/>
+      </Drange>
+    </Variable>
+    <Variable name="BrainletStatus" kind="BrainletStatusEnum" format="UINT8" description="Status of Brainlet">
+      <Drange name="BrainletStatusEnum">
+        <Option name="Loading" value="1"/>
+        <Option name="Inactive" value="2"/>
+        <Option name="Active" value="3"/>
+      </Drange>
+    </Variable>
+		<Variable name="ControlStatus" kind="StatusEnum" format="UINT8" description="Load message status">
+			<Drange name="ControlStatusEnum">
+				<Option name="OK" value="1"/>
+        <Option name="InvalidBrainlet" value="2"/>
+        <Option name="BrainletExists" value="3"/>
+        <Option name="Rejected_BrainletActive" value="4"/>
+			</Drange>
+    </Variable>
+    <Variable name="BrainletCounter" kind="counter" format="UINT16" description="Counter incrementing from 1 to the total number of loaded brainlets"/>
+    <Variable name="NumberOfBrainlets" kind="count" format="UINT16" description="States the total number of brainlets"/>
+    <Variable name="BrainletChecksum" kind="checksum" format="UINT8" length="16" description="MD5 Checksum used to compare remote brainlet text to local copy"/>
+    
+    <!--  LoadBrainlet is utilized to transfer brainlet text-based logic to a remote brain -->
+    <!--  The BrainletFilePrefix indicates the name of the file on the file system where the permanent copy is kept. -->
+    <!--  If the BrainletFilePrefix specified matches at the remote node the load will be rejected. -->
+    <!--  An overwrite can be forced by using Update as the LoadMode -->
+    <!--  The Brainlet Mnenomic string is returned if the load is successful -->
+    <Request>
+      <CommandMsg name="LoadBrainlet" id="1">
+        <VariableRef name="BrainletFilePrefix"/>
+        <VariableRef name="BrainletString"/>
+        <VariableRef name="LoadMode"/>
+      </CommandMsg>
+      <DataReplyMsg name="LoadBrainletReply" id="2">
+        <VariableRef name="BrainletMnemonic"/>
+        <VariableRef name="ControlStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- RemoveBrainlet removes a brainlet from the remote node -->
+    <!-- It cannot be applied to a brainlet that is currently active -->
+    <!-- Active Brainlets must first be de-activated using the SetBrainletStatus request -->
+    <Request>
+      <CommandMsg name="RemoveBrainlet" id="3">
+        <VariableRef name="BrainletFilePrefix"/>
+      </CommandMsg>
+      <DataReplyMsg name="RemoveBrainletReply" id="4">
+        <VariableRef name="ControlStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- SetBrainletStatus allows a brainlet to be activated or de-activated using its Mnemonic -->
+    <!-- Brainlets are not activated by default when loaded. This request must be used to enable them -->
+    <Request>
+      <CommandMsg name="SetBrainletStatus" id="5">
+        <VariableRef name="BrainletMnemonic"/>
+        <VariableRef name="BrainletStatus"/>
+      </CommandMsg>
+      <DataReplyMsg name="SetBrainletStatusReply" id="6">
+        <VariableRef name="ControlStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- SetAllBrainletStatus activates or de-activates all brainlets -->
+    <Request>
+      <CommandMsg name="SetAllBrainletStatus" id="7">
+        <VariableRef name="BrainletStatus"/>
+      </CommandMsg>
+      <DataReplyMsg name="SetAllBrainletStatusReply" id="8">
+        <VariableRef name="ControlStatus"/>
+		<VariableRef name="BrainletMnemonic"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Retrieves information about a single brainlet -->
+    <!-- The BrainletFilePrefix string is used as the Key to retrieve status -->
+    <Request>
+      <CommandMsg name="GetBrainletStatus" id="9">
+        <VariableRef name="BrainletFilePrefix"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetBrainletStatusReply" id="10">
+        <VariableRef name="ControlStatus"/>
+        <VariableRef name="BrainletFilePrefix"/>
+        <VariableRef name="BrainletMnemonic"/>
+        <VariableRef name="BrainletStatus"/>
+        <VariableRef name="BrainletChecksum"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Retrieves information about all loaded brainlets -->
+    <!-- Each entry is returned in a counted reply message from 1-N -->
+    <Request>
+      <CommandMsg name="GetBrainletSummary" id="11">
+      </CommandMsg>
+      <DataReplyMsg name="GetBrainletSummaryReply" id="12">
+        <VariableRef name="ControlStatus"/>
+        <VariableRef name="BrainletCounter"/>
+        <VariableRef name="NumberOfBrainlets"/>
+        <VariableRef name="BrainletFilePrefix"/>
+        <VariableRef name="BrainletMnemonic"/>
+        <VariableRef name="BrainletStatus"/>
+        <VariableRef name="BrainletChecksum"/>
+      </DataReplyMsg>
+    </Request>
+	
+	</Interface>	
+
+</xTEDS>

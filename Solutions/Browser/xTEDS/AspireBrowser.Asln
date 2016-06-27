@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>AspireBrowser</Name>
+  <ActiveProjectName>Browser</ActiveProjectName>
+  <Project xsi:type="ScenarioProject" name="DemoSat">
+    <Item xsi:type="Folder" name="MyStuff">
+      <Type>Folder</Type>
+      <Item name="Item6">
+        <Type>CsFile</Type>
+      </Item>
+    </Item>
+    <Item xsi:type="StripChartDoc" name="StripChart" period="0.05">
+      <Type>StripChart</Type>
+      <Item xsi:type="StripChartItem" blackboardPath="DemoSat1.IMU.AttitudeRate" caption="AttitudeRate" length="3" chart="ChartArea1" />
+      <Item xsi:type="StripChartItem" blackboardPath="DemoSat1.IMU.RateVariance" caption="RateVariance" length="3" chart="ChartArea2" />
+      <TimeWindow>25</TimeWindow>
+      <ShowLegend>true</ShowLegend>
+      <ShowYAxisTitle>true</ShowYAxisTitle>
+    </Item>
+    <Item xsi:type="MonitorDoc" name="Monitor">
+      <Type>Monitor</Type>
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.ElapsedSeconds" caption="ElapsedSeconds" length="0" format="G8" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.MicroSeconds" caption="MicroSeconds" length="0" format="F0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.Seconds" caption="Seconds" length="0" format="F0" />
+    </Item>
+    <Item xsi:type="StripChartDoc" name="StripChart2" period="0.05">
+      <Type>StripChart</Type>
+      <Item xsi:type="StripChartItem" blackboardPath="Browser.IRU.AttitudeRate.AngularRateMsg.AngularRate" caption="AngularRate" length="3" chart="ChartArea1" />
+      <ShowLegend>true</ShowLegend>
+      <ShowYAxisTitle>true</ShowYAxisTitle>
+    </Item>
+    <Scenario name="DemoSat" file="DemoSat.xml">
+      <Reference name="AspireSpace.dll" />
+      <Reference name="AspireBrowsingUI.dll" register="Registration" />
+      <Reference name="AspireCoreModels.dll" />
+    </Scenario>
+  </Project>
+  <Project xsi:type="ScenarioProject" name="Browser">
+    <Item xsi:type="MonitorDoc" name="Monitor">
+      <Type>Monitor</Type>
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.estimatingStateOfHealthStatus" caption="estimatingStateOfHealthStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthIsNominalStatus" caption="healthIsNominalStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.initializingStatus" caption="initializingStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthyStatus" caption="healthyStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthy1AStatus" caption="healthy1AStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthy1BStatus" caption="healthy1BStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthy2AStatus" caption="healthy2AStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthy2BStatus" caption="healthy2BStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.healthIsOffNominalStatus" caption="healthIsOffNominalStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.unknownStatus" caption="unknownStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.failedStatus" caption="failedStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.resettingProcessStatus" caption="resettingProcessStatus" length="0" />
+      <Item xsi:type="MonitorItem" blackboardPath="Aspire.GSA.IntelligentAgent.IEstimatingZoneStateOfHealth.EstimatingZoneStateOfHealthStatusMessage.Received" caption="Received" length="0" format="F0" />
+    </Item>
+    <Item xsi:type="StripChartDoc" name="StripChart" period="0.125">
+      <Type>StripChart</Type>
+      <Item xsi:type="StripChartItem" blackboardPath="StatechartTest shell.IStatechartTest.ThermalStatusMsg.Temperature" caption="Temperature" length="0" chart="ChartArea1" />
+      <Item xsi:type="StripChartItem" blackboardPath="Aspire.GSA.StatechartTest.IStatechartTest.ThermalStatusMsg.Temperature" caption="Temperature-browsed" length="0" chart="ChartArea1" color="Orange" />
+      <TimeWindow>25</TimeWindow>
+      <ShowLegend>true</ShowLegend>
+      <ShowYAxisTitle>true</ShowYAxisTitle>
+    </Item>
+    <Item xsi:type="AppMgrDoc" name="ApplicationManager">
+      <Type>Monitor</Type>
+      <ActiveConfig>Default</ActiveConfig>
+    </Item>
+    <Item xsi:type="StripChartDoc" name="StripChart2" period="0.125">
+      <Type>StripChart</Type>
+      <Item xsi:type="StripChartItem" blackboardPath="Aspire.Default.AttitudeController.IAdcsCommanding.TrackingStatus.PointingError" caption="TrackingStatus.PointingError" chart="ChartArea1">
+        <Element />
+      </Item>
+      <TimeWindow>120</TimeWindow>
+      <ShowLegend>true</ShowLegend>
+      <ShowYAxisTitle>true</ShowYAxisTitle>
+    </Item>
+    <Scenario name="Browser" file="Browser.xml">
+      <Reference name="AspireCoreModels.dll" />
+      <Reference name="AspirePrimitives.dll" />
+      <Reference name="AspireBrowsingUI.dll" register="Registration" />
+    </Scenario>
+  </Project>
+  <TaskList>
+    <Name>TaskList1</Name>
+  </TaskList>
+</Solution>

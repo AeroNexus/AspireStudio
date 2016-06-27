@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+name='ThreeMessageProducer_xTEDS'
+version='1.0'>
+<Application name='ThreeMessageProducer' kind='Software'/>
+<Interface name='iDeviceSafety' id='1'>
+<Variable name='Time' kind='time' format='UINT32' units='s'/>
+<Variable name='SubS' kind='subSeconds' units='counts' format='UINT32' scaleFactor='0.000001' scaleUnits='s'/>
+<Variable name='DeviceTemperature' kind='temperature' format='FLOAT32' units='degC'/>
+<Notification>
+<DataMsg name='Temperature1Hz' id='1' msgArrival='PERIODIC' msgRate='1'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='DeviceTemperature'/>
+</DataMsg>
+</Notification>
+<Notification>
+<DataMsg name='Temperature2Hz' id='2' msgArrival='PERIODIC' msgRate='2'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='DeviceTemperature'/>
+</DataMsg>
+</Notification>
+<Notification>
+<DataMsg name='Temperature5Hz' id='3' msgArrival='PERIODIC' msgRate='5'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='DeviceTemperature'/>
+</DataMsg>
+</Notification>
+</Interface>
+</xTEDS>

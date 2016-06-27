@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A4FCDEB7-9DFF-4F59-B69F-D6534AF7594E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aspire.CoreModels</RootNamespace>
+    <AssemblyName>AspireCoreModels</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AspireBrowser.cs" />
+    <Compile Include="Application.cs" />
+    <Compile Include="AspireComponent.cs" />
+    <Compile Include="AspireShell.cs" />
+    <Compile Include="AspireShellUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AspireShellUI.Designer.cs">
+      <DependentUpon>AspireShellUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AspireManager.cs" />
+    <Compile Include="AspireClock.cs" />
+    <Compile Include="BrowserFactory.cs" />
+    <Compile Include="BrowserFactoryProtocol.cs" />
+    <Compile Include="CcsdsMux.cs" />
+    <Compile Include="Attitude.cs" />
+    <Compile Include="ManifestProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManifestProgress.Designer.cs">
+      <DependentUpon>ManifestProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UdpClientTransport.cs" />
+    <Compile Include="Hpiu.cs" />
+    <Compile Include="MsgTransport.cs" />
+    <Compile Include="PnPBrowsers.cs" />
+    <Compile Include="DRangeTypeEditor.cs" />
+    <Compile Include="Interfaces\IPnPBrowser.cs" />
+    <Compile Include="MessageHelpers.cs" />
+    <Compile Include="Interfaces\IAdapter.cs" />
+    <Compile Include="Interfaces\IHostXteds.cs" />
+    <Compile Include="Interfaces\IUseXteds.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Xteds.cs" />
+    <Compile Include="XtedsCache.cs" />
+    <Compile Include="XtedsVariable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AspireStudio\AspireStudio.csproj">
+      <Project>{1801e82d-a6d6-420d-8a33-84a84d053fd2}</Project>
+      <Name>AspireStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{e236dc25-fef2-4ca1-81c1-89782ed31b3d}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Primitives\Primitives.csproj">
+      <Project>{285341bd-c4c9-47d2-a57a-e5383b85534a}</Project>
+      <Name>Primitives</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{3d0c3d1f-4e9f-4066-93cb-3fa8a1a29549}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AspireShellUI.resx">
+      <DependentUpon>AspireShellUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\component.png" />
+    <Content Include="Images\export1.png" />
+    <Content Include="Images\flash.png" />
+    <Content Include="Images\flashDown.png" />
+    <Content Include="Images\flashUp.png" />
+    <Content Include="Images\hwil.png" />
+    <Content Include="Images\import1.png" />
+    <Content Include="Images\interface.png" />
+    <Content Include="Images\mail_exchange.png" />
+    <Content Include="Images\mail_forward.png" />
+    <Content Include="Images\mail_preferences.png" />
+    <Content Include="Images\shell.PNG" />
+    <Content Include="Images\window_star.png" />
+    <Content Include="Images\window_time.png" />
+    <Content Include="Images\window_warning.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetFileName) $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+copy $(TargetName).pdb $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

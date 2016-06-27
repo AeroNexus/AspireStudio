@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="ManageOrbit_xTEDS" version="2.1">
+
+<Application name="ManageOrbit" version="1.0" kind="Software" description="Activity Agent responsible for transitioning to and maintaining a specified orbit" />
+
+<Interface name="iManageOrbit" id="1">
+<Variable name="Time" kind="Time" format="UINT32" units="s" />
+<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+<Variable name="Altitude" kind="OrbitAltitude" format="FLOAT64" units="km" description="Altitude of circular orbit above mean seal level"/>
+<Variable name="AltitudeTolerance" kind="OrbitAltitudeTolerance" format="FLOAT64" units="km" description="Tolerance of orbit altitude error"/>
+<Variable name="Inclination" kind="OrbitInclination" format="FLOAT64" units="deg" description="Inclination of orbit"/>
+<Variable name="EarliestStartTime" kind="Time" units="s" format="UINT32" description="Earliest GPS Time at which an Orbit Change is to begin (0 = now)"/>
+<Variable name="ScheduledStartTime" kind="Time" units="s" format="UINT32" description="GPS Time at which an Orbit Change is scheduled to begin"/>
+<Variable name="LatestCompletionTime" kind="Time" units="s" format="UINT32" description="GPS Time by which an orbit change must be complete (0 = ASAP)"/>
+<Variable name="PredictedCompletionTime" kind="Time" units="s" format="UINT32" description="GPS Time at which the orbit change will be complete"/>
+<Variable name="BasePriority" kind="ActivityPriority" format="UINT8" units="" description="Priority of the requested orbit change/mainenance activity (0-255)"/>
+<Variable name="SemimajorAxis" kind="OrbitSemimajorAxis" format="FLOAT64" units="m" description="Keplerian orbital element"/>
+<Variable name="Eccentricity" kind="OrbitEccentricity" format="FLOAT64" units="" description="Keplerian orbital element"/>
+<Variable name="TrueAnomaly" kind="OrbitTrueAnomaly" format="FLOAT64" units="deg" description="Keplerian orbital element"/>
+<Variable name="ArgumentOfPerigee" kind="OrbitArgumentOfPerigee" format="FLOAT64" units="deg" description="Keplerian orbital element"/>
+<Variable name="RightAscensionOfAscendingNode" kind="OrbitRightAscensionOfAscendingNode" format="FLOAT64" units="deg" description="Keplerian orbital element"/>
+
+<Variable name="GroundTrackTargetLatitude" kind="Latitude" format="FLOAT64" units="deg" description="Latitude of reference point for repeating ground track"/>
+<Variable name="GroundTrackTargetLongitude" kind="Longitude" format="FLOAT64" units="deg" description="Longitude of a reference point for repeating ground track"/>
+<Variable name="MinimumRevisitTime" kind="Time" units="s" format="UINT32" description="Minimum time between revisits to the ground target area"/>
+
+<Variable name="PropellantLevelPostChange" kind="PropellantLevel" format="FLOAT32" units="percent" description="Percent of propellant that will remain after maneuver"/>
+
+<Variable name="ChangeInclination" kind="enum" format="UINT8" units="" description="Flag to indicate whether an orbit plane change is desired">
+<Drange name="ChangeInclinationEnum">
+<Option name="No" value="0"/>
+<Option name="Yes" value="1"/>
+</Drange>
+</Variable>
+
+<Variable name="ResponseCode" kind="enum" format="UINT8" units="" description="Return code for orbit request">
+<Drange name="ResponseCodeEnum">
+<Option name="RequestOK" value="0"/>
+<Option name="BadParameter" value="1"/>
+<Option name="NotAccepted_ActivityInProgress" value="2"/>
+<Option name="NotPossibleWithinTimeConstraint" value="3"/>
+<Option name="NotPossibleWithRemainingPropellant" value="4"/>
+<Option name="NotPossibleGivenPhysicsLimitation" value="5"/>
+</Drange>
+</Variable>
+
+<Variable name="OrbitChangeStatusCode" kind="enum" format="UINT8" units="" description="Status code for orbit change/maintenance">
+<Drange name="OrbitChangeStatusCodeEnum">
+<Option name="Inactive" value="0"/>
+<Option name="IdleAwaitingExecution" value="1"/>
+<Option name="Planning" value="2"/>
+<Option name="Re-planning" value="3"/>
+<Option name="MaintainingOrbit" value="4"/>
+<Option name="PreparingToBurn" value="5"/>
+<Option name="BurnInProgress" value="6"/>
+<Option name="InOrbitTransition" value="7"/>
+<Option name="ActivityAborted" value="8"/>
+</Drange>
+</Variable>
+
+<!-- Changes orbit (if not already in desired orbit), then maintains desired orbit within expressed tolerance -->
+<Request>
+<CommandMsg id="1" name="SetGenericCircularOrbit" description="Set ChangeInclination flag to YES if orbital plane change desired">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="EarliestStartTime"/>
+<VariableRef name="LatestCompletionTime"/>
+<VariableRef name="Altitude"/>
+<VariableRef name="AltitudeTolerance"/>
+<VariableRef name="ChangeInclination"/>
+<VariableRef name="Inclination"/>
+<VariableRef name="BasePriority"/>
+</CommandMsg>
+<DataReplyMsg id="2" name="SetGenericCircularOrbitReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="ResponseCode"/>
+<VariableRef name="ScheduledStartTime"/>
+<VariableRef name="PredictedCompletionTime"/>
+<VariableRef name="PropellantLevelPostChange"/>
+</DataReplyMsg>
+</Request>
+
+<!-- Tries to compute a new orbit based upon revisit parameters (repeating ground track), then maintains orbit thereafter-->
+<Request>
+<CommandMsg id="3" name="SetRepeatingOrbit">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="EarliestStartTime"/>
+<VariableRef name="LatestCompletionTime"/>
+<VariableRef name="GroundTrackTargetLatitude"/>
+<VariableRef name="GroundTrackTargetLongitude"/>
+<VariableRef name="MinimumRevisitTime"/>
+<VariableRef name="BasePriority"/>
+</CommandMsg>
+<DataReplyMsg id="4" name="SetRepeatingOrbitReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="ResponseCode"/>
+<VariableRef name="ScheduledStartTime"/>
+<VariableRef name="PredictedCompletionTime"/>
+<VariableRef name="PropellantLevelPostChange"/>
+</DataReplyMsg>
+</Request>
+
+<!-- Sets a desired orbit using Keplerian elements, then maintains thereafter-->
+<Request>
+<CommandMsg id="5" name="SetKeplerOrbit">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="EarliestStartTime"/>
+<VariableRef name="LatestCompletionTime"/>
+<VariableRef name="SemimajorAxis"/>
+<VariableRef name="Inclination"/>
+<VariableRef name="Eccentricity"/>
+<VariableRef name="TrueAnomaly"/>
+<VariableRef name="ArgumentOfPerigee"/>
+<VariableRef name="RightAscensionOfAscendingNode"/>
+<VariableRef name="AltitudeTolerance"/>
+<VariableRef name="BasePriority"/>
+</CommandMsg>
+<DataReplyMsg id="6" name="SetKeplerOrbitReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="ResponseCode"/>
+<VariableRef name="ScheduledStartTime"/>
+<VariableRef name="PredictedCompletionTime"/>
+<VariableRef name="PropellantLevelPostChange"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg id="7" name="CancelActiveOrbitActivity">
+</CommandMsg>
+<DataReplyMsg id="8" name="CancelActiveOrbitActivityReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="ResponseCode"/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg id="9" name="OrbitChangeStatus" msgArrival="EVENT" description="Changes on transitions between activity modes">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="OrbitChangeStatusCode"/>
+<VariableRef name="ScheduledStartTime"/>
+<VariableRef name="PredictedCompletionTime"/>
+</DataMsg>
+</Notification>
+
+<Request>
+<CommandMsg id="10" name="GetOrbitChangeStatus">
+</CommandMsg>
+<DataReplyMsg id="11" name="GetOrbitChangeStatusReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="OrbitChangeStatusCode"/>
+<VariableRef name="ScheduledStartTime"/>
+<VariableRef name="PredictedCompletionTime"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg id="12" name="ChangeActivityBasePriority">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="BasePriority"/>
+</CommandMsg>
+<DataReplyMsg id="13" name="ChangeActivityBasePriorityReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="BasePriority"/>
+</DataReplyMsg>
+</Request>
+
+</Interface>
+</xTEDS>

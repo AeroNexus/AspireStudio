@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<Solution xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Name>AspireStudio</Name>
+  <ActiveProjectName>DemoSat</ActiveProjectName>
+  <Project xsi:type="ScenarioProject" name="DemoSat">
+    <Item xsi:type="MonitorDoc" name="Monitor1">
+      <Type>Monitor</Type>
+      <GeneratedCaptionRule>Leaf</GeneratedCaptionRule>
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.Seconds" caption="Seconds" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.MicroSeconds" caption="MicroSeconds" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.ElapsedSeconds" caption="ElapsedSeconds" />
+      <AlternatingRowColoring>false</AlternatingRowColoring>
+    </Item>
+    <Item xsi:type="Folder" name="MyStuff">
+      <Type>Folder</Type>
+      <Item name="Item6">
+        <Type>CsFile</Type>
+      </Item>
+    </Item>
+    <Scenario name="DemoSat" file="DemoSat.xml" >
+	  <Reference name="AspireSpace.dll" />
+	</Scenario>
+  </Project>
+  <Project xsi:type="ScenarioProject" name="Browser">
+    <Item xsi:type="MonitorDoc" name="Monitor1">
+      <Type>Monitor</Type>
+      <GeneratedCaptionRule>Leaf</GeneratedCaptionRule>
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.Seconds" caption="Seconds" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.MicroSeconds" caption="MicroSeconds" />
+      <Item xsi:type="MonitorItem" blackboardPath="Clock.ElapsedSeconds" caption="ElapsedSeconds" />
+      <AlternatingRowColoring>false</AlternatingRowColoring>
+    </Item>
+    <Scenario name="Browser" file="Browser.xml">
+      <Reference name="AspireBrowsingUI.dll" register="Registration" />
+      <Reference name="AspireCoreModels.dll" />
+      <Reference name="AspirePrimitives.dll" />
+    </Scenario>
+  </Project>
+  <TaskList>
+    <Name>TaskList</Name>
+  </TaskList>
+</Solution>

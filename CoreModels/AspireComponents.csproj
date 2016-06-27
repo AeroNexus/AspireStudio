@@ -1,0 +1,192 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1BF6D815-9290-424C-922E-06B1DF567512}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PnPInnovations.Aspire.Components</RootNamespace>
+    <AssemblyName>PnPInnovations.Aspire.Components</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DotNetMagic, Version=3.0.2.0, Culture=neutral, PublicKeyToken=6cf6edec59e036ec">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\DotNetMagic.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.DataDictionary, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.DataDictionary.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.Framework, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.GuiUtilities, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.GuiUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.MathLib, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.MathLib.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.PlugInMgr, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.PlugInMgr.dll</HintPath>
+    </Reference>
+    <Reference Include="StarTechnologies.SdtUtilities, Version=3.3.0.3281, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\SDT 3\Source\SDTExe\bin\Debug\StarTechnologies.SdtUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Asim.cs" />
+    <Compile Include="AsimConfig.cs" />
+    <Compile Include="AsimMgr.cs" />
+    <Compile Include="AsimMgrUi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AsimProvider.cs" />
+    <Compile Include="AsimState.cs" />
+    <Compile Include="AspireShell.cs" />
+    <Compile Include="AspireShellUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AspireShellUI.Designer.cs">
+      <DependentUpon>AspireShellUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IHostXteds.cs" />
+    <Compile Include="IUseXteds.cs" />
+    <Compile Include="ManifestProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManifestProgress.designer.cs">
+      <DependentUpon>ManifestProgress.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NetSerialPort.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PmListener.cs" />
+    <Compile Include="AspireComponent.cs" />
+    <Compile Include="DRangeTypeEditor.cs" />
+    <Compile Include="IAdapter.cs" />
+    <Compile Include="MessageHelpers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="AspireBrowser.cs" />
+    <Compile Include="AspireComponentProxy.cs" />
+    <Compile Include="AspireNetAdapter\AdapterState.cs" />
+    <Compile Include="AspireNetAdapter\EventMsg.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AspireNetAdapter\PeriodicMsg.cs" />
+    <Compile Include="AspireNetAdapter\QueuedMessages.cs" />
+    <Compile Include="AspireNetAdapter\AspireNetAdapter.cs" />
+    <Compile Include="TaskManager.cs" />
+    <Compile Include="TaskManagerUi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TaskManagerUi.designer.cs">
+      <DependentUpon>TaskManagerUi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestBypassPort.cs" />
+    <Compile Include="TestBypassRouter.cs" />
+    <Compile Include="TestBypassVariable.cs" />
+    <Compile Include="TimeSync.cs" />
+    <Compile Include="UdpTransport.cs" />
+    <Compile Include="Xteds.cs" />
+    <Compile Include="XtedsCache.cs" />
+    <Compile Include="XtedsDirPathEditor.cs" />
+    <Compile Include="XtedsMessageAttributes.cs" />
+    <Compile Include="XtedsVariable.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aspire\Aspire.csproj">
+      <Project>{9FE839C5-BCF7-4988-A383-DB32ABF95488}</Project>
+      <Name>Aspire</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\component.png" />
+    <Content Include="Resources\export1.png" />
+    <Content Include="Resources\flash.png" />
+    <Content Include="Resources\flashUp.png" />
+    <Content Include="Resources\hwil.png" />
+    <Content Include="Resources\import1.png" />
+    <Content Include="Resources\mail_exchange.png" />
+    <Content Include="Resources\mail_forward.png" />
+    <Content Include="Resources\mail_preferences.png" />
+    <Content Include="Resources\shell.png" />
+    <Content Include="Resources\window_time.png" />
+    <Content Include="Resources\window_warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AsimMgrUi.resx">
+      <DependentUpon>AsimMgrUi.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AspireShellUI.resx">
+      <DependentUpon>AspireShellUI.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ManifestProgress.resx">
+      <DependentUpon>ManifestProgress.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaskManagerUi.resx">
+      <DependentUpon>TaskManagerUi.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)$(TargetName).*" "$(SolutionDir)Bin"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

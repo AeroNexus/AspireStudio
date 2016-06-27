@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" running="false">
+  <Clock name="Clock" displayFormat="Mission" initialTime="2013/11/01 08:15::47.000" stepSize="0.05">
+    <Model xsi:type="AstroClock" name="Astro" />
+  </Clock>
+  <Model xsi:type="Earth" name="Earth" >
+    <Model xsi:type="Fk5EarthReference" name="Fk5EarthReference" />
+  </Model>
+  <Model xsi:type="Spacecraft" name="DemoSat1">
+    <Model xsi:type="Dynamics" name="Dynamics" />
+    <Model xsi:type="AspireImu" name="IMU" compId="bd5fe857-118e-409e-9417-faf1774b0121" xtedsDirectory="xTEDS/" xtedsFile="LN200.xteds" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel1" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel2" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel3" />
+  </Model>
+</Scenario>

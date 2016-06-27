@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Aggregate_HostedPayload_xTEDS" version="1.0">
+<Application name="CAPS" version="1.0" kind="HostedPayload" />
+
+
+<!--=============================================-->
+<!-- Interface 1: CAPS Sensor                    -->
+<!--=============================================-->
+  <Interface name="iPlumeSensing" id="1" scope="Public">
+    <Variable name="PlumeTimestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Plume Report"/>
+    <Variable name="DetectionStatus" kind="StatusEnum" format="UINT8" description="Plume Detection status">
+      <Drange name="DetectionStatusEnum">
+        <Option name="NoEvent" value="0"/>
+        <Option name="EventDetected" value="1"/>
+      </Drange>
+    </Variable>
+    <Variable name="PlumeDetectionConfidence" kind="Confidence_Level" format="FLOAT32" units="percent" description="Plume detection confidence (1 minus p-value)"/>
+    <Variable name="ParticleDensity" kind="Particle_Density" format="FLOAT32" units="n_m^3" description="Estimate of neutral particle density"/>
+    <Variable name="NumberOfSamples" kind="count" format="UINT16" description="Number of samples in the delivered CAPS RawData buffer"/>
+    <Variable name="RawData" kind="CAPS_Sensor" format="BUFFER" description="Raw CAPS sensor data, buffer of 16-bit A/D samples"/>
+
+    <Notification>
+      <DataMsg name="PlumeSensorMsg" id="1" msgArrival="EVENT">
+        <VariableRef name="PlumeTimestamp"/>
+        <VariableRef name="DetectionStatus"/>
+        <VariableRef name="PlumeDetectionConfidence"/>
+        <VariableRef name="ParticleDensity"/>
+        <VariableRef name="NumberOfSamples"/>
+        <VariableRef name="RawData"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--========================================-->
+  <!-- Standard Interface 20: Host Time       -->
+  <!--========================================-->
+  <Interface name="iHostTime" id="20" scope="Public">
+    <Variable name="GpsSeconds" kind="time" format="UINT32" units="sec" description="GPS seconds since Jan6, 1980"/>
+
+    <Command>
+      <CommandMsg name="TimeMsg" id="1">
+        <VariableRef name="GpsSeconds"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+
+</xTEDS>

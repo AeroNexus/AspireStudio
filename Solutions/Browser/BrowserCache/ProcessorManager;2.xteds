@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+name='ProcessorManager_xTEDS'
+version='1.0'>
+<Application name='ProcessorManager' kind='Software'/>
+<Interface name='iCoreComponentMgmt' id='1'>
+<Variable name='Address' kind='address' format='BUFFER' description='Component address'/>
+<Variable name='Instance' kind='count' format='UINT08' description='Instance number of the added core component'/>
+<Variable name='Type' kind='CoreComponentType' format='UINT8' description='Type of core component'>
+<Drange name='CoreComponentType'>
+<Option name='ALL' value='0'/>
+<Option name='NETWORK_MANAGER' value='1'/>
+<Option name='CENTRAL_ID_SERVICE' value='2'/>
+<Option name='TASK_MANAGER' value='3'/>
+<Option name='SENSOR_MANAGER' value='4'/>
+<Option name='NETWORK_DATA_STORE' value='5'/>
+<Option name='DIRECTORY' value='6'/>
+<Option name='GATEWAY' value='7'/>
+<Option name='PROCESSOR_MANAGER' value='8'/>
+</Drange>
+</Variable>
+<Variable name='Operation' kind='listOperation' format='UINT8' description='Type of operation on core component list entry'>
+<Drange name='OperationEnum'>
+<Option name='REMOVE' value='1'/>
+<Option name='ADD' value='2'/>
+<Option name='MODIFY' value='3'/>
+</Drange>
+</Variable>
+<Variable name='Result' kind='status' format='UINT08' description='PM Request Result'>
+<Drange name='PmRequestResult'>
+<Option name='OK' value='1'/>
+<Option name='ENTRY_EXISTS' value='2'/>
+<Option name='INVALID_ADDRESS' value='3'/>
+<Option name='INVALID_INSTANCE' value='4'/>
+<Option name='ERROR' value='5'/>
+</Drange>
+</Variable>
+<Variable name='Scope' kind='systemScope' format='UINT08' description='System Scope of an entry in the Managed Core Component Table'>
+<Drange name='SystemScopeEnum'>
+<Option name='PROCESSOR' value='1'/>
+<Option name='SUBNETWORK' value='2'/>
+<Option name='VEHICLE' value='3'/>
+<Option name='CONSTELLATION' value='4'/>
+<Option name='SQUADRON' value='5'/>
+<Option name='GLOBAL' value='6'/>
+</Drange>
+</Variable>
+
+<Request>
+<CommandMsg name='AddCoreComponent' id='1'>
+<VariableRef name='Type'/>
+<VariableRef name='Address'/>
+</CommandMsg>
+<DataReplyMsg name='AddCoreComponentReply' id='2'>
+<VariableRef name='Result'/>
+<VariableRef name='Instance'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='GetEntryInfo' id='3'>
+<VariableRef name='Type'/>
+<VariableRef name='Instance'/>
+</CommandMsg>
+<DataReplyMsg name='GetEntryReply' id='4'>
+<VariableRef name='Result'/>
+<VariableRef name='Instance'/>
+<VariableRef name='Address'/>
+<VariableRef name='Scope'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='RemoveCoreComponent' id='5'>
+<VariableRef name='Type'/>
+<VariableRef name='Instance'/>
+</CommandMsg>
+<DataReplyMsg name='RemoveCoreComponentReply' id='6'>
+<VariableRef name='Result'/>
+<VariableRef name='Instance'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='SetEntryNotification' id='7' description='Sets the specifications for notification of addition/removal of entries'>
+<VariableRef name='Type'/>
+<VariableRef name='Scope'/>
+</CommandMsg>
+<DataReplyMsg name='SetEntryNotificationReply' id='8'>
+<VariableRef name='Type'/>
+<VariableRef name='Result'/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name='EntryNotification' id='9' msgArrival='EVENT' description='Event message delivered to subscriber when an entry is added/removed/modified' >
+<VariableRef name='Type'/>
+<VariableRef name='Instance'/>
+<VariableRef name='Scope'/>
+<VariableRef name='Address'/>
+<VariableRef name='Operation'/>
+</DataMsg>
+</Notification>
+
+</Interface>
+<Interface name='IStatus' id='2'>
+<Variable name='PpssReceived' format='UINT32' kind='counter' />
+<Variable name='TatsReceived' format='UINT32' kind='counter' />
+<Request>
+<CommandMsg name='GetTimeStats' id='1' />
+<DataReplyMsg name='TimeStats' id='2' >
+<VariableRef name='PpssReceived' />
+<VariableRef name='TatsReceived' />
+</DataReplyMsg>
+</Request>
+</Interface>
+</xTEDS>

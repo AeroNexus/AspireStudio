@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{96760986-EACD-41CD-A4BD-2CFB4315BE0E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aspire.Space</RootNamespace>
+    <AssemblyName>AspireSpace</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AspireImu.cs" />
+    <Compile Include="Body.cs" />
+    <Compile Include="OrbitalState.cs" />
+    <Compile Include="StateProvider.cs" />
+    <Compile Include="Environment\AstroClock.cs" />
+    <Compile Include="Environment\CelestialBody.cs" />
+    <Compile Include="Environment\StandardAtmosphere1976.cs" />
+    <Compile Include="Environment\SolarWind.cs" />
+    <Compile Include="Environment\SolarRadiation.cs" />
+    <Compile Include="Environment\JacciaRobertsLineberryAtmosphere.cs" />
+    <Compile Include="Environment\JacciaRobertsAtmosphere.cs" />
+    <Compile Include="Environment\Sun.cs" />
+    <Compile Include="Environment\Moon.cs" />
+    <Compile Include="Environment\MagField.cs" />
+    <Compile Include="Environment\Environment.cs" />
+    <Compile Include="Environment\Gravity.cs" />
+    <Compile Include="Environment\EcefState.cs" />
+    <Compile Include="Environment\EnvironmentModel.cs" />
+    <Compile Include="Environment\TrueOfDate.cs" />
+    <Compile Include="Environment\Fk5EarthReference.cs" />
+    <Compile Include="Environment\Earth.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="Interfaces\IMoon.cs" />
+    <Compile Include="Interfaces\IAtmosphere.cs" />
+    <Compile Include="Interfaces\ISun.cs" />
+    <Compile Include="Interfaces\IMagnetics.cs" />
+    <Compile Include="Interfaces\IGenerateMechanicalLoads.cs" />
+    <Compile Include="Interfaces\I_NBodyGravity.cs" />
+    <Compile Include="Interfaces\IEarth.cs" />
+    <Compile Include="Interfaces\IBody.cs" />
+    <Compile Include="Interfaces\ICelestialBody.cs" />
+    <Compile Include="Interfaces\IReferenceFrameModel.cs" />
+    <Compile Include="Vehicle.cs" />
+    <Compile Include="BodyDynamics.cs" />
+    <Compile Include="Imu.cs" />
+    <Compile Include="ReactionWheel.cs" />
+    <Compile Include="Spacecraft.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AspireStudio\AspireStudio.csproj">
+      <Project>{1801e82d-a6d6-420d-8a33-84a84d053fd2}</Project>
+      <Name>AspireStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreModels\CoreModels.csproj">
+      <Project>{a4fcdeb7-9dff-4f59-b69f-d6534af7594e}</Project>
+      <Name>CoreModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{e236dc25-fef2-4ca1-81c1-89782ed31b3d}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Primitives\Primitives.csproj">
+      <Project>{285341bd-c4c9-47d2-a57a-e5383b85534a}</Project>
+      <Name>Primitives</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{3d0c3d1f-4e9f-4066-93cb-3fa8a1a29549}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetFileName) $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+copy $(TargetName).pdb $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ 	 name="NotificationProducer_xTEDS"
+	 version="1.0">
+   
+ 	<Application name="NotificationProducer" kind="ExampleSoftware"/>
+
+   <Interface name="iAttitudeRate" id="1" description="Attitude Rate Standard Interface">
+     <Qualifier name="Object" value="Spacecraft"/>
+     <Variable name="Time" kind="time" format="UINT32" units="s"/>
+     <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+     <Variable name="AttitudeRate" kind="attitudeRate" units="rad/s" format="FLOAT32" length="3" description="3-axis attitude rate">
+       <Qualifier name="Representation" value="vector"/>
+       <Qualifier name="FrameMeasured" value="DVF"/>
+       <Qualifier name="FrameResolved" value="DVF"/>
+       <Qualifier name="Accuracy" value="0.00001" units="deg/sec"/>
+       <Qualifier name="Resolution" value="0.0024" units="deg/sec"/>
+       <Qualifier name="Stability" value="0.00012" units="deg/sec/hr"/>
+       <Qualifier name="MeasurementMax" value="55.0" units="deg/sec"/>
+       <Qualifier name="MeasurementMin" value="-55.0" units="deg/sec"/>
+       <Location x="2.5" y="0.0" z="47.0" units="cm"/>
+       <Orientation axis="X" angle="45" units="degrees"/>
+       <Orientation axis="Y" angle="45" units="degrees"/>
+     </Variable>
+     <Notification>
+       <DataMsg name="AttitudeRateMsg" msgArrival="PERIODIC" msgRate="20" id="1">
+         <VariableRef name="Time"/>
+         <VariableRef name="SubS"/>
+         <VariableRef name="AttitudeRate" />
+       </DataMsg>
+     </Notification>
+   </Interface>
+   
+   <Interface name="iMagneticField" id="2" description="Magnetic Field Standard Interface">
+     <Qualifier name="Object" value="EarthCharacteristic" />
+     <Variable name="Time" kind="time" format="UINT32" units="s" />
+     <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+     <Variable name="MagField" kind="magFlux" units="gauss" format="FLOAT32" length="3" description="Magnetic flux observed at this device">
+       <Qualifier name="Representation" value="vector"/>
+       <Qualifier name="FrameMeasured" value="DVF"/>
+       <Qualifier name="FrameResolved" value="DVF"/>
+       <Qualifier name="Accuracy" value="0.0001" units="gauss"/>
+       <Qualifier name="Resolution" value="0.00004" units="gauss"/>
+       <Qualifier name="Stability" value="0.0015" units="gauss/hr"/>
+       <Qualifier name="MeasurementMax" value="1.0" units="gauss"/>
+       <Qualifier name="MeasurementMin" value="0.0" units="gauss"/>
+       <Location x="5.5" y="2.7" z="40." units="cm"/>
+       <Orientation axis="X" angle="-90" units="degrees"/>
+     </Variable>
+     <Notification>
+       <DataMsg name="MagFieldMsg" msgArrival="PERIODIC" msgRate="10" id="1">
+         <VariableRef name="Time"/>
+         <VariableRef name="SubS"/>
+         <VariableRef name="MagField"/>
+       </DataMsg>
+     </Notification>
+   </Interface>
+   
+   <Interface name="iDeviceSafety" id="3" description="Device Safety Interface">
+     <Variable name="Time" kind="time" format="UINT32" units="s"/>
+     <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor="0.000001" scaleUnits="s"/>
+     <Variable name="DeviceTemperature" kind="temperature" format="FLOAT32" units="degC">
+       <Qualifier name="Representation" value="scalar"/>
+       <Qualifier name="FrameMeasured" value="DVF"/>
+       <Qualifier name="FrameResolved" value="DVF"/>
+       <Qualifier name="Accuracy" value="0.15" units="degC"/>
+       <Qualifier name="Resolution" value="0.005" units="degC"/>
+       <Qualifier name="Stability" value="0.5" units="degC/hr"/>
+       <Qualifier name="MeasurementMax" value="75.0" units="degC"/>
+       <Qualifier name="MeasurementMin" value="-20.0" units="degC"/>
+       <Location x="25.5" y="50.0" z="-56.0" units="cm"/>
+     </Variable>    
+     <Notification>
+       <DataMsg name="TemperatureMsg" id="1" msgArrival="PERIODIC" msgRate="1">
+         <VariableRef name="Time"/>
+         <VariableRef name="SubS"/>
+         <VariableRef name="DeviceTemperature"/>
+       </DataMsg>
+     </Notification>
+   </Interface>
+
+ </xTEDS>

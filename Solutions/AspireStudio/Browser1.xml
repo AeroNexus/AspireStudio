@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Browser List" running="true" >
+	<Clock displayFormat="UTC" initialTime="2010/11/29" >
+		<Model xsi:type="AspireClock" name="Aspire" SoftPps="true" TimeAtTone="true" />
+	</Clock>
+	<Model xsi:type="AspireBrowser" name="Browser" />
+	<Model xsi:type="AspireBrowser" name="Browser-GSA" domain="GSA" debugLevel="1"/>
+	<Model xsi:type="AspireBrowser" name="Browser-LSA" domain="LSA"/>
+	<Model xsi:type="AspireBrowser" name="Browser-HVA" domain="HVA"/>
+	<Model xsi:type="AspireBrowser" name="Browser-GBT1" domain="GBT1"/>
+	<Model xsi:type="AspireBrowser" name="Browser-GBT2" domain="GBT2"/>
+	<Model xsi:type="AspireBrowser" name="Browser-GBT3" domain="GBT3"/>
+	<Model xsi:type="AspireBrowser" name="Browser-GBT4" domain="GBT4"/>
+	<Model xsi:type="AspireBrowser" name="Browser-GBT5" domain="GBT5"/>
+	<Model xsi:type="AspireBrowser" name="Browser-ODS1" domain="ODS1"/>
+	<Model xsi:type="AspireBrowser" name="Browser-Simulation" domain="Simulation"/>
+	<Model xsi:type="SignalGenerator" name="Signals" />
+<!--
+-->
+<Model xsi:type="Application" name="GSA" domain="GSA" >
+	<Model xsi:type="AspireShell" name="AcsControlLaws" xtedsFile="AcsControlLaws.xteds"/>
+	<Model xsi:type="AspireShell" name="AdcsController2" xtedsFile="AdcsController2.xteds"/>
+	<Model xsi:type="AspireShell" name="AMM_Standard_Interfaces" xtedsFile="AMM_Standard_Interfaces.xteds"/>
+	<Model xsi:type="AspireShell" name="Asset" xtedsFile="Asset.xteds"/>
+	<Model xsi:type="AspireShell" name="AttitudeEstimator" xtedsFile="Attitude.xteds"/>
+	<Model xsi:type="AspireShell" name="AttitudeController" xtedsFile="AttitudeController.xteds"/>
+	<Model xsi:type="AspireShell" name="AttitudePlanningSupport" xtedsFile="AttitudePlanningSupport.xteds"/>
+	<Model xsi:type="AspireShell" name="BaitProxy" xtedsFile="BaitProxy.xteds"/>
+	<Model xsi:type="AspireShell" name="FSC-701" xtedsFile="Ball FSC-701 Star Tracker.xteds"/>
+	<Model xsi:type="AspireShell" name="bdStudioComms" xtedsFile="bdStudioComms.xteds"/>
+	<Model xsi:type="AspireShell" name="Brain" xtedsFile="Brain.xteds"/>
+	<Model xsi:type="AspireShell" name="CoarseSunSensor" xtedsFile="CSS.xteds"/>
+	<Model xsi:type="AspireShell" name="DataStoreModel" xtedsFile="DataStoreModel.xteds"/>
+	<Model xsi:type="AspireShell" name="FailoverTest" xtedsFile="FailoverTest.xteds"/>
+	<Model xsi:type="AspireShell" name="FileManagement" xtedsFile="FileManagement.xteds"/>
+	<Model xsi:type="AspireShell" name="GeoObservationAgent" xtedsFile="GeoObservationAgent.xteds"/>
+	<Model xsi:type="AspireShell" name="GroundTelescopeSiteWeather" xtedsFile="GroundTelescopeSiteWeather.xteds"/>
+	<Model xsi:type="AspireShell" name="HvaTrigger" xtedsFile="HVATrigger.xteds"/>
+	<Model xsi:type="AspireShell" name="IM_203" xtedsFile="IM-203.xteds"/>
+	<Model xsi:type="AspireShell" name="LaserDetector" xtedsFile="LaserDetector.xteds"/>
+	<Model xsi:type="AspireShell" name="LN200" xtedsFile="LN200.xteds"/>
+	<Model xsi:type="AspireShell" name="LripApplication" xtedsFile="LripApplication.xteds"/>
+	<Model xsi:type="AspireShell" name="MagSunAttitude" xtedsFile="MagSunAttitude.xteds"/>
+	<Model xsi:type="AspireShell" name="MissionInfoAgent" xtedsFile="MissionInfoAgent.xteds"/>
+	<Model xsi:type="AspireShell" name="MissionInformationService" xtedsFile="MissionInfoService.xteds"/>
+	<Model xsi:type="AspireShell" name="MissionManager" xtedsFile="MissionManager.xteds"/>
+	<Model xsi:type="AspireShell" name="MODS Imager" xtedsFile="MODS Imager.xteds"/>
+	<Model xsi:type="AspireShell" name="MomentumMgmt" xtedsFile="MomentumMgmt.xteds"/>
+	<Model xsi:type="AspireShell" name="MoveTargetTrigger" xtedsFile="MoveTargetTrigger.xteds"/>
+	<Model xsi:type="AspireShell" name="NotificationProducer" xtedsFile="NotificationProducer.xteds"/>
+	<Model xsi:type="AspireShell" name="ObservationSupportAgent" xtedsFile="ObservationSupportAgent.xteds"/>
+	<Model xsi:type="AspireShell" name="ObservationTaskingTester" xtedsFile="ObservationTaskingTester.xteds"/>
+	<Model xsi:type="AspireShell" name="Orbit" xtedsFile="Orbit.xteds"/>
+	<Model xsi:type="AspireShell" name="OrbitAnalyzer" xtedsFile="OrbitAnalyzer.xteds"/>
+	<Model xsi:type="AspireShell" name="OrbitDeterminationTester" xtedsFile="OrbitDeterminationTester.xteds"/>
+</Model>
+<!--
+-->
+
+<!--
+-->
+<Model xsi:type="AspireShell" name="LSA.OrbitParams" domain="LSA" xtedsFile="OrbitParams.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PlannerProxy" domain="LSA" xtedsFile="PlannerProxy.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PointingDirector" domain="LSA" xtedsFile="PointingDirector.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PointingResources" domain="LSA" xtedsFile="PointingResources.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PowerController" domain="LSA" xtedsFile="PowerController.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.Gen2PowerHub" domain="LSA" xtedsFile="PowerHubV2.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PowerSwitch" domain="LSA" xtedsFile="PowerSwitch.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.PropulsionModule" domain="LSA" xtedsFile="PropulsionModule.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.ProximityThreatEventReporter" domain="LSA" xtedsFile="ProximityEventTester.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.ProxyAssertor" domain="LSA" xtedsFile="ProxyAssertor.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.ProxyBrain" domain="LSA" xtedsFile="ProxyBrain.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.Qmgr" domain="LSA" xtedsFile="Qmgr.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.AdditionProvider" domain="LSA" xtedsFile="RequestProvider.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.ReactionWheels" domain="LSA" xtedsFile="ReactionWheels.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.RtsBridge" domain="LSA" xtedsFile="RtsBridge.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SED26" domain="LSA" xtedsFile="SED-26StarTracker.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SimpleAgent" domain="LSA" xtedsFile="SimpleAgent.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.Simulation" domain="LSA" xtedsFile="Simulation.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SiteInfo" domain="LSA" xtedsFile="SiteInfo.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SmallSim" domain="LSA" xtedsFile="SmallSim.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SSA_Sensor" domain="LSA" xtedsFile="SSA_Sensor.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SurveillanceCatalogManager" domain="LSA" xtedsFile="SsaCatalogManager.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SsaObjectLocation" domain="LSA" xtedsFile="SsaLocationAlgorithm.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.bdStudioSensor" domain="LSA" xtedsFile="SsaOpticalSensor.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.StatechartTest" domain="LSA" xtedsFile="StatechartTestHarness.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.StringAndBufferExample" domain="LSA" xtedsFile="StringAndBufferExample.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SunSolution" domain="LSA" xtedsFile="SunSolution.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.GPS_Receiver" domain="LSA" xtedsFile="SurreySGR-10.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.Surveillance" domain="LSA" xtedsFile="Surveillance.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.SurveillanceSentry" domain="LSA" xtedsFile="SurveillanceSentry.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.TR10CFN" domain="LSA" xtedsFile="TR10CFN.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.TR100CFN" domain="LSA" xtedsFile="TR100CFN.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.TW_4B200" domain="LSA" xtedsFile="TW-4B200.xteds"/>
+<Model xsi:type="AspireShell" name="LSA.TW_16B200" domain="LSA" xtedsFile="TW-16B200.xteds"/>
+<!--
+-->
+</Scenario>

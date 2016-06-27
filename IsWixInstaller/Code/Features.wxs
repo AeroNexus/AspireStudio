@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment> 
+    
+    <FeatureGroup Id="features">
+      <Feature Id="IsWixInstaller" Title="IsWixInstaller" Description="Installs all the files needed for IsWixInstaller" Level="1" AllowAdvertise="no" ConfigurableDirectory="INSTALLLOCATION">
+        <MergeRef Id="IsWixInstallerMM"/>
+      </Feature>
+    </FeatureGroup>
+
+    <!-- Content -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="CompanyFolder" Name="PnP Innovations">
+          <Directory Id="INSTALLLOCATION" Name="IsWixInstaller">
+            <Merge Id="IsWixInstallerMM" SourceFile="$(var.IsWixInstallerMM.TargetPath)" DiskId="1" Language="1033"/>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+    
+  </Fragment>
+</Wix>

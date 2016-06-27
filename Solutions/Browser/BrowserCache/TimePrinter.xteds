@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xTEDS version="1.0" name="IntelligentAgent_xTEDS" xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Application kind="Software" name="IntelligentAgent"/>
+    <Interface id="1" name="IEstimatingZoneStateOfHealth">
+        <Variable format="UINT8" kind="TBD" name="estimatingStateOfHealthStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthIsNominalStatus"/>
+        <Variable format="UINT8" kind="TBD" name="initializingStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthyStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthy1AStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthy1BStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthy2AStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthy2BStatus"/>
+        <Variable format="UINT8" kind="TBD" name="healthIsOffNominalStatus"/>
+        <Variable format="UINT8" kind="TBD" name="unknownStatus"/>
+        <Variable format="UINT8" kind="TBD" name="failedStatus"/>
+        <Variable format="UINT8" kind="TBD" name="resettingProcessStatus"/>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="1" name="StateIs2A"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="2" name="StateIs2B"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="3" name="XZCTRL"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="4" name="XZBKUP"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="5" name="EstimatingZoneStateOfHealthStatusMessage">
+                <VariableRef name="estimatingStateOfHealthStatus"/>
+                <VariableRef name="healthIsNominalStatus"/>
+                <VariableRef name="initializingStatus"/>
+                <VariableRef name="healthyStatus"/>
+                <VariableRef name="healthy1AStatus"/>
+                <VariableRef name="healthy1BStatus"/>
+                <VariableRef name="healthy2AStatus"/>
+                <VariableRef name="healthy2BStatus"/>
+                <VariableRef name="healthIsOffNominalStatus"/>
+                <VariableRef name="unknownStatus"/>
+                <VariableRef name="failedStatus"/>
+                <VariableRef name="resettingProcessStatus"/>
+            </DataMsg>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="6" name="StateIsInitializing"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="7" name="StateIsFailed"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="8" name="StateIsUnknown"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="9" name="StateIs1A"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgRate="0.0" msgArrival="EVENT" id="10" name="StateIs1B"/>
+        </Notification>
+    </Interface>
+</xTEDS>

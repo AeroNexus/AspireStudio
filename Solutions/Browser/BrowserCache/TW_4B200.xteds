@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ 	 xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+  name="Reaction_Wheel_xTEDS" version="1.0">
+  
+	<Device name="TW_4B200" kind="ReactionWheel" manufacturerId="Goodrich" modelId="TW-16B200" />
+
+	<Interface name="IReactionWheel" id="1">
+		<Qualifier name="MaxMomentum" value="16.6" units="Nms" />
+		<Qualifier name="NominalMomentum" value="8" units="Nms" />
+		<Qualifier name="TorqueLossMomentum" value="1.0" units="Nms"/>
+		<Qualifier name="MaxTorqueAtMaxSpeed" value="0.200"  units="Nm" />
+		<Qualifier name="MaxTorqueAtNominalSpeed" value="0.200" units="Nm"/>
+		<Qualifier name="FlywheelMOI" value="0.03108" units="Nms2"/>
+		<Qualifier name="TimeConstant" value="0.1" units="s" />
+
+		<Variable name="WheelSpeed" kind="speed" format="FLOAT32" units="RPM" description="Current actual wheel speed" />
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="CommandedTorque" kind="torque" format="FLOAT32" units="Nm" description="Magnitude of torque requested of this device" />
+		<Variable name="Momentum" kind="angularMomentum" format="FLOAT32" units="Nms" description="The current momentum of this wheel." />
+		<Variable name="SatPercentage" kind="saturationLevel" format="FLOAT32" units="percent" description="The current saturation % of this wheel." />
+		<Variable name="OpMode" kind="mode" format="UINT08" defaultValue="1">
+			<Drange name="OpModeEnum">
+				<Option name="GROSS_TORQUE" value="1" description="Direct torque without friction compensation" />
+				<Option name="ADAPTIVE_NET_TORQUE" value="2" description="Applied torque is adaptively corrected for dynamic friction" />
+				<Option name="ADAPTIVE_NET_OMEGA" value="3" description="Applied torque is does not compensate for friction; final W is held." />
+			</Drange>
+		</Variable>
+		<Variable name="ReplyStatus" kind="mode" format="UINT08" defaultValue="1">
+			<Drange name="ReplyStatusEnum">
+				<Option name="OK" value="1" description="Mode change accepted" />
+				<Option name="ERROR" value="2" description="Invalid OpMode" />
+			</Drange>
+		</Variable>
+		
+		<Command>
+			<CommandMsg name="TorqueCommand" id="1">
+				<VariableRef name="CommandedTorque" />
+			</CommandMsg>
+		</Command>	
+		<Request>
+			<CommandMsg name="SetOpMode" id="2">
+				<VariableRef name="OpMode" />
+			</CommandMsg>
+			<DataReplyMsg name="SetOpModeReply" id="3">
+				<VariableRef name="ReplyStatus"/>
+				<VariableRef name="OpMode"/>
+			</DataReplyMsg>
+		</Request>
+		<Notification>
+			<DataMsg name="Status" msgArrival="PERIODIC" msgRate="1" id="4">
+				<Qualifier name="TelemetryModulo" value="10"  />
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time" />
+				<VariableRef name="SubS" />
+				<VariableRef name="WheelSpeed" />
+				<VariableRef name="SatPercentage" />
+				<VariableRef name="Momentum" />
+				<VariableRef name="OpMode" />
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="IDevicePower" id="2">
+		<Qualifier name="CurrentWarning" value=".6" units="A"/>
+		<Qualifier name="CurrentLimit" value=".8" units="A"/>
+		<Qualifier name="AsimOnlyPower" value="0.5" units="W"/>
+		<Qualifier name="AvgPower" value="9.0" units="W"/>
+		<Qualifier name="MaxPower" value="16.0" units="W"/>
+		<Qualifier name="PowerBehavior" value="Constant_Power"/>
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="DevPwrState" kind="powerState" format="UINT08" defaultValue="1">
+			<Drange name="DevPwrStateEnum">
+				<Option name="OFF" value="1" description="No power applied to device" />
+				<Option name="ON" value="2" description="Power applied to device" />
+			</Drange>
+		</Variable>
+		<Variable name="SetPwrStateStatus" kind="mode" format="UINT08" defaultValue="1">
+			<Drange name="SetPwrStateStatusEnum" >
+				<Option name="OK" value="1"/>
+				<Option name="ERROR" value="2"/>
+			</Drange>
+		</Variable>
+		
+		<Request>
+			<CommandMsg name="DevPwrSetState" id="1">
+				<VariableRef name="DevPwrState" />
+			</CommandMsg>
+			<DataReplyMsg name="DevPwrSetStateReply" id="2">
+				<VariableRef name="SetPwrStateStatus" />
+				<VariableRef name="DevPwrState" />
+			</DataReplyMsg>
+		</Request>
+		
+		<Request>
+			<CommandMsg name="GetDevPwrState" id="3" />
+			<DataReplyMsg name="DevPwrStateReply" id="4">
+				<VariableRef name="DevPwrState" />
+			</DataReplyMsg>
+		</Request>
+		
+		<Notification>
+			<DataMsg name="DevicePowerStatus" id="5" msgArrival="EVENT">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time" />
+				<VariableRef name="SubS" />
+				<VariableRef name="DevPwrState" />
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="IDeviceSafety" id="3">
+		<!-- Temperatures and limits -->
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20" yLow="-10" yHigh="50" rHigh="60"/>
+		
+		<Request>
+			<CommandMsg name="GetDeviceTemperature" id="1" />
+			<DataReplyMsg name="DeviceTempReply" id="2">
+				<VariableRef name="Temperature"/>
+			</DataReplyMsg>
+		</Request>
+		
+		<Notification>
+			<DataMsg name="DeviceTemp" id="3" msgArrival="PERIODIC" msgRate="1">
+				<Qualifier name="TelemetryModulo" value="30" />
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time" />
+				<VariableRef name="SubS" />
+				<VariableRef name="Temperature"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+	
+	<Interface name="ASIM" id="4">
+		<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+		<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+		<Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+		<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+		<Variable name="GUID" kind="GUID" format="BUFFER" />
+
+		<Request>
+			<CommandMsg name="GetVersionInfo" id="1"/>
+			<DataReplyMsg name="VersionInfoReply" id="2">
+				<VariableRef name="CRCProgCode"/>
+				<VariableRef name="CRCxTEDS"/>
+				<VariableRef name="SWCoreLibRev"/>
+				<VariableRef name="HWFPGAFirmwareRev"/>
+				<VariableRef name="GUID"/>
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+       name="Surveilance_xTeds" version="2.1">
+  <Application name="Surveilance" kind="Software" id="1"/>
+
+  <Interface name="ISurveilance" id="1">
+    <!-- variables used -->
+    <Variable name="EciPosition" kind="attitude" format="FLOAT64" length="3" units="m"
+	description="ECI Position"/>
+    <Variable name="TargetId" kind="ID" format="UINT16"/>
+    <Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+    <Variable name="RightAscension" units="deg" kind="angle" format="FLOAT32" />
+    <Variable name="Declination" kind="angle" format="FLOAT32" />
+	<Variable name="VelocityFactor" kind="factor" format="FLOAT64"/>
+	<Variable name="Name" kind="string" format="UINT08" length="32" description="Name"/>
+	<Variable name="ShutterState" kind="state" format="UINT32" description="Intended Shutter State"/>
+    <Variable name="LaserState" kind="state" format="UINT32" description="1 on, 0 off"/>
+    <Variable name="InternationalDesignator" kind="name" format="STRING" />
+	<Variable name="TargetStatus" kind="TargetStatusType" format="INT8" >
+	  <Drange name="TargetStatusType" >
+	    <Option name="OK" value="1"/>
+	    <Option name="NotFound" value="2"/>
+	  </Drange>
+	</Variable>
+    <!-- requests supported -->
+
+    <Command>
+      <CommandMsg name="LookAtPosition" id="2">
+        <VariableRef name="TargetId"/>
+        <VariableRef name="EciPosition"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="ReleaseFromLookAtPosition" id="4">
+        <VariableRef name="TargetId"/>
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+        <DataMsg name="TrackAchieved" id="3" msgArrival="EVENT">
+          <Qualifier name="TelemetryLevel" value="1"/>
+          <VariableRef name="Time"/>
+          <VariableRef name="SubS"/>
+          <VariableRef name="TargetId"/>
+		  <VariableRef name="InternationalDesignator"/>
+        </DataMsg>
+    </Notification>
+
+    <Notification>
+        <DataMsg name="TargetSeen" id="5" msgArrival="EVENT">
+            <Qualifier name="TelemetryLevel" value="1"/>
+            <VariableRef name="Time"/>
+            <VariableRef name="SubS"/>
+            <VariableRef name="RightAscension"/>
+            <VariableRef name="Declination"/>
+        </DataMsg>
+    </Notification>
+
+	<!-- Jhamell - move a satellite within the scenario -->
+    <Command>
+      <CommandMsg name="MoveSatellite" id="6">
+      </CommandMsg>
+    </Command>
+	
+	<!-- Jhamell - echo the camera shutter state here -->
+	<!-- 1 is open, 0 is closed -->
+	<Command>
+	  <CommandMsg name="SetShutter" id="7">
+	    <VariableRef name="ShutterState"/>
+	  </CommandMsg>
+	</Command>
+
+    <Notification>
+      <DataMsg name="ShutterStateUpdate" msgArrival="EVENT" id="8">
+        <VariableRef name="ShutterState"/>
+      </DataMsg>
+    </Notification>
+    
+	<!-- Jhamell - break the look_at into two calls -->
+	<Command>
+	  <CommandMsg name="StartImager" id="9"/>
+	</Command>
+    
+    <!-- JDH: Adding laser set, state updates-->
+    <!-- There are two kinds of threat - Low and High Intensity -->
+    <Command>
+      <CommandMsg name="HighIntensityLaserThreat" id="10">
+        <VariableRef name="LaserState"/>
+      </CommandMsg>
+    </Command>
+	
+	<Command>
+      <CommandMsg name="HighIntensityLaserThreatToggle" id="20">
+      </CommandMsg>
+    </Command>
+	
+    <Notification>
+      <DataMsg name="HighIntensityLaserUpdate" msgArrival="EVENT" id="11">
+        <VariableRef name="LaserState"/>
+      </DataMsg>
+    </Notification>
+    <Command>
+      <CommandMsg name="LowIntensityLaserThreat" id="12">
+        <VariableRef name="LaserState"/>
+      </CommandMsg>
+    </Command>
+    <Notification>
+      <DataMsg name="LowIntensityLaserUpdate" msgArrival="EVENT" id="13">
+        <VariableRef name="LaserState"/>
+      </DataMsg>
+    </Notification>
+    
+    <Request>
+      <CommandMsg name="LookAtTarget" id="14">
+        <VariableRef name="TargetId"/>
+        <VariableRef name="InternationalDesignator"/>
+      </CommandMsg>
+	    <DataReplyMsg name="LookAtTargetReply" id="15" >
+	      <VariableRef name="TargetId"/>
+		    <VariableRef name="TargetStatus"/>
+	    </DataReplyMsg>
+    </Request>
+
+  </Interface>
+  <Interface name="IGPS" id="2">
+    <Variable name="Time" kind="time" format="UINT32" units="s"/>
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor= ".000001" scaleUnits="s"/>
+    <Variable name="GPSTime" kind="time" format="UINT32" units="s" description="Current calculated GPS time (UTC)">
+      <Qualifier name="TimeFrame" value="UTC"/>
+    </Variable>
+    <Variable name="GPSPosition" kind="position" units="m" format="FLOAT64" length="3">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="ECITOD"/>
+			<Qualifier name="FrameResolved" value="ITRF"/>
+		</Variable>
+    <Variable name="GPSVelocity" kind="velocity" units="m/s" format="FLOAT64" length="3">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="ECITOD"/>
+			<Qualifier name="FrameResolved" value="ITRF"/>
+		</Variable>
+    <Variable name="GDOP" kind="counter" format="UINT8" description="GDOP*10"/>
+    <Variable name="OPmode" kind="mode" format="UINT8" defaultValue="1">
+      <Drange name="OPmodeEnum">
+        <Option name="NoFix" value="1" description="No solution"/>
+        <Option name="TwoDimension" value="2" description="2D fix"/>
+        <Option name="ThreeDimension" value="3" description="3D fix"/>
+      </Drange>
+    </Variable>
+    <Variable name="PSAT" kind="counter" format="UINT8" description="Number of satellites used in fix" />
+
+    <Notification>
+      <DataMsg  name="PVT_Data" msgArrival="EVENT" id="1">
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="OPmode"/>
+        <VariableRef name="GDOP"/>
+        <VariableRef name="PSAT"/>
+        <VariableRef name="GPSTime"/>
+        <VariableRef name="GPSPosition"/>
+        <VariableRef name="GPSVelocity"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+</xTEDS>

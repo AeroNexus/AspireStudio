@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="AspireTestServer_xTEDS"
+version="1.0">
+
+<Application name="AspireTestServer" kind="Aspire_UnitTest"/>
+
+<Interface name="iTypeIntegrity" id="1">
+
+<!-- Pure primitive variable types -->
+<Variable name="uint_8_out" kind="testVar" format="UINT8" description="Outgoing UINT8 type"/>
+<Variable name="uint_8_in" kind="testVar" format="UINT8" description="Incoming UINT8 type"/>
+<Variable name="int_8_out" kind="testVar" format="INT8" description="Outgoing INT8 type"/>
+<Variable name="int_8_in" kind="testVar" format="INT8" description="Incoming INT8 type"/>
+<Variable name="uint_16_out" kind="testVar" format="UINT16" description="Outgoing UINT16 type"/>
+<Variable name="uint_16_in" kind="testVar" format="UINT16" description="Incoming UINT16 type"/>
+<Variable name="int_16_out" kind="testVar" format="INT16" description="Outgoing INT16 type"/>
+<Variable name="int_16_in" kind="testVar" format="INT16" description="Incoming INT16 type"/>
+<Variable name="uint_32_out" kind="testVar" format="UINT32" description="Outgoing UINT32 type"/>
+<Variable name="uint_32_in" kind="testVar" format="UINT32" description="Incoming UINT32 type"/>
+<Variable name="int_32_out" kind="testVar" format="INT32" description="Outgoing INT32 type"/>
+<Variable name="int_32_in" kind="testVar" format="INT32" description="Incoming INT32 type"/>
+<Variable name="uint_64_out" kind="testVar" format="UINT64" description="Outgoing UINT64 type"/>
+<Variable name="uint_64_in" kind="testVar" format="UINT64" description="Incoming UINT64 type"/>
+<Variable name="int_64_out" kind="testVar" format="INT64" description="Outgoing INT64 type"/>
+<Variable name="int_64_in" kind="testVar" format="INT64" description="Incoming INT64 type"/>
+<Variable name="float_32_out" kind="testVar" format="FLOAT32" description="Outgoing FLOAT32 type"/>
+<Variable name="float_32_in" kind="testVar" format="FLOAT32" description="Incoming FLOAT32 type"/>
+<Variable name="float_64_out" kind="testVar" format="FLOAT64" description="Outgoing FLOAT64 type"/>
+<Variable name="float_64_in" kind="testVar" format="FLOAT64" description="Incoming FLOAT64 type"/>
+
+<!-- Arrays of primitive variable types -->
+<Variable name="uint_8_array_out" kind="testVar" format="UINT8" length ="11" description="Outgoing UINT8 type"/>
+<Variable name="uint_8_array_in" kind="testVar" format="UINT8" length ="11" description="Incoming UINT8 type"/>
+<Variable name="int_8_array_out" kind="testVar" format="INT8" length ="11" description="Outgoing INT8 type"/>
+<Variable name="int_8_array_in" kind="testVar" format="INT8" length ="11" description="Incoming INT8 type"/>
+<Variable name="uint_16_array_out" kind="testVar" format="UINT16" length ="11" description="Outgoing UINT16 type"/>
+<Variable name="uint_16_array_in" kind="testVar" format="UINT16" length ="11" description="Incoming UINT16 type"/>
+<Variable name="int_16_array_out" kind="testVar" format="INT16" length ="11" description="Outgoing INT16 type"/>
+<Variable name="int_16_array_in" kind="testVar" format="INT16" length ="11" description="Incoming INT16 type"/>
+<Variable name="uint_32_array_out" kind="testVar" format="UINT32" length ="11" description="Outgoing UINT32 type"/>
+<Variable name="uint_32_array_in" kind="testVar" format="UINT32" length ="11" description="Incoming UINT32 type"/>
+<Variable name="int_32_array_out" kind="testVar" format="INT32" length ="11" description="Outgoing INT32 type"/>
+<Variable name="int_32_array_in" kind="testVar" format="INT32" length ="11" description="Incoming INT32 type"/>
+<Variable name="uint_64_array_out" kind="testVar" format="UINT64" length ="11" description="Outgoing UINT64 type"/>
+<Variable name="uint_64_array_in" kind="testVar" format="UINT64" length ="11" description="Incoming UINT64 type"/>
+<Variable name="int_64_array_out" kind="testVar" format="INT64" length ="11" description="Outgoing INT64 type"/>
+<Variable name="int_64_array_in" kind="testVar" format="INT64" length ="11" description="Incoming INT64 type"/>
+<Variable name="float_32_array_out" kind="testVar" format="FLOAT32" length ="11" description="Outgoing FLOAT32 type"/>
+<Variable name="float_32_array_in" kind="testVar" format="FLOAT32" length ="11" description="Incoming FLOAT32 type"/>
+<Variable name="float_64_array_out" kind="testVar" format="FLOAT64" length ="11" description="Outgoing FLOAT64 type"/>
+<Variable name="float_64_array_in" kind="testVar" format="FLOAT64" length ="11" description="Incoming FLOAT64 type"/>
+
+<!-- Dynamic Variables, Strings and Buffers -->
+<Variable name="string_in" kind="testVar" format="STRING" description="Incoming STRING type"/>
+<Variable name="string_out" kind="testVar" format="STRING" description="Outgoing STRING type"/>
+<Variable name="buffer_in" kind="testVar" format="BUFFER" description="Incoming BUFFER type"/>
+<Variable name="buffer_out" kind="testVar" format="BUFFER" description="Outgoing BUFFER type"/>
+
+<!--
+A single request-reply that verifies:
+- Marshaling and unmarshaling of all primitive constructs
+- Buffers larger than the IP MTU
+- Ability to map variables irrespective of variable order in message
+-->
+
+<Request>
+<CommandMsg name="VerifyPrimitives" id="1">
+<VariableRef name="buffer_out"/>
+<VariableRef name="uint_8_out"/>
+<VariableRef name="int_64_array_out"/>
+<VariableRef name="uint_16_array_out"/>
+<VariableRef name="int_16_out"/>
+<VariableRef name="uint_32_out"/>
+<VariableRef name="uint_64_array_out"/>
+<VariableRef name="uint_64_out"/>
+<VariableRef name="int_32_array_out"/>
+<VariableRef name="float_32_out"/>
+<VariableRef name="float_64_out"/>
+<VariableRef name="uint_16_out"/>
+<VariableRef name="int_64_out"/>
+<VariableRef name="int_16_array_out"/>
+<VariableRef name="int_32_out"/>
+<VariableRef name="float_32_array_out"/>
+<VariableRef name="int_8_out"/>
+<VariableRef name="uint_8_array_out"/>
+<VariableRef name="int_8_array_out"/>
+<VariableRef name="float_64_array_out"/>
+<VariableRef name="string_out"/>
+<VariableRef name="uint_32_array_out"/>
+</CommandMsg>
+<DataReplyMsg name="VerifyPrimitivesReply" id="2">
+<VariableRef name="string_in"/>
+<VariableRef name="uint_8_in"/>
+<VariableRef name="int_8_array_in"/>
+<VariableRef name="int_16_in"/>
+<VariableRef name="float_32_array_in"/>
+<VariableRef name="int_8_in"/>
+<VariableRef name="int_16_array_in"/>
+<VariableRef name="uint_32_array_in"/>
+<VariableRef name="int_32_array_in"/>
+<VariableRef name="uint_32_in"/>
+<VariableRef name="uint_16_array_in"/>
+<VariableRef name="int_32_in"/>
+<VariableRef name="float_64_in"/>
+<VariableRef name="uint_8_array_in"/>
+<VariableRef name="uint_64_in"/>
+<VariableRef name="uint_64_array_in"/>
+<VariableRef name="float_32_in"/>
+<VariableRef name="int_64_array_in"/>
+<VariableRef name="uint_16_in"/>
+<VariableRef name="int_64_in"/>
+<VariableRef name="float_64_array_in"/>
+<VariableRef name="buffer_in"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+<Interface name="iQueryTest1" id="2">
+<Qualifier name="interfaceQualifier1" value="2"/>
+<Qualifier name="interfaceQualifier2" value="45.0"/>
+<Qualifier name="interfaceQualifier3" value="-20"/>
+<Variable name="Variable1" kind="cadillac" format="UINT8"/>
+<Variable name="Variable2" kind="toyota" format="FLOAT32"/>
+<Variable name="Variable3" kind="ford" format="FLOAT32" length="3"/>
+<Variable name="Variable4" kind="porsche" format="INT16" units="m/s">
+<Qualifier name="Color" value="red"/>
+</Variable>
+<Variable name="Variable5" kind="cessna" format="BUFFER"/>
+<Variable name="Variable6" kind="trek" format="STRING"/>
+<Variable name="Variable7" kind="specialized" format="STRING"/>
+<Command>
+<CommandMsg name="automobile" id="1">
+<Qualifier name="condition" value="junker"/>
+<VariableRef name="Variable1"/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name="aircraft" id="2" msgArrival="EVENT">
+<Qualifier name="condition" value="pristine"/>
+<VariableRef name="Variable5"/>
+</DataMsg>
+</Notification>
+<Request>
+<CommandMsg name="bike" id="3">
+<VariableRef name="Variable5"/>
+</CommandMsg>
+<DataReplyMsg name="bikeReply" id="4">
+<VariableRef name="Variable6"/>
+<VariableRef name="Variable7"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+<Interface name="iQueryTest2" id="3">
+<Qualifier name="interfaceQualifier1" value="5"/>
+<Qualifier name="interfaceQualifier2" value="1.0"/>
+<Qualifier name="interfaceQualifier3" value="-200"/>
+<Variable name="Variable4" kind="cadillac" format="UINT8"/>
+<Variable name="Variable5" kind="toyota" format="FLOAT32"/>
+<Variable name="Variable6" kind="ford" format="FLOAT32" length="3"/>
+<Variable name="Variable7" kind="porsche" format="INT16" units="m/s">
+<Qualifier name="Color" value="red"/>
+</Variable>
+<Variable name="Variable8" kind="cessna" format="BUFFER"/>
+<Variable name="Variable9" kind="trek" format="STRING"/>
+<Variable name="Variable10" kind="specialized" format="STRING"/>
+<Command>
+<CommandMsg name="automobile" id="1">
+<Qualifier name="condition" value="junker"/>
+<VariableRef name="Variable4"/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name="aircraft" id="2" msgArrival="EVENT">
+<Qualifier name="condition" value="pristine"/>
+<VariableRef name="Variable5"/>
+</DataMsg>
+</Notification>
+<Request>
+<CommandMsg name="bike" id="3">
+<VariableRef name="Variable6"/>
+</CommandMsg>
+<DataReplyMsg name="bikeReply" id="4">
+<VariableRef name="Variable7"/>
+<VariableRef name="Variable8"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+<Interface name="BasicMessageFlow" id="4">
+<Command>
+<CommandMsg name="EventTrigger" id="1"/>
+</Command>
+<Notification>
+<DataMsg name="EventMsg" msgArrival="EVENT" id="2"/>
+</Notification>
+<Notification>
+<DataMsg name="PeriodicMsg" msgArrival="PERIODIC" msgRate="10" id="3"/>
+</Notification>
+<Request>
+<CommandMsg name="SyncRequestMsg" id="4"/>
+<DataReplyMsg name="SyncReplyMsg" id="5"/>
+</Request>
+<Request>
+<CommandMsg name="AsyncRequestMsg" id="6"/>
+<DataReplyMsg name="AsyncReplyMsg" id="7"/>
+</Request>
+</Interface>
+
+<Interface name="MessageSpeedTest" id="5">
+<Variable name="Timestamp" kind="time" format="FLOAT64"/>
+<Variable name="MsgCounter" kind="counter" format="UINT32"/>
+<Variable name="Cargo" kind="buffer" format="BUFFER"/>
+<Command>
+<CommandMsg name="SendMsg" id="1">
+<VariableRef name="Timestamp"/>
+<VariableRef name="MsgCounter"/>
+<VariableRef name="Cargo"/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name="ReceieveMsg" msgArrival="EVENT" id="2">
+<VariableRef name="Timestamp"/>
+<VariableRef name="MsgCounter"/>
+<VariableRef name="Cargo"/>
+</DataMsg>
+</Notification>
+</Interface>
+
+<Interface name="TimeSynchronizationTest" id="6">
+<Variable name="AppTime" kind="time" format="FLOAT64"/>
+<Request>
+<CommandMsg name="GetServerAppTime" id="1"/>
+<DataReplyMsg name="GetServerAppTimeReply" id="2">
+<VariableRef name="AppTime"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+</xTEDS>

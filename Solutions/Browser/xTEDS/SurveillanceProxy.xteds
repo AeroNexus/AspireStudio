@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="Surveillance_xTEDS" description="Surveillance Application to support Detect, Search, Track of Space Objects" version="1.0">
+  
+  <Application name="Surveillance" kind="SsaSoftwareModule" />
+
+  <!--====================================-->
+  <!--   OBSERVATION STANDARD INTERFACE   -->
+  <!--====================================-->
+
+  <Interface name="iObservation" id="1" description="Standard interface for an object observation service" scope="Public">
+
+    <Variable name="ObserverName" kind="String" format="STRING" description="Name of the component offering the observation report"/>
+    <Variable name="RequestorName" kind="String" format="STRING" description="Name of the component requesting observation support"/>
+    <Variable name="ObservationTimestamp" kind="Time" format="FLOAT64" units="s" description="The time of the observation"/>
+    <Variable name="ObjectName" kind="String" format="STRING" description="Catalog name of the object"/>
+    <Variable name="ProxyName" kind="String" format="STRING" description="Proxy name to be used for an unidentified object"/>
+    <Variable name="TrackletId" kind="Id" format="UINT32" description="Identifier of Tracklet to which this observation belongs"/>
+    <Variable name="ObservationsInTracklet" kind="count" format="UINT16" description="Number of observations in this Tracklet"/>
+    <Variable name="ObservationIndex" kind="index" format="UINT16" description="1-based index of observation within this Tracklet"/>
+    <Variable name="ObserverPosition" kind="position" units="m" format="FLOAT64" length="3" description="ECI Position of satellite observing the event (J2000 frame)">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObserverVelocity" kind="speed" units="m/s" format="FLOAT64" length="3" description="ECI Velocity of satellite observing the event (J2000 frame)">
+      <Qualifier name="Representation" value="vector" />
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightToObject" kind="unitVector" units="" format="FLOAT64" length="3" description="Unit vector from observer to object (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightToObjectVariance" kind="unitVector" units="" format="FLOAT64" length="3" description="Variance of unit vector from observer to object (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationBoresight" kind="unitVector" units="" format="FLOAT64" length="3" description="Unit vector observation boresight (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationBoresightVariance" kind="unitVector" units="" format="FLOAT64" length="3" description="Variance of unit vector observation boresight (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightAngularRate" kind="Vector" units="rads/sec" format="FLOAT64" length="3" description="Angular rate of observed object in rads/sec (J2000 frame)" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightAngularRateVariance" kind="Vector" units="rads/sec" format="FLOAT64" length="3" description="Variance of angular rate of observed object in rads/sec (J2000 frame)" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationConfidence" kind="Confidence_Level" format="FLOAT32" units="percent" description="Confidence in Observation (0 - 100%)"/>
+    <Variable name="ObservationCone" kind="angle" format="FLOAT32" units="rad" description="Full angle of a conical field of view performed by an observer (radians)"/>
+    <Variable name="AngularDisplacement" kind="angle" format="FLOAT32" units="rad" description="Angular displacement of object from expected position (radians)"/>
+    
+    <!-- Event Notification delivered by an AMM observer upon positive observation of a known object -->
+    <Notification>
+      <DataMsg name="ObservedSpaceObject" id="1" msgArrival="EVENT" description="Positive observation of a known space object by an AMM observer">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObservationTimestamp"/>
+        <VariableRef name="TrackletId"/>
+        <VariableRef name="ObservationIndex"/>
+        <VariableRef name="ObservationsInTracklet"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="ObserverPosition"/>
+        <VariableRef name="ObserverVelocity"/>
+        <VariableRef name="LineOfSightToObject"/>
+        <VariableRef name="LineOfSightToObjectVariance"/>
+        <VariableRef name="LineOfSightAngularRate"/>
+        <VariableRef name="LineOfSightAngularRateVariance"/>
+        <VariableRef name="ObservationConfidence"/>
+      </DataMsg>
+    </Notification>
+    
+    <!-- Event Notification delivered by an AMM observer when a known object is displaced from its expected position -->
+    <Notification>
+      <DataMsg name="DisplacedSpaceObject" id="2" msgArrival="EVENT" description="A known space object viewed by an AMM observer is displaced from the expected position">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObservationTimestamp"/>
+        <VariableRef name="TrackletId"/>
+        <VariableRef name="ObservationIndex"/>
+        <VariableRef name="ObservationsInTracklet"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="ObserverPosition"/>
+        <VariableRef name="ObserverVelocity"/>
+        <VariableRef name="LineOfSightToObject"/>
+        <VariableRef name="LineOfSightToObjectVariance"/>
+        <VariableRef name="LineOfSightAngularRate"/>
+        <VariableRef name="LineOfSightAngularRateVariance"/>
+        <VariableRef name="ObservationConfidence"/>
+        <VariableRef name="AngularDisplacement"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event Notification delivered by an AMM observer upon positive observation of an object -->
+    <Notification>
+      <DataMsg name="UnidentifiedSpaceObject" id="3" msgArrival="EVENT" description="Positive observation of an unidentified space object by an AMM observer">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObservationTimestamp"/>
+        <VariableRef name="TrackletId"/>
+        <VariableRef name="ObservationIndex"/>
+        <VariableRef name="ObservationsInTracklet"/>
+        <VariableRef name="ProxyName"/>
+        <VariableRef name="ObserverPosition"/>
+        <VariableRef name="ObserverVelocity"/>
+        <VariableRef name="LineOfSightToObject"/>
+        <VariableRef name="LineOfSightToObjectVariance"/>
+        <VariableRef name="LineOfSightAngularRate"/>
+        <VariableRef name="LineOfSightAngularRateVariance"/>
+        <VariableRef name="ObservationConfidence"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event Notification delivered by an AMM observer when a known object cannot be located -->
+    <Notification>
+      <DataMsg name="MissingSpaceObject" id="4" msgArrival="EVENT" description="Delivered by an AMM observer when a known object cannot be located">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObservationTimestamp"/>
+        <VariableRef name="TrackletId"/>
+        <VariableRef name="ObservationIndex"/>
+        <VariableRef name="ObservationsInTracklet"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="ObserverPosition"/>
+        <VariableRef name="ObserverVelocity"/>
+        <VariableRef name="ObservationBoresight"/>
+        <VariableRef name="ObservationBoresightVariance"/>
+        <VariableRef name="ObservationCone"/>
+        <VariableRef name="ObservationConfidence"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event Notification delivered by an AMM observer to assert the need for observation support -->
+    <Notification>
+      <DataMsg name="ObservationSupportTrigger" id="5" msgArrival="EVENT" description="Delivered by an AMM observer to assert the need for observation support">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="ProxyName"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  <!--========================================-->
+  <!-- SURVEILLANCE TASKING STANDARD INTERFACE -->
+  <!--========================================-->
+
+  <Interface name="iObjectSurveillance" id="2" description="Standard interface for space object surveillance" scope="Public">
+
+    <Variable name="RequestorName" kind="String" format="STRING" description="Name of the component requesting observation support"/>
+    <Variable name="RequestTimestamp" kind="Time" format="FLOAT64" units="s" description="Time the request was made"/>
+    <Variable name="ObjectName" kind="String" format="STRING" description="Catalog name of the object"/>
+    <Variable name="ProxyName" kind="String" format="STRING" description="Proxy name to be used for an unidentified object"/>
+    <Variable name="TimeElapsed" kind="Time" format="UINT32" units="s" description="Time in the current surveillance mode"/>
+    <Variable name="FrameCount" kind="count" format="UINT32" description="Number of frames considered in surveillance activity (search mode will increment this counter)"/>
+    <Variable name="OriginLatitude" kind="latitude" format="FLOAT32" units="rad" description="Latitude of focus origin"/>
+    <Variable name="OriginLongitude" kind="longitude" format="FLOAT32" units="rad" description="Longitude of focus origin"/>
+    <Variable name="OriginAltitude" kind="distance" format="FLOAT32" units="m" description="Altitude of focus origin"/>
+    <Variable name="SurveillanceMode" kind="mode" format="UINT8">
+      <Drange name="SurveillanceModeEnum">
+        <Option name="STANDBY" value="1"/>
+        <Option name="OBSERVE" value="2"/>
+        <Option name="SEARCH" value="3"/>
+        <Option name="TRACK" value="4"/>
+      </Drange>
+    </Variable>
+    <Variable name="SurveillanceReplyStatus" kind="enum" format="UINT8">
+      <Drange name="SurveillanceReplyStatusEnum">
+        <Option name="OK" value="1"/>
+        <Option name="FAILED" value="2"/>
+      </Drange>
+    </Variable>
+    <Variable name="SurveillanceEvent" kind="enum" format="UINT8">
+      <Drange name="SurveillanceEventEnum">
+        <Option name="OBJECT_NOMINAL" value="1"/>
+        <Option name="OBJECT_DISPLACED" value="2"/>
+        <Option name="OBJECT_MISSING" value="3"/>
+        <Option name="NEW_UCT" value="4"/>
+      </Drange>
+    </Variable>
+    <Variable name="SurveillanceResult" kind="enum" format="UINT8">
+      <Drange name="SurveillanceResultEnum">
+        <Option name="OBSERVATION_COMPLETE" value="1"/>
+        <Option name="OBSERVATION_OBJECT_MISSING" value="2"/>
+        <Option name="OBSERVATION_ABORTED" value="3"/>
+        <Option name="SEARCH_OBJECT_FOUND" value="4"/>
+        <Option name="SEARCH_CONTINUING" value="5"/>
+        <Option name="SEARCH_UNSUCCESSFUL" value="6"/>
+        <Option name="SEARCH_ABORTED" value="7"/>
+        <Option name="TRACK_LOST" value="8"/>
+        <Option name="TRACK_CONTINUING" value="9"/>
+        <Option name="TRACK_ABORTED" value="10"/>
+      </Drange>
+    </Variable>
+
+    <!-- Surveillance request where a known catalog object is the focus -->
+    <Request>
+      <CommandMsg name="SetSurveillanceObject" id="1" description="Set a focal object for surveillance">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="RequestTimestamp"/>
+      </CommandMsg>
+      <DataReplyMsg name ="SetSurveillanceObjectReply" id="2">
+        <VariableRef name="SurveillanceReplyStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Surveillance request where a region is the focus (used when observing a proxy object) -->
+    <Request>
+      <CommandMsg name="SetGeoSurveillanceRegion" id="3" description="Set a focal region for surveillance (based on a Geo-Sphere lat/long/alt origin)">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ProxyName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="RequestTimestamp"/>
+        <VariableRef name="OriginLatitude"/>
+        <VariableRef name="OriginLongitude"/>
+        <VariableRef name="OriginAltitude"/>
+      </CommandMsg>
+      <DataReplyMsg name ="SetGeoSurveillanceRegionReply" id="4">
+        <VariableRef name="SurveillanceReplyStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Set the surveillance mode (OBSERVE, SEARCH, TRACK) -->
+    <Request>
+      <CommandMsg name="SetSurveillanceMode" id="5" description="Set the surveillance mode">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="SurveillanceMode"/>
+      </CommandMsg>
+      <DataReplyMsg name ="SetSurveillanceModeReply" id="6">
+        <VariableRef name="SurveillanceReplyStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Surveillance Cancellation request -->
+    <!-- Terminates all activity and sends Surveillance state machine to STANDBY  -->
+    <Request>
+      <CommandMsg name="CancelSurveillance" id="7" description="Cancel surveillance activity and return to standby mode">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObjectName"/>
+      </CommandMsg>
+      <DataReplyMsg name ="CancelSurveillanceReply" id="8">
+        <VariableRef name="SurveillanceReplyStatus"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <!-- Periodic Notification of surveillance status. -->
+    <Notification>
+      <DataMsg name="SurveillanceStatusMsg" id="9" msgArrival="PERIODIC" msgRate="1">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="SurveillanceMode"/>
+        <VariableRef name="FrameCount"/>
+        <VariableRef name="TimeElapsed"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event-type Notification of surveillance event. Generated in the process of mode execution -->
+    <Notification>
+      <DataMsg name="SurveillanceEventMsg" id="10" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ObjectName"/>
+        <VariableRef name="SurveillanceEvent"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event-type Notification of surveillance result. Generated at the conclusion of the surveillance activity -->
+	  <Notification>
+		  <DataMsg name="SurveillanceResultMsg" id="11" msgArrival="EVENT">
+			<Qualifier name="TelemetryLevel" value="2"/>
+			<VariableRef name="SurveillanceResult"/>
+		  </DataMsg>
+		</Notification>
+
+	
+  </Interface>
+
+
+
+</xTEDS>

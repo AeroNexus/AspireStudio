@@ -1,0 +1,308 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.comAspire/xTEDS ../Schema/xTEDS26.xsd'
+name='AcsControlLaw_xTEDS' version='3.0'>
+<Application name='AcsControlLaws' version='1.0' kind='Software' description='Calculates angular accelerations to apply to spacecraft' />
+<Interface name='IAcsControlLaw' id='1'>
+<Variable name='ActiveLoops' kind='status' format='INT8' >
+<Drange name='ActiveLoopEnum'>
+<Option name='NoLoop' value='1'/>
+<Option name='AttitudeLoop' value='2'/>
+<Option name='RateLoop' value='3'/>
+<Option name='AttitudeAndRateLoop' value='4'/>
+</Drange>
+</Variable>
+<Variable name='AnglAccel' kind='angularAcceleration' length='3' format='FLOAT64' description='Commanded angular acceleration'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='AngularRate' kind='attitude' format='FLOAT32' length='3' units='rad/s'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='SVF' />
+</Variable>
+<Variable name='BodyLos' kind='LOS' length='3' format='FLOAT64' description='body vector along which we wish to point'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='BodyReference' kind='LOS' length='3' format='FLOAT64' description='body vector to align with the inertial reference'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='Duration' kind='duration' format='FLOAT32' />
+<Variable name='Energy' kind='energy' format='FLOAT32' />
+<Variable name='EulerAngle' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler angles'/>
+<Variable name='EulerError' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler error angles'/>
+<Variable name='EulerOffset' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler offset angles'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='SVF' />
+</Variable>
+<Variable name='InertialLos' kind='WellKnownVectorEnum' format='UINT08' description='Well known vectors'>
+<Drange name='WellKnownVectorEnum'>
+<Option name='Moon' value='1'/>
+<Option name='Nadir' value='2'/>
+<Option name='OrbitNormal' value='3'/>
+<Option name='Sun' value='4'/>
+<Option name='Target' value='5'/>
+<Option name='Velocity' value='6'/>
+<Option name='Zenith' value='7'/>
+<Option name='Unknown' value='8'/>
+</Drange>
+</Variable>
+<Variable name='InertialReference' kind='WellKnownVectorEnum' format='UINT08' description='Well known vectors'>
+<Drange name='WellKnownVectorEnum2'>
+<Option name='Moon' value='1'/>
+<Option name='Nadir' value='2'/>
+<Option name='OrbitNormal' value='3'/>
+<Option name='Sun' value='4'/>
+<Option name='Target' value='5'/>
+<Option name='Velocity' value='6'/>
+<Option name='Zenith' value='7'/>
+<Option name='Unknown' value='8'/>
+</Drange>
+</Variable>
+<Variable name='KnowAttitude' kind='boolean' format ='UINT8' />
+<Variable name='KnowMagField' kind='boolean' format ='UINT8' />
+<Variable name='KnowOrbit' kind='boolean' format ='UINT8' />
+<Variable name='KnowRate' kind='boolean' format ='UINT8' />
+<Variable name='KnowSun' kind='boolean' format ='UINT8' />
+<Variable name='ModeResponse' kind='ModeResponseType' format='INT8' >
+<Drange name='ModeResponseType'>
+<Option name='OK' value='1'/>
+<Option name='Unable' value='2'/>
+</Drange>
+</Variable>
+<Variable name='Parameter' kind='time' format='UINT8'>
+<Drange name='ParameterEnum'>
+<Option name='Gd' value='1'/>
+<Option name='Gp' value='2'/>
+<Option name='Ka' value='3'/>
+<Option name='Kia' value='4'/>
+<Option name='Kir' value='5'/>
+<Option name='TrimAccel' value='6'/>
+<Option name='DumpRateTrim' value='7'/>
+<Option name='TrimAttitudeRate' value='8'/>
+<Option name='Kp' value='9'/>
+<Option name='DumpErrors' value='10'/>
+<Option name='RateCmdFilter' value='11'/>
+<Option name='DumpRateCmd' value='12'/>
+<Option name='TrackThreshold' value='13'/>
+</Drange>
+</Variable>
+<Variable name='PointingError' kind='angle' format='FLOAT32' units='deg' description='Angular pointing error'/>
+<Variable name='Power' kind='power' format='FLOAT32' />
+<Variable name='SubS' kind='SubSeconds' units='counts' format='UINT32' scaleFactor='.000001' scaleUnits='s' />
+<Variable name='Time' kind='Time' format='UINT32' units='s' />
+<Variable name='SubMode' kind='SubModeEnum' format='UINT8' description='Active sub-mode'>
+<Drange name='SubModeEnum'>
+<Option name='Idle' value='1'/>
+<Option name='SpinDown' value='2'/>
+<Option name='SlewAccel' value='3'/>
+<Option name='SlewCoast' value='4'/>
+<Option name='SlewDeccel' value='5'/>
+<Option name='SpinUp' value='6'/>
+<Option name='Track' value='7'/>
+</Drange>
+</Variable>
+<Variable name='TorqueCommand' kind='torque' length='3' format='FLOAT64' description='command torque in BF'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='Value' kind='time' format='FLOAT64' units='s'/>
+
+
+<Notification>
+<DataMsg name='SCAngularAccelMsg' id='1' msgArrival='PERIODIC' msgRate='10'  description='10HZ broadcast of Commanded angular acceleration'>
+<Qualifier name='TelemetryLevel' value='3'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='AnglAccel'/>
+</DataMsg>
+</Notification>
+
+<Command>
+<CommandMsg name='ClearTorquesCmd' id='2' description='Command to make all actuators stop torquing'>
+<Qualifier name='TelemetryLevel' value='3'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+</CommandMsg>
+</Command>
+
+<Command>
+<CommandMsg name='SetSCAngularAccelCmd' id='3' description='Command to force control acc (testing only)'>
+<Qualifier name='TelemetryLevel' value='3'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='AnglAccel'/>
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg name='ActiveMode' id='4'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+<VariableRef name='AngularRate'/>
+<VariableRef name='EulerOffset'/>
+<VariableRef name='InertialLos'/>
+<VariableRef name='InertialReference'/>
+<VariableRef name='ActiveLoops'/>
+</CommandMsg>
+<DataReplyMsg name ='ActiveReply' id='5'>
+<VariableRef name='ModeResponse' />
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name='ModeChange' id='6' msgArrival='EVENT'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='ActiveLoops'/>
+<VariableRef name='SubMode'/>
+</DataMsg>
+</Notification>
+
+<Request>
+<CommandMsg name='PlanMode' id='7'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+<VariableRef name='AngularRate'/>
+<VariableRef name='EulerOffset'/>
+<VariableRef name='InertialLos'/>
+<VariableRef name='InertialReference'/>
+<VariableRef name='ActiveLoops'/>
+</CommandMsg>
+<DataReplyMsg name ='PlanReply' id='8'>
+<VariableRef name='ModeResponse' />
+<VariableRef name='Duration' />
+<VariableRef name='Energy' />
+<VariableRef name='Power' />
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name='StateKnowledge' id='9' msgArrival='EVENT'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='KnowAttitude'/>
+<VariableRef name='KnowMagField'/>
+<VariableRef name='KnowOrbit'/>
+<VariableRef name='KnowRate'/>
+<VariableRef name='KnowSun'/>
+</DataMsg>
+</Notification>
+
+<Notification  >
+<DataMsg id='10' name='BodyTorqueCmd' msgArrival='EVENT' description='Commanded torque Body Frame'>
+<Qualifier name='TelemetryLevel' value='3'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='TorqueCommand'/>
+</DataMsg>
+</Notification>
+
+<Command>
+<CommandMsg name='SetParameter' id='11'>
+<VariableRef name='Parameter'/>
+<VariableRef name='Value'/>
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg name='GetParameter' id='12'>
+<VariableRef name='Parameter'/>
+</CommandMsg>
+<DataReplyMsg name='ParameterReply' id='13'>
+<VariableRef name='Parameter'/>
+<VariableRef name='Value'/>
+</DataReplyMsg>
+</Request>
+
+<Command>
+<CommandMsg name='SetAttitudeRate' id='14' >
+<VariableRef name='AngularRate'/>
+</CommandMsg>
+</Command>
+
+<Notification>
+<DataMsg name='State' id='15' msgArrival='PERIODIC' msgRate='10'>
+<VariableRef name='PointingError' />
+<VariableRef name='EulerAngle'/>
+<VariableRef name='EulerError'/>
+</DataMsg>
+</Notification>
+
+</Interface>
+
+<Interface name='IAcsTest' id='2'>
+
+<Variable name='Amplitude' kind='amplitude' format='FLOAT64' />
+<Variable name='AttLoopTesting' kind='Enum' format='UINT8' >
+<Drange name='LoopTestingEnum' >
+<Option name='Off' value='1' />
+<Option name='Open' value='2' />
+<Option name='Closed' value='3' />
+</Drange>
+</Variable>
+<Variable name='ChirpCmd' kind='acceleration' length='3' format='FLOAT64' description='accelCmd'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='Duration' kind='duration' format='FLOAT64' />
+<Variable name='Frequency' kind='frequency' format='FLOAT64' length='2'/>
+<Variable name='Period' kind='duration' format='FLOAT64' />
+<Variable name='RateLoopTesting' kind='Enum' format='UINT8' >
+<Drange name='LoopTestingEnum2' >
+<Option name='Off' value='1' />
+<Option name='Open' value='2' />
+<Option name='Closed' value='3' />
+</Drange>
+</Variable>
+<Variable name='SignalGenMode' kind='Enum' format='UINT8' >
+<Drange name='ModeType' >
+<Option name='NoSignal' value='1'/>
+<Option name='Chirp' value='2'/>
+<Option name='Square' value='3'/>
+</Drange>
+</Variable>
+<Variable name='Step' kind='boolean' format='UINT8' />
+<Variable name='SubS' kind='SubSeconds' units='counts' format='UINT32' scaleFactor='.000001' scaleUnits='s' />
+<Variable name='Time' kind='Time' format='UINT32' units='s' />
+
+<Request>
+<CommandMsg name='ControlsTesting' id='1'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='Step'/>
+<VariableRef name='AttLoopTesting'/>
+<VariableRef name='RateLoopTesting'/>
+<VariableRef name='ChirpCmd'/>
+</CommandMsg>
+<DataReplyMsg name='ControlsTestingReply' id='2' >
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='ChirpCmd'/>
+</DataReplyMsg>
+</Request>
+
+<Command>
+<CommandMsg name='SignalGenerator' id='3' >
+<VariableRef name='SignalGenMode'/>
+<VariableRef name='Duration'/>
+<VariableRef name='Period'/>
+<VariableRef name='Amplitude'/>
+<VariableRef name='Frequency'/>
+</CommandMsg>
+</Command>
+
+</Interface>
+</xTEDS>

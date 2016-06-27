@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="FailoverTest_xTEDS" version="1.0">
+<Application name="FailoverTest" version="1.0" kind="BrainInterface" description="Test Application Failover"/>
+  
+	<Interface name="IFailover" id="1" scope="Public">
+    <Variable name="Timestamp" kind="Time" format="FLOAT64" units="s" description="Data Timestamp (GPS Epoch Seconds)"/>
+    <Variable name="Role" kind="RoleEnum" format="UINT8" description="Role of Failsafe Application">
+      <Drange name="RoleEnum">
+        <Option name="Undesignated" value="1"/>
+        <Option name="Primary" value="2"/>
+        <Option name="Backup" value="3"/>
+      </Drange>
+    </Variable>
+	
+    <Request>
+      <CommandMsg name="GetRole" id="1"/>
+      <DataReplyMsg name="GetRoleReply" id="2">
+        <VariableRef name="Role"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification> 
+      <DataMsg id="3" name="PrimaryHeartbeat" msgArrival="EVENT">
+	      <VariableRef name="Timestamp"/>
+      </DataMsg>
+    </Notification>
+	
+	</Interface>	
+
+</xTEDS>

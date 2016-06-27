@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Geo_Observation_xTEDS" version="1.1">
+  
+<Application name="GeoObservationAgent" version="1.0" kind="AMM_Software" description="Activity Agent that manages the routine observation of Geosynchronous Earth Orbiting satellites from Catalog"/>
+  <Interface name="iObservation" id="1" description="Standard interface for an object observation service" scope="Public">
+
+    <Variable name="ObserverName" kind="String" format="STRING" description="Name of the component offering the observation report"/>
+    <Variable name="ProxyName" kind="String" format="STRING" description="Proxy name to be used for an unidentified object"/>
+    
+    <!-- Event Notification delivered by an AMM observer to assert the need for observation support -->
+    <Notification>
+      <DataMsg name="ObservationSupportTrigger" id="5" msgArrival="EVENT" description="Delivered by an AMM observer to assert the need for observation support">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="ProxyName"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+</xTEDS>

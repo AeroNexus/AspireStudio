@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="SSA_Sensor_xTEDS" version="1.0">
+  
+	<Device name="bdStudioSensor" kind="ImagingSensor" description="bdStudio imager">
+    <Qualifier name="FullImageWidth" value="1024" units="pixels"/>  <!-- CCD operational dimensions -->
+    <Qualifier name="FullImageHeight" value="1024" units="pixels"/>
+    <Qualifier name="FOV" value="5" units="deg"/>                  <!-- The effective full Field of View angle along the horizontal (X) CCD dimension -->
+  </Device>
+
+  <!-- Sensor Imaging Interface -->
+  <Interface name="iImage" id="1">
+    <Variable name="ImageTime" kind="time" format="UINT32" units="s" description="Timetag of delivered image product"/>
+    <Variable name="ImageSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="ImageNumber" kind="counter" format="UINT16" description="Image Identifier"/>
+    <Variable name="Rows" kind="counter" format="UINT16" units="pixels" description="Rows in image (Y-dimension)"/>
+    <Variable name="Columns" kind="counter" format="UINT16" units="pixels" description="Columns in image (X-dimension)"/>
+    <Variable name="ImageLength" kind="counter" format="UINT32" units="pixels" description="Rows times Columns in image"/>
+    <Variable name="NumBytes" kind="counter" format="UINT32" description="Number of bytes in image"/>
+    <Variable name="ImageData" kind="image" format="BUFFER"/>
+    <Variable name="ImageRequestStatus" kind="status" format="UINT8">
+      <Drange name="ImageRequestStatusEnum">
+        <Option name="REQUEST_OK" value="1"/>
+        <Option name="BAD_PARAMETERS" value="2"/>
+        <Option name="UNSUPPORTED_MODE" value="3"/>
+        <Option name="IMAGER_BUSY" value="4"/>
+        <Option name="ACQUISITION_COMPLETE" value="5"/>
+      </Drange>
+    </Variable>
+    <Variable name="ImagerState" kind="status" format="UINT8">
+      <Drange name="ImagerStateEnum">
+        <Option name="IDLE" value="1"/>
+        <Option name="ACQUIRING" value="2"/>
+        <Option name="COMPLETE" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="SensorName" kind="name" format="STRING" />
+    <Command>
+      <CommandMsg name="ImageRequest" id="1"/>
+    </Command>
+
+    <Notification>
+      <DataMsg name="RequestStatus" id="2" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ImageRequestStatus"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ImagerStateMsg" id="3" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ImagerState"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ImageMsg" id="4" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/> 
+        <VariableRef name="ImageTime"/>
+        <VariableRef name="ImageSubS"/>
+        <VariableRef name="ImageNumber"/>
+        <VariableRef name="Rows"/>
+        <VariableRef name="Columns"/>
+        <VariableRef name="NumBytes"/>
+        <VariableRef name="ImageData"/>
+      </DataMsg>
+    </Notification>
+    
+    <Notification>
+      <DataMsg name="bdStudio_ImageMsg" id="5" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ImageLength"/>
+        <VariableRef name="Rows"/>
+        <VariableRef name="Columns"/>
+        <VariableRef name="SensorName"/>
+        <VariableRef name="ImageData"/>
+      </DataMsg>
+    </Notification>    
+
+  </Interface>
+
+  <!-- Sensor Imaging Interface -->
+  <Interface name="Protection" id="2">
+    <Variable name="DesiredShutterState" kind="status" format="UINT8">
+      <Drange name="DesiredShutterStateEnum">
+        <Option name="CLOSE" value="1"/>
+        <Option name="OPEN" value="2"/>
+      </Drange>
+    </Variable>
+    <Variable name="ShutterState" kind="status" format="UINT8">
+      <Drange name="ShutterStateEnum">
+        <Option name="CLOSED" value="1"/>
+        <Option name="OPEN" value="2"/>
+      </Drange>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="SetShutterState" id="1">
+        <VariableRef name="DesiredShutterState"/>
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ShutterStateMsg" id="2" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ShutterState"/>
+      </DataMsg>
+    </Notification>
+
+    </Interface>
+
+  </xTEDS>

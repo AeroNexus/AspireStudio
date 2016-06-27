@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	 name="MagSunAttitude_xTEDS" version="2.0">
+<Application name="MagSunAttitude" version="2.0" kind="SHAP" description="Uses sensed and modeled magnetic flux and sensed and modeled LOS to sun to calculate attitude and angular rate" />
+<Interface id="1" name="IMagSunAttitude">
+  <Variable name="Time" kind="Time" format="UINT32" units="s" />
+  <Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+  <Variable name="AttitudeFk5" kind="attitude" format="FLOAT64" length="4" description="attitude of the spacecraft rel. to FK5 (i.e. J2000, ECI)">
+    <Qualifier name="Representation" value="quaternion"/>
+    <Qualifier name="FrameFrom" value="SVF"/>
+    <Qualifier name="FrameTo" value="FK5"/>
+  </Variable>
+  <Variable name="AngularRateFk5" kind="attitudeRate" format="FLOAT64" length="3" description="Angular rate of the spacecraft relative to FK5">
+    <Qualifier name="Representation" value="vector"/>
+    <Qualifier name="FrameMeasured" value="FK5"/>
+    <Qualifier name="FrameResolved" value="SVF"/>
+  </Variable>
+  <Variable name="AttitudeEciTod" kind="attitude" format="FLOAT64" length="4" description="attitude of the spacecraft rel. to FK5 (i.e. J2000, ECI)">
+    <Qualifier name="Representation" value="quaternion"/>
+    <Qualifier name="FrameFrom" value="SVF"/>
+    <Qualifier name="FrameTo" value="ECITOD"/>
+  </Variable>
+  <Variable name="AngularRateEciTod" kind="attitudeRate" format="FLOAT64" length="3" description="Angular rate of the spacecraft relative to FK5">
+    <Qualifier name="Representation" value="vector"/>
+    <Qualifier name="FrameMeasured" value="ECITOD"/>
+    <Qualifier name="FrameResolved" value="SVF"/>
+  </Variable>
+  <Notification>
+    <DataMsg id="1" name="AttitudeFk5Msg" msgArrival="PERIODIC" msgRate="2">
+			<Qualifier name="TelemetryLevel" value="3"/>
+			<Qualifier name="TelemetryModulo" value="10"  />
+      <VariableRef name="Time"/>
+      <VariableRef name="SubS"/>
+      <VariableRef name="AttitudeFk5"/>
+    </DataMsg>
+  </Notification>
+  <Notification>
+    <DataMsg id="2" name="AngularRateFk5Msg" msgArrival="PERIODIC" msgRate="2">
+	    <Qualifier name="TelemetryLevel" value="3"/>
+			<Qualifier name="TelemetryModulo" value="10"  />
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="AngularRateFk5"/>
+		</DataMsg>
+	</Notification>
+	<Notification>
+	  <DataMsg id="3" name="AttitudeEciTodMsg" msgArrival="PERIODIC" msgRate="2">
+		  <Qualifier name="TelemetryLevel" value="1"/>
+		  <Qualifier name="TelemetryModulo" value="10"  />
+      <VariableRef name="Time"/>
+      <VariableRef name="SubS"/>
+      <VariableRef name="AttitudeEciTod"/>
+    </DataMsg>
+  </Notification>
+  <Notification>
+    <DataMsg id="4" name="AngularRateEciTodMsg" msgArrival="PERIODIC" msgRate="2">
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<Qualifier name="TelemetryModulo" value="10"  />
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="AngularRateEciTod"/>
+	  </DataMsg>
+	</Notification>
+</Interface>
+</xTEDS>

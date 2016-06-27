@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Asset_xTEDS" version="1.0">
+<Application name="Asset" version="1.0" kind="AssetPrimaryInterface" description="Implements the Top-Level Public Interface to an Asset"/>
+	<Interface name="IAsset" id="1" scope="Public">
+    <Variable name="Timestamp" kind="Time" format="FLOAT64" units="s" description="Data Timestamp (GPS Epoch Seconds)"/>
+		<Variable name="AssetName" kind="string" format="STRING" description="Asset Name"/>
+    <Variable name="CurrentActivity" kind="string" format="STRING" description="Current Operational Activity"/>
+    <Variable name="CurrentActivityStatus" kind="string" format="STRING" description="Status of the Current Activity"/>
+		<Variable name="OperationalStatus" kind="StatusEnum" format="UINT8" description="Reply message status">
+			<Drange name="OpStatusEnum">
+				<Option name="Available" value="1"/>
+				<Option name="Offline" value="2"/>
+				<Option name="Degraded" value="3"/>
+				<Option name="Engaged" value="4"/>
+        <Option name="Maintenance" value="5"/>
+        <Option name="ServiceDenial" value="6"/>
+			</Drange>
+    </Variable>
+    <Variable name="DeliveryRate" kind="frequency" format="FLOAT32" units="Hz" description="Settable Delivery Rate of a Notification Message"/>
+    <Variable name="SetRateStatus" kind="StatusEnum" format="UINT8" description="Status for Notification Message Set">
+      <Drange name="SetRateStatusEnum">
+        <Option name="OK" value="1"/>
+        <Option name="RateInvalid" value="2"/>
+        <Option name="RateTooHigh" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="AssetPropertyLabel" kind="string" format="STRING" description="Asset Property Label String"/>
+    <Variable name="AssetPropertyValue" kind="string" format="STRING" description="Asset Property Value String"/>
+    <Variable name="AssetPropertyType" kind="string" format="STRING" description="Asset Property Variable Type String"/>
+    <Variable name="AssetPropertyUnits" kind="string" format="STRING" description="Asset Property Units String"/>
+    <Variable name="AssetPropertyCounter" kind="counter" format="UINT8" description="Asset Property Counter (1-based)"/>
+    <Variable name="NumberOfAssetProperties" kind="counter" format="UINT8" description="Number of asset properties to be delivered"/>
+    <Variable name="Position" kind="vector" format="FLOAT64" length="3" units="m" description="J2000 position of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+    <Variable name="Velocity" kind="velocity" format="FLOAT64" length="3" units="m/s"  description="J2000 velocity of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+    <Variable name="Attitude" kind="quaternion" format="FLOAT64" length="4" description="J2000 quaternion attitude of asset's body coordinate frame" >
+      <Qualifier name="Representation" value="quaternion"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="DVF"/>
+    </Variable>
+
+    <Request>
+      <CommandMsg name="GetIdentity" id="1">
+      </CommandMsg>
+      <DataReplyMsg name="GetIdentityReply" id="2">
+        <VariableRef name="AssetName"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Use of the GetCharacteristics Request will result in multiple replies - one for each asset property being expressed -->
+    <!-- The counter increments from 1 to NumberOfAssetProperties allowing the client to know when the list has been fully delivered -->
+    <Request>
+      <CommandMsg name="GetCharacteristics" id="3">
+      </CommandMsg>
+      <DataReplyMsg name="GetCharacteristicsReply" id="4">
+        <VariableRef name="AssetName"/>
+        <VariableRef name="AssetPropertyCounter"/>
+        <VariableRef name="NumberOfAssetProperties"/>
+        <VariableRef name="AssetPropertyLabel"/>
+        <VariableRef name="AssetPropertyValue"/>
+        <VariableRef name="AssetPropertyType"/>
+        <VariableRef name="AssetPropertyUnits"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="AssetStatus" id="5" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="AssetName"/>
+        <VariableRef name="OperationalStatus"/>
+        <VariableRef name="CurrentActivity"/>
+        <VariableRef name="CurrentActivityStatus"/>
+      </DataMsg>
+    </Notification>
+    <Request>
+      <CommandMsg name="SetAssetStatusDeliveryRate" id="6">
+        <VariableRef name="DeliveryRate"/>
+      </CommandMsg>
+      <DataReplyMsg name="SetAssetStatusDeliveryRateReply" id="7">
+        <VariableRef name="SetRateStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="AssetState" id="8" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="Position"/>
+        <VariableRef name="Velocity"/>
+        <VariableRef name="Attitude"/>
+      </DataMsg>
+    </Notification>
+    <Request>
+      <CommandMsg name="SetAssetStateDeliveryRate" id="9">
+        <VariableRef name="DeliveryRate"/>
+      </CommandMsg>
+      <DataReplyMsg name="SetAssetStateDeliveryRateReply" id="10">
+        <VariableRef name="SetRateStatus"/>
+      </DataReplyMsg>
+    </Request>
+	
+	</Interface>
+	
+
+</xTEDS>

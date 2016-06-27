@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="LaserDetector_xTEDS" version="1.0">
+  
+	<Device name="LaserDetector" kind="LaserDetector" description="Delivers event when being lased"/>
+
+  <!-- Basic SSA Event  -->
+	<Interface name="ISelfProtect" id="1">
+		<Variable name="Time" kind="time" format="UINT32" units="s" description="Event timestamp in GPS seconds"/>
+		<Variable name="SubS" kind="time" format="UINT32" units="microSec" description="Event timestamp in microsec"/>
+		<Variable name="EventDuration" kind="duration" units="s" format="FLOAT32" description="Duration of the detected event"/>
+		<Variable name="ObserverName" kind="string" format="STRING" description="Catalog name of satellite observing the event"/>
+		<Variable name="ObserverPosition" kind="position" units="m" format="FLOAT64" length="3" description="ECI Position of satellite observing the event">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="ECITOD"/>
+			<Qualifier name="FrameResolved" value="ECITOD"/>
+		</Variable>
+		<Variable name="ObserverVelocity" kind="speed" units="m/s" format="FLOAT64" length="3" description="ECI Velocity of satellite observing the event">
+			<Qualifier name="Representation" value="vector" />
+			<Qualifier name="FrameMeasured" value="ECITOD"/>
+			<Qualifier name="FrameResolved" value="ECITOD"/>
+		</Variable>
+		<Variable name="ObserverAttitude" kind="attitude" units="" format="FLOAT64" length="4" description="Attitude quaternion, ECI to body" >
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameMeasured" value="ECITOD"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="SensorType" kind="SSA_Sensor_Type" format="UINT8" description="Type of sensor used in event detection">
+			<Drange name="Sensor_Type_Enum">
+				<Option name="OPTICAL" value="1"/>
+				<Option name="RADAR" value="2"/>
+				<Option name="ION" value="3"/>
+				<Option name="OPTICAL_AND_RADAR" value="4"/>
+				<Option name="OPTICAL_AND_ION" value="5"/>
+				<Option name="RADAR_AND_ION" value="6"/>
+				<Option name="OTHER" value="7"/>
+			</Drange>
+		</Variable>
+		<Variable name="InterestLevel" kind="SSA_Interest_Level" format="UINT8" description="Interest Level of Object">
+		<Drange name="SSA_Interest_Level_Enum">
+		<Option name="UNDEFINED" value="0"/>
+		<Option name="LOW" value="1"/>
+		<Option name="ADVISORY" value="2"/>
+		<Option name="ELEVATED" value="3"/>
+		<Option name="HIGH" value="4"/>
+		<Option name="SEVERE" value="5"/>
+		</Drange>
+		</Variable>
+		<Variable name="ObjectAzimuthElevation" kind="AzimElev" format="FLOAT32" length="2" units="deg" description="Azim-Elev angles to object in observer-centered ECI">
+			<Qualifier name="Representation" value="AzimElev"/>
+			<Qualifier name="FrameMeasured" value="ECIBodyCentered"/>
+			<Qualifier name="FrameResolved" value="ECITOD"/>
+		</Variable>
+		
+		<Notification>
+			<DataMsg  name="LaserIlluminate" id="1" msgArrival="EVENT" description="Laser Illumination Event Notification">
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="EventDuration"/>
+				<VariableRef name="ObserverName"/>
+				<VariableRef name="ObserverPosition"/>
+				<VariableRef name="ObserverVelocity"/>
+				<VariableRef name="ObserverAttitude"/>
+				<VariableRef name="SensorType"/>
+				<VariableRef name="InterestLevel"/>
+				<VariableRef name="ObjectAzimuthElevation"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+</xTEDS>

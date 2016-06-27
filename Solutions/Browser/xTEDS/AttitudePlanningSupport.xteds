@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="AMM_Std_IF_Template_xTEDS" description="Containiner holding xTEDS Standard Interface Templates in support of attitude planning" version="1.0">
+
+  <Application name="AttitudePlanningSupport" kind="AutonomyFlightSoftware" />
+
+  <!-- Below this point are standard interfaces to support attitude planning -->
+
+
+  <!--=====================================-->
+  <!--ATTITUDE PLANNING STANDARD INTERFACE -->
+  <!--=====================================-->
+  
+  <Interface name="iAttitudePlanning" id="1">
+  
+		<Variable name="Time" kind="Time" format="UINT32" units="s"/>
+		<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="StartTime" kind="Time" format="FLOAT64" units="s" description="Start time of slew (GPS Epoch seconds) - 0 is NOW"/>
+    <Variable name="BeginTime" kind="Time" format="FLOAT64" units="s" description="Beginning of stare time (GPS Epoch seconds) - 0 is NOW"/>
+    <Variable name="EndTime" kind="Time" format="FLOAT64" units="s" description="End of start time (GPS Epoch seconds) - if BeginTime is 0, EndTime is seconds beyond NOW"/>
+    <Variable name="ViewerID" kind="string" format="STRING" description="Catalog ID of the Viewer requesting the planning support (LOCAL is asset hosting the service)"/>
+    <Variable name="TargetID" kind="string" format="STRING" description="Catalog ID of the target at which to stare"/>
+    <Variable name="FromTargetID" kind="string" format="STRING" description="Catalog ID of the target from which we are slewing"/>
+    <Variable name="ToTargetID" kind="string" format="STRING" description="Catalog ID of the target to which we are slewing. Can also be Noon or Midnight for ground sites"/>
+    <Variable name="KeepoutObjectID" kind="string" format="STRING" description="Catalog ID of the object to avoid during acquisition (predefines are: Sun, Moon, Earth, Noon, Midnight)"/>
+    <Variable name="AvoidanceAngle" kind="fullAngle" format="FLOAT32" units="deg" description="Full cone angle of avoidance volume"/>
+    <Variable name="ViewerPosition" kind="position" length="3" format="FLOAT64" description="Specified position of the viewer (frame is selectable using PositionType)"/>
+    <Variable name="UserSpecifiedTargetPosition" kind="position" length="3" format="FLOAT64" description="User-specified target location in ECEF (set TargetId=UserSpecified to utilize)"/>
+    <Variable name="PositionType" kind="Enum" format="UINT8" description="Type of Position Representation">
+      <Drange name="PositionTypeEnum">
+        <Option name="LLA" value="1"/>
+        <Option name="ECI" value="2"/>
+        <Option name="ECEF" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="SensorLos" kind="LOS" length="3" format="FLOAT64" description="Body vector associated with instrument to point at TargetID">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="SVF"/>
+    </Variable>
+    <Variable name="FromSensorLos" kind="LOS" length="3" format="FLOAT64" description="Body vector associated with FROM attitude">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="SVF"/>
+    </Variable>
+    <Variable name="ToSensorLos" kind="LOS" length="3" format="FLOAT64" description="Body vector associated with TO attitude">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="SVF"/>
+    </Variable>
+    <Variable name="SlewDuration" kind="Time" format="FLOAT32" units="s" description="Duration of the slew in seconds"/>
+    <Variable name="NumberOfKeepoutIntervals" kind="count" format="UINT16" description="Number of keepout intervals in response (0 if no constraints)"/>
+    <Variable name="KeepoutStartTimes" kind="Time" format="FLOAT64" units="s" length="10" description="Array containing start times of keepout intervals (GPS Epoch seconds)"/>
+    <Variable name="KeepoutEndTimes" kind="Time" format="FLOAT64" units="s" length="10" description="Array containing end times of keepout intervals (GPS Epoch seconds)"/>
+    <Variable name="SlewTimeReturnCode" kind="Enum" format="UINT8" description="Return code for Compute Slew Time Request">
+      <Drange name="SlewTimeReturnCodeEnum">
+        <Option name="OK" value="1"/>
+        <Option name="InvalidTime" value="2"/>
+        <Option name="InvalidViewer" value="3"/>
+        <Option name="InvalidFromTarget" value="4"/>
+        <Option name="InvalidToTarget" value="5"/>
+        <Option name="InvalidFromLos" value="6"/>
+        <Option name="InvalidToLos" value="7"/>
+        <Option name="SlewNotPossibleGivenLimitations" value="8"/>
+      </Drange>
+    </Variable>
+    <Variable name="KeepoutViolationsReturnCode" kind="Enum" format="UINT8" description="Return code for Compute Keepout Violations Request">
+      <Drange name="KeepoutViolationsReturnCodeEnum">
+        <Option name="OK" value="1"/>
+        <Option name="InvalidBeginTime" value="2"/>
+        <Option name="InvalidEndTime" value="3"/>
+        <Option name="InvalidViewer" value="4"/>
+        <Option name="InvalidTarget" value="5"/>
+        <Option name="InvalidKeepoutObject" value="6"/>
+        <Option name="InvalidLos" value="7"/>
+        <Option name="InvalidConeAngle" value="8"/>
+      </Drange>
+    </Variable>
+    <Variable name="SetViewerPositionReturnCode" kind="Enum" format="UINT8" description="Return code for Set Viewer Position Request">
+      <Drange name="SetViewerPositionReturnCodeEnum">
+        <Option name="OK" value="1"/>
+        <Option name="InvalidPositionType" value="2"/>
+      </Drange>
+    </Variable>
+
+    <!-- Slew Time Computation Request/Reply Message Pair -->
+    <Request>
+      <CommandMsg name="ComputeSlewTime" id="1" description="Compute the time to slew between two catalog targets">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StartTime"/>
+        <VariableRef name="ViewerID"/>
+        <VariableRef name="FromTargetID"/>
+        <VariableRef name="ToTargetID"/>
+        <VariableRef name="FromSensorLos"/>
+        <VariableRef name="ToSensorLos"/>
+      </CommandMsg>
+      <DataReplyMsg name="ComputeSlewTimeReply" id="2">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="SlewTimeReturnCode"/>
+        <VariableRef name="SlewDuration"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Cone Avoidance Request/Reply Message Pair -->
+    <Request>
+      <CommandMsg name="ComputeKeepoutViolations" id="3" description="Compute the time of keepout constraints during target acquisition">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ViewerID"/>
+        <VariableRef name="SensorLos"/>
+        <VariableRef name="TargetID"/>
+        <VariableRef name="UserSpecifiedTargetPosition"/>
+        <VariableRef name="KeepoutObjectID"/>
+        <VariableRef name="BeginTime"/>
+        <VariableRef name="EndTime"/>
+        <VariableRef name="AvoidanceAngle"/>
+      </CommandMsg>
+      <DataReplyMsg name="ComputeKeepoutViolationsReply" id="4">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="KeepoutViolationsReturnCode"/>
+        <VariableRef name="NumberOfKeepoutIntervals"/>
+        <VariableRef name="KeepoutStartTimes"/>
+        <VariableRef name="KeepoutEndTimes"/>
+      </DataReplyMsg>
+    </Request>
+
+    <!-- Set the viewer's position. Using this service will set the position of the viewer. It should be used for static (Earth-fixed viewers) with no GPS receiver -->
+    <Request>
+      <CommandMsg name="SetViewerPosition" id="5" description="Set the location of the viewer. Receipt of a GPS message by the service will override user-defined values">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="PositionType"/>
+        <VariableRef name="ViewerPosition"/>
+      </CommandMsg>
+      <DataReplyMsg name="SetViewerPositionReply" id="6">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="SetViewerPositionReturnCode"/>
+      </DataReplyMsg>
+    </Request>
+    
+	</Interface>
+
+</xTEDS>

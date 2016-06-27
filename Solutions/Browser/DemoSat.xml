@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Orbit Logic APS II - DemoSat" >
+  <Clock displayFormat="Mission" stepSize="0.050" >
+    <Model xsi:type="AspireClock" name="Aspire" SoftPps="true" TimeAtTone="true" />
+	<Model xsi:type="AstroClock" name="Astro" />
+  </Clock>
+  <Model xsi:type="AspireBrowser" name="Browser" xtedsDirectory="./xTEDS/" />
+  <Model xsi:type="Earth">
+	<Model xsi:type="Fk5EarthReference" name='FK5'/>
+	<Model xsi:type="Gravity" J2='1082.63e-6' J3='-2.54e-6' J4='-1.61e-6' />
+  </Model>
+  <Model xsi:type="Spacecraft" name="DemoSat1" orbit='h=400,e=0.001,i=45,raan=30' initialAttitude='LVLH' >
+    <MassProperties mass='200' inertia='20,0,0;0,20,0;0,0,20' />
+    <Model xsi:type="AspireImu" name="IMU" xtedsFile="LN200.xteds"
+		compId="BD5FE857-118E-409E-9417-FAF1774B0121" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel1" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel2" />
+    <Model xsi:type="ReactionWheel" name="ReactionWheel3" />
+  </Model>
+</Scenario>

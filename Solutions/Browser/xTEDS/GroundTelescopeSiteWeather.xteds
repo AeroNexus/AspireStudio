@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="Ground_Telescope_Site_Weather" description="Data associated with ground-based telescope site" version="1.0">
+  
+  <Application name="GroundTelescopeSiteWeather" kind="GroundSupportSoftware" />
+  
+  <!-- This xTEDS was developed based on the user interface for the Boltwood Cloud Sensor II, see http://www.cyanogen.com/fix.php -->
+
+  <!--================================================================-->
+  <!-- STANDARD INTERFACE FOR WEATHER DATA AT GROUND OBSERVATION SITE -->
+  <!--================================================================-->
+  
+  <Interface name="iGroundWeather" id="1" description="Standard interface for ground weather">
+
+    <Variable name="DataTimestamp" kind="Time" format="FLOAT64" units="s" description="Time data was collected (GPS epoch seconds)"/>
+    <Variable name="SiteName" kind="String" format="STRING" description="Name of the site providing weather data"/>
+    <Variable name="SiteLatitude" kind="latitude" format="FLOAT32" units="rad" description="Latitude of weather collection site"/>
+    <Variable name="SiteLongitude" kind="longitude" format="FLOAT32" units="rad" description="Longitude of weather collection site"/>
+    <Variable name="SiteAltitude" kind="distance" format="FLOAT32" units="m" description="Altitude of focus origin"/>
+    <Variable name="SkyTemperature" kind="temperature" format="FLOAT32" units="degC" description="Ambient Sky Temperature"/>
+    <Variable name="GroundTemperature" kind="temperature" format="FLOAT32" units="degC" description="Ambient Ground Temperature"/>
+    <Variable name="SensorTemperature" kind="temperature" format="FLOAT32" units="degC" description="Sensor Temperature"/>
+    <Variable name="RainHeaterLevel" kind="heaterLevel" format="FLOAT32" units="percent" description="Rain Heater Operation Level"/>
+    <Variable name="WindSpeed" kind="speed" format="FLOAT32" units="m/s" description="Local wind speed (m/s)"/>
+    <Variable name="HumidityLevel" kind="humidityLevel" format="FLOAT32" units="percent" description="Local Humidity Level"/>
+    <Variable name="DewPoint" kind="temperature" format="FLOAT32" units="percent" description="Local Dew Point"/>
+    <Variable name="LightLevel" kind="lightLevel" format="FLOAT32" units="unitFraction" description="Local Light Fraction (0-1)"/>
+    <Variable name="VisibilityCondition" kind="mode" format="UINT8">
+      <Drange name="VisibilityEnum">
+        <Option name="CLEAR" value="1"/>
+        <Option name="CLOUDY" value="2"/>
+        <Option name="VERY_CLOUDY" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="WindCondition" kind="enum" format="UINT8">
+      <Drange name="WindEnum">
+        <Option name="CALM" value="1"/>
+        <Option name="WINDY" value="2"/>
+        <Option name="VERY_WINDY" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="MoistureCondition" kind="enum" format="UINT8">
+      <Drange name="MoistureEnum">
+        <Option name="DRY" value="1"/>
+        <Option name="WET" value="2"/>
+        <Option name="RAIN" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="LightCondition" kind="enum" format="UINT8">
+      <Drange name="LightEnum">
+        <Option name="DARK" value="1"/>
+        <Option name="LIGHT" value="2"/>
+        <Option name="VERY_LIGHT" value="3"/>
+      </Drange>
+    </Variable>
+
+    <!-- Periodic notification message associated with ground site weather data collection (delivered once a minute) -->
+    <Notification>
+      <DataMsg name="WeatherData" id="1" msgArrival="PERIODIC" msgRate="0.01667">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="DataTimestamp"/>
+        <VariableRef name="SiteName"/>
+        <VariableRef name="SiteLatitude"/>
+        <VariableRef name="SiteLongitude"/>
+        <VariableRef name="SiteAltitude"/>
+        <VariableRef name="SkyTemperature"/>
+        <VariableRef name="RainHeaterLevel"/>
+        <VariableRef name="SensorTemperature"/>
+        <VariableRef name="WindSpeed"/>
+        <VariableRef name="HumidityLevel"/>
+        <VariableRef name="DewPoint"/>
+        <VariableRef name="LightLevel"/>
+        <VariableRef name="VisibilityCondition"/>
+        <VariableRef name="WindCondition"/>
+        <VariableRef name="MoistureCondition"/>
+        <VariableRef name="LightCondition"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event message for change in Visibilty Condition -->
+	  <Notification>
+		  <DataMsg name="VisibilityConditionChange" id="2" msgArrival="EVENT">
+			<Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="DataTimestamp"/>
+        <VariableRef name="SiteName"/>
+        <VariableRef name="SiteLatitude"/>
+        <VariableRef name="SiteLongitude"/>
+        <VariableRef name="SiteAltitude"/>
+        <VariableRef name="VisibilityCondition"/>
+		  </DataMsg>
+		</Notification>
+
+    <!-- Event message for change in Wind Condition -->
+    <Notification>
+      <DataMsg name="WindConditionChange" id="3" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="DataTimestamp"/>
+        <VariableRef name="SiteName"/>
+        <VariableRef name="SiteLatitude"/>
+        <VariableRef name="SiteLongitude"/>
+        <VariableRef name="SiteAltitude"/>
+        <VariableRef name="WindCondition"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event message for change in Moisture Condition -->
+    <Notification>
+      <DataMsg name="MoistureConditionChange" id="4" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="DataTimestamp"/>
+        <VariableRef name="SiteName"/>
+        <VariableRef name="SiteLatitude"/>
+        <VariableRef name="SiteLongitude"/>
+        <VariableRef name="SiteAltitude"/>
+        <VariableRef name="MoistureCondition"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Event message for change in Light Condition -->
+    <Notification>
+      <DataMsg name="LightConditionChange" id="5" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="DataTimestamp"/>
+        <VariableRef name="SiteName"/>
+        <VariableRef name="SiteLatitude"/>
+        <VariableRef name="SiteLongitude"/>
+        <VariableRef name="SiteAltitude"/>
+        <VariableRef name="LightCondition"/>
+      </DataMsg>
+    </Notification>
+	
+  </Interface>
+
+</xTEDS>

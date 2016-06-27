@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="Orbit_xTEDS" version="2.1">
+<Application name="Orbit" version="1.0" kind="Software" description="Propagates Position and Velocity via Numerical Integration of Acceleration and Velocity" />
+<Interface name="IOrbitPropagator" id="1">
+<Variable name="Time" kind="Time" format="UINT32" units="s" />
+<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+<Variable name="Duration" kind="Time" format="FLOAT64" units="s" />
+<Variable name="PosItrf" kind="position" length="3" units="m" format="FLOAT64" description="Position Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="ITRF"/>
+<Qualifier name="FrameResolved" value="ITRF"/>
+</Variable>
+<Variable name="PosFk5" kind="position" length="3" units="m" format="FLOAT64" description="Position Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="FK5"/>
+<Qualifier name="FrameResolved" value="FK5"/>
+</Variable>
+<Variable name="PosEciTod" kind="position" length="3" units="m" format="FLOAT64" description="Position Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="ECITOD"/>
+<Qualifier name="FrameResolved" value="ECITOD"/>
+</Variable>
+<Variable name="VelItrf" kind="position" length="3" units="m/s" format="FLOAT32" description="Velocity Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="ITRF"/>
+<Qualifier name="FrameResolved" value="ITRF"/>
+</Variable>
+<Variable name="VelFk5" kind="position" length="3" units="m/s" format="FLOAT32" description="Velocity Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="FK5"/>
+<Qualifier name="FrameResolved" value="FK5"/>
+</Variable>
+<Variable name="VelEciTod" kind="position" length="3" units="m/s" format="FLOAT32" description="Velocity Vector">
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="ECITOD"/>
+<Qualifier name="FrameResolved" value="ECITOD"/>
+</Variable>
+<Variable name="GpsSeconds" kind="Time" format="UINT32" units="s" />
+<Variable name="TimeTagOrTimeNow" kind="mode" format="UINT8" defaultValue="1" >
+<Drange name="TimeTagOrTimeNowEnum">
+<Option name="TimeTag" value="1"/>
+<Option name="TimeNow" value="2"/>
+</Drange>
+</Variable>
+<Variable name="PosVelQuality" kind="status" format="UINT8" description="data grade, equals or greater than 1, 1 is best; 0 if no data">
+<Drange name="PosVelQualityEnum">
+<Option name="NotAvailable" value="0"/>
+<Option name="FreshGps" value="1"/>
+<Option name="StaleGps10Sec" value="2"/>
+<Option name="StaleGps1KSec" value="3"/>
+<Option name="StaleGps100KSec" value="4"/>
+<Option name="UploadedEphemeris" value="5"/>
+<Option name="SeparationEphemeris" value="6"/>
+<Option name="DefaultEphemeris" value="7"/>
+</Drange>
+</Variable>
+
+<Notification>
+<DataMsg id="1" name="PosVelFK5Msg" msgArrival="PERIODIC" msgRate="10"  description="broadcast of Pos, Vel">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="PosFk5"/>
+<VariableRef name="VelFk5"/>
+<VariableRef name="PosVelQuality"/>
+</DataMsg>
+</Notification>
+
+<Notification>
+<DataMsg id="2" name="PosVelItrfMsg" msgArrival="PERIODIC" msgRate="10"  description="broadcast of Pos, Vel">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="PosItrf"/>
+<VariableRef name="VelItrf"/>
+<VariableRef name="PosVelQuality"/>
+</DataMsg>
+</Notification>
+
+<Notification>
+<DataMsg id="3" name="PosVelEciTodMsg" msgArrival="PERIODIC" msgRate="10"  description="broadcast of Pos, Vel">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="PosEciTod"/>
+<VariableRef name="VelEciTod"/>
+<VariableRef name="PosVelQuality"/>
+</DataMsg>
+</Notification>
+
+<Command>
+<CommandMsg id="4" name="InitOrbitCmd" description="Initializes Orbit with Pos, Vel and Epoch">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="GpsSeconds"/>
+<VariableRef name="PosItrf"/>
+<VariableRef name="VelItrf"/>
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg id="5" name="PosVelFk5Request">
+<Qualifier name="TelemetryLevel" value="3"/>
+</CommandMsg>
+<DataReplyMsg id="6" name="PosVelFk5Reply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="PosFk5"/>
+<VariableRef name="VelFk5"/>
+<VariableRef name="PosVelQuality"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg id="7" name="PosVelEciTodRequest">
+<Qualifier name="TelemetryLevel" value="3"/>
+</CommandMsg>
+<DataReplyMsg id="8" name="PosVelEciTodReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="PosEciTod"/>
+<VariableRef name="VelEciTod"/>
+<VariableRef name="PosVelQuality"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg id="9" name="RequestFutureFk5">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="Duration"/>
+</CommandMsg>
+<DataReplyMsg id="10" name="FutureFk5Reply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="Duration"/>
+<VariableRef name="PosEciTod"/>
+<VariableRef name="VelEciTod"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg id="11" name="RequestFutureEciTod">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="Duration"/>
+</CommandMsg>
+<DataReplyMsg id="12" name="FutureEciTodReply">
+<Qualifier name="TelemetryLevel" value="3"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="Duration"/>
+<VariableRef name="PosEciTod"/>
+<VariableRef name="VelEciTod"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+<Interface name="IOrbitTest" id="2" scope='Private' >
+<Variable name="Duration" kind="Time" format="INT32" units="milli-sec" />
+
+<Request>
+<CommandMsg name='SynchronousWork' id='1' >
+<VariableRef name='Duration' />
+</CommandMsg>
+<DataReplyMsg name='WorkFinished' id='2' />
+</Request>
+</Interface>
+</xTEDS>

@@ -1,0 +1,71 @@
+<Silver.UI.ToolBox version="1">
+  <Config>
+    <TabHeight>18</TabHeight>
+    <ItemHeight>20</ItemHeight>
+    <TabSpacing>1</TabSpacing>
+    <ItemSpacing>1</ItemSpacing>
+    <LayoutDelay>10</LayoutDelay>
+    <ScrollDelay>60</ScrollDelay>
+    <ScrollWaitTime>500</ScrollWaitTime>
+    <BackgroundColor>Control</BackgroundColor>
+    <ItemBackgroundColor />
+    <ItemBorderColor />
+    <ItemNormalColor>Control</ItemNormalColor>
+    <ItemSelectedColor>Linen</ItemSelectedColor>
+    <ItemHoverColor>BurlyWood</ItemHoverColor>
+    <ItemNormalTextColor />
+    <ItemSelectedTextColor />
+    <ItemHoverTextColor />
+    <TabNormalTextColor />
+    <TabSelectedTextColor />
+    <TabHoverTextColor />
+    <SelectAllTextWhileRenaming>true</SelectAllTextWhileRenaming>
+    <ShowOnlyOneItemPerRow>false</ShowOnlyOneItemPerRow>C:\Projects\AspireStudio0\trunk\AspireStudio\DockedViews\ToolBox.config.xml
+    <AllowSwappingByDragDrop>true</AllowSwappingByDragDrop>
+    <UseItemColorInRename>false</UseItemColorInRename>
+    <LargeItemSize width="64" height="64" />
+    <SmallItemSize width="32" height="32" />
+    <Scrolls>
+      <Up enabled="false">
+        <ToolTip>Scroll Up</ToolTip>
+      </Up>
+      <Down enabled="false">
+        <ToolTip>Scroll Down</ToolTip>
+      </Down>
+    </Scrolls>
+  </Config>
+  <Tabs selected-tab="0">
+    <Tab enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true" view-mode="list">
+      <Caption>General</Caption>
+      <ImageIndices small="-1" large="-1" />
+      <ToolTip />
+      <TabItems selected-item="0">
+        <TabItem enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true">
+          <Caption>Clock</Caption>
+          <ImageIndices small="-1" large="-1" />
+          <ToolTip />
+        </TabItem>
+        <TabItem enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true">
+          <Caption>Application</Caption>
+          <ImageIndices small="-1" large="-1" />
+          <ToolTip />
+        </TabItem>
+        <TabItem enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true">
+          <Caption>AspireBrowser</Caption>
+          <ImageIndices small="-1" large="-1" />
+          <ToolTip />
+        </TabItem>
+        <TabItem enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true">
+          <Caption>AspireShell</Caption>
+          <ImageIndices small="-1" large="-1" />
+          <ToolTip />
+        </TabItem>
+        <TabItem enabled="true" movable="true" renamable="true" deletable="true" allow-drag="true">
+          <Caption>AspireClock</Caption>
+          <ImageIndices small="-1" large="-1" />
+          <ToolTip />
+        </TabItem>
+      </TabItems>
+    </Tab>
+  </Tabs>
+</Silver.UI.ToolBox>

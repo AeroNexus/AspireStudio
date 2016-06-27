@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="PointingResources_xTEDS" version="1.0">
+<Application name="PointingResources" version="1.0" kind="ResourceManager" description="Implements pointing resource management"/>
+	<Interface name="IPointingResources" id="1">
+		<Variable name="Boresight" kind="vector" format="FLOAT64" length="3" >
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="Class" kind="ResourceClass" format="UINT8" >
+			<Drange name="ResourceClass">
+				<Option name="undefined" value="0"/>
+				<Option name="SolarPanel" value="1"/>
+				<Option name="Sensor" value="2"/>
+				<Option name="Antenna" value="3"/>
+				<Option name="Actuator" value="4"/>
+			</Drange>
+		</Variable>
+		<Variable name="ComponentName" kind="string" format="STRING" />
+		<Variable name="IsNormalToMount" kind="" format="UINT8"
+			description="Actuator orientation is normal to actuator/sensor mount"/>
+		<Variable name="Orientation" kind="quaternion" format="FLOAT64" length="4" >
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="ResourceId" kind="ID" format="INT32" />
+		<Variable name="ResourceName" kind="string" format="STRING" />
+		<Variable name="Type" kind="string" format="STRING" />
+		<Variable name="Up" kind="vector" format="FLOAT64" length="3" >
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="Position" kind="Position" format="FLOAT64" length="3">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="J2000"/>
+			<Qualifier name="FrameResolved" value="J2000"/>
+		</Variable>
+		<Variable name="Velocity"  kind="Velocity" format="FLOAT64" length="3">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="J2000"/>
+			<Qualifier name="FrameResolved" value="J2000"/>
+		</Variable>
+		<Variable name="Attitude"  kind="Attitude" format="FLOAT64" length="4">
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameFrom" value="J2000"/>
+			<Qualifier name="FrameTo" value="SVF"/>
+		</Variable>
+		<Variable name="EcefToEci"  kind="Transform" format="FLOAT64" length="4">
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameFrom" value="ITRF"/>
+			<Qualifier name="FrameTo" value="J2000"/>
+		</Variable>
+		<Request>
+			<CommandMsg name="GetResource" id="1">
+				<VariableRef name="ResourceId" />
+			</CommandMsg>
+			<DataReplyMsg name="ResourceInfo" id="2" description="Class=undefined as terminator">
+				<VariableRef name="Class" />
+				<VariableRef name="ComponentName" />
+				<VariableRef name="ResourceName" />
+				<VariableRef name="Type" />
+				<VariableRef name="IsNormalToMount" />
+				<VariableRef name="Boresight" />
+				<VariableRef name="Up" />
+				<VariableRef name="Orientation" />
+			</DataReplyMsg>
+		</Request>
+		<Notification>
+			<DataMsg name="PlatformState" id="3" msgArrival="EVENT">
+				<VariableRef name="Position" />
+				<VariableRef name="Velocity" />
+				<VariableRef name="Attitude" />
+				<VariableRef name="EcefToEci" />
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+</xTEDS>

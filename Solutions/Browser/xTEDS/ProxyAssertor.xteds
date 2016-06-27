@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="ProxyAssertor_xTEDS" description="Proxy App to Generate USO Messages for testing" version="1.0">
+  
+  <Application name="ProxyAssertor" kind="SsaSoftwareModule" />
+
+  <!--====================================-->
+  <!--   OBSERVATION STANDARD INTERFACE   -->
+  <!--====================================-->
+
+  <Interface name="iObservation" id="1" description="Standard interface for an object observation service" scope="Public">
+
+    <Variable name="ObserverName" kind="String" format="STRING" description="Name of the component offering the observation report"/>
+    <Variable name="RequestorName" kind="String" format="STRING" description="Name of the component requesting observation support"/>
+    <Variable name="ObservationTimestamp" kind="Time" format="FLOAT64" units="s" description="The time of the observation"/>
+    <Variable name="ObjectName" kind="String" format="STRING" description="Catalog name of the object"/>
+    <Variable name="ProxyName" kind="String" format="STRING" description="Proxy name to be used for an unidentified object"/>
+    <Variable name="TrackletId" kind="Id" format="UINT32" description="Identifier of Tracklet to which this observation belongs"/>
+    <Variable name="ObservationsInTracklet" kind="count" format="UINT16" description="Number of observations in this Tracklet"/>
+    <Variable name="ObservationIndex" kind="index" format="UINT16" description="1-based index of observation within this Tracklet"/>
+    <Variable name="ObserverPosition" kind="position" units="m" format="FLOAT64" length="3" description="ECI Position of satellite observing the event (J2000 frame)">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObserverVelocity" kind="speed" units="m/s" format="FLOAT64" length="3" description="ECI Velocity of satellite observing the event (J2000 frame)">
+      <Qualifier name="Representation" value="vector" />
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightToObject" kind="unitVector" units="" format="FLOAT64" length="3" description="Unit vector from observer to object (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightToObjectVariance" kind="unitVector" units="" format="FLOAT64" length="3" description="Variance of unit vector from observer to object (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationBoresight" kind="unitVector" units="" format="FLOAT64" length="3" description="Unit vector observation boresight (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationBoresightVariance" kind="unitVector" units="" format="FLOAT64" length="3" description="Variance of unit vector observation boresight (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightAngularRate" kind="Vector" units="rads/sec" format="FLOAT64" length="3" description="Angular rate of observed object in rads/sec (J2000 frame)" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightAngularRateVariance" kind="Vector" units="rads/sec" format="FLOAT64" length="3" description="Variance of angular rate of observed object in rads/sec (J2000 frame)" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObservationConfidence" kind="Confidence_Level" format="FLOAT32" units="percent" description="Confidence in Observation (0 - 100%)"/>
+    <Variable name="ObservationCone" kind="angle" format="FLOAT32" units="rad" description="Full angle of a conical field of view performed by an observer (radians)"/>
+    <Variable name="AngularDisplacement" kind="angle" format="FLOAT32" units="rad" description="Angular displacement of object from expected position (radians)"/>
+    
+
+    <!-- Event Notification delivered by an AMM observer upon positive observation of an object -->
+    <Notification>
+      <DataMsg name="UnidentifiedSpaceObject" id="3" msgArrival="EVENT" description="Positive observation of an unidentified space object by an AMM observer">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ObserverName"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObservationTimestamp"/>
+        <VariableRef name="TrackletId"/>
+        <VariableRef name="ObservationIndex"/>
+        <VariableRef name="ObservationsInTracklet"/>
+        <VariableRef name="ProxyName"/>
+        <VariableRef name="ObserverPosition"/>
+        <VariableRef name="ObserverVelocity"/>
+        <VariableRef name="LineOfSightToObject"/>
+        <VariableRef name="LineOfSightToObjectVariance"/>
+        <VariableRef name="LineOfSightAngularRate"/>
+        <VariableRef name="LineOfSightAngularRateVariance"/>
+        <VariableRef name="ObservationConfidence"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+</xTEDS>

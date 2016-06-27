@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{082F6A94-FDE9-4DBA-8AC1-5E87DD609D3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aspire.UiToolbox</RootNamespace>
+    <AssemblyName>AspireUiToolbox</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Design" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\ColorHelper.cs" />
+    <Compile Include="Common\CommandDraw.cs" />
+    <Compile Include="Common\CommandImage.cs" />
+    <Compile Include="Common\KeyHelper.cs" />
+    <Compile Include="Common\ResourceHelper.cs" />
+    <Compile Include="Controls\CancelNodeEventArgs.cs" />
+    <Compile Include="Common\ColorDetails.cs" />
+    <Compile Include="Common\Enums.cs" />
+    <Compile Include="Common\CollectionWithEvents.cs" />
+    <Compile Include="Common\Delegates.cs" />
+    <Compile Include="Common\Edges.cs" />
+    <Compile Include="Controls\DefaultCollectionVC.cs" />
+    <Compile Include="Controls\DefaultNodeVC.cs" />
+    <Compile Include="Controls\GroupCollectionVC.cs" />
+    <Compile Include="Controls\GroupNodeVC.cs" />
+    <Compile Include="Controls\LabelControlEventArgs.cs" />
+    <Compile Include="Controls\SelectedNodeCollection.cs" />
+    <Compile Include="Controls\StartDragEventArgs.cs" />
+    <Compile Include="Common\ThemeColorHelper.cs" />
+    <Compile Include="Common\ThemeHelper.cs" />
+    <Compile Include="Controls\Delegates.cs" />
+    <Compile Include="Controls\NodeEventArgs.cs" />
+    <Compile Include="Controls\PopupShadow.cs" />
+    <Compile Include="Controls\PopupBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Enums.cs" />
+    <Compile Include="Controls\IndentPaddingEdges.cs" />
+    <Compile Include="Controls\Interfaces.cs" />
+    <Compile Include="Controls\Node.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\NodeCache.cs" />
+    <Compile Include="Controls\NodeCollection.cs" />
+    <Compile Include="Controls\PopupToolSingle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\TreeControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SyntaxEditor\IntelliSenseResolver.cs" />
+    <Compile Include="SyntaxEditor\SyntaxEditor.cs" />
+    <Compile Include="Win32\Enums.cs" />
+    <Compile Include="Win32\Gdi32.cs" />
+    <Compile Include="Win32\Structs.cs" />
+    <Compile Include="Win32\User32.cs" />
+    <Compile Include="Win32\Uxtheme.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

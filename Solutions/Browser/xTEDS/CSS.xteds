@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="CoarseSS_xTEDS" version="2.9">
+
+  <Device name="CoarseSunSensor"
+      kind="CoarseSunSensor" 
+      description="An assembly of 4 coarse sun sensors" >
+  </Device>
+
+  <Interface id="1" name="CoarseSunSensor" description="Aggregate-level interface for the assembly" >
+    <Qualifier name="Assembly" value="TRUE"/>
+    <Qualifier name="NumSensors" value="4"/>
+	<Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+    <Variable name="SunCos1" kind="sunCos" format="FLOAT32">
+      <Location x="2.5" y="0" z="4" units="cm"/>
+	  <Orientation axis="Z" angle="45" units="degrees"/>
+	  <Orientation axis="X" angle="54.7356103172" units="degrees"/>
+	</Variable>
+	<Variable name="SunCos1Variance" kind="measurementVariance" format="FLOAT32" />
+    <Variable name="SunCos2" kind="sunCos" format="FLOAT32">
+      <Location x="5" y="5" z="4" units="cm"/>
+	  <Orientation axis="Z" angle="45" units="degrees"/>
+      <Orientation axis="Y" angle="54.7356103172" units="degrees"/>
+	</Variable>
+	<Variable name="SunCos2Variance" kind="measurementVariance" format="FLOAT32" />
+    <Variable name="SunCos3" kind="sunCos" format="FLOAT32">
+      <Location x="2.5" y="10" z="4" units="cm"/>
+	  <Orientation axis="Z" angle="45" units="degrees"/>
+      <Orientation axis="X" angle="-54.7356103172" units="degrees"/>
+	</Variable>
+	<Variable name="SunCos3Variance" kind="measurementVariance" format="FLOAT32" />
+    <Variable name="SunCos4" kind="sunCos" format="FLOAT32">
+      <Location x="0" y="5" z="4" units="cm"/>
+	  <Orientation axis="Z" angle="45" units="degrees"/>
+      <Orientation axis="Y" angle="-54.7356103172" units="degrees"/>
+	</Variable>
+	<Variable name="SunCos4Variance" kind="measurementVariance" format="FLOAT32" />
+
+    <Notification> 
+      <DataMsg id="1" name="SunCos" msgArrival="PERIODIC" msgRate="100">
+        <Qualifier name="TelemetryModulo" value="30"  />
+	      <Qualifier name="TelemetryLevel" value="1"/>
+	      <VariableRef name="Time"/>
+	      <VariableRef name="SubS"/>
+		  <VariableRef name="SunCos1"/>
+		  <VariableRef name="SunCos1Variance" />
+		  <VariableRef name="SunCos2"/>
+		  <VariableRef name="SunCos2Variance" />
+		  <VariableRef name="SunCos3"/>
+		  <VariableRef name="SunCos3Variance" />
+		  <VariableRef name="SunCos4"/>
+		  <VariableRef name="SunCos4Variance" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <Interface name="DeviceSafety" id="2">
+    <Variable name="DeviceTemperature" kind="temperature" format="FLOAT32" units="degC" description="ASIM electronics" rLow="-20" yLow="-10" yHigh="50" rHigh="60">
+      <Location x="5" y="0" z="0" units="cm"/>
+    </Variable>
+    <Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+
+    <Notification>
+      <DataMsg name="DeviceTemperatureMsg" id="3" msgArrival="PERIODIC" msgRate="1">
+         <Qualifier name="TelemetryModulo" value="10"  />
+	      <Qualifier name="TelemetryLevel" value="1"/>
+	      <VariableRef name="Time" />
+	      <VariableRef name="SubS" />
+	      <VariableRef name="DeviceTemperature"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+	<Interface name="DevicePower" id="3">
+     <!-- Only ASIM power-->
+		<Qualifier name="AsimOnlyPower" value="0.5" units="W"/>
+		<Qualifier name="MinPower" value="0.5" units="W"/>
+		<Qualifier name="AvgPower" value="0.5" units="W"/>
+		<Qualifier name="MaxPower" value="0.5" units="W"/>
+		<Qualifier name="FirstResetTime" value="25" units="s"/>
+		<Qualifier name="ResetTime" value="10" units="s"/>
+	</Interface>
+
+	<Interface name="ASIM" id="4">
+		<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+		<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+		<Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+		<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+		<Variable name="GUID" kind="GUID" format="BUFFER" />
+
+		<Request>
+			<CommandMsg name="GetVersionInfo" id="1" />
+			<DataReplyMsg name="VersionInfoReply" id="2">
+				<VariableRef name="CRCProgCode"/>
+				<VariableRef name="CRCxTEDS"/>
+				<VariableRef name="SWCoreLibRev"/>
+				<VariableRef name="HWFPGAFirmwareRev"/>
+				<VariableRef name="GUID" />
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

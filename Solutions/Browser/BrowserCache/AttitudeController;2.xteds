@@ -1,0 +1,450 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+name='AttitudeControl_xTEDS' version='1.1'>
+<Application name='AttitudeController' version='1.0' kind='AdcsSubsystemController' description='Implements the top-level interface to the ADCS'/>
+<Interface name='IAdcsCommanding' id='1'>
+<Variable name='Time' kind='Time' format='UINT32' units='s'/>
+<Variable name='SubS' kind='SubSeconds' units='counts' format='UINT32' scaleFactor='.000001' scaleUnits='s'/>
+<Variable name='Mode' kind='ModeEnum' format='UINT8' description='Active control mode'>
+<Drange name='ModeEnum'>
+<Option name='Standby' value='1'/>
+<Option name='Detumble' value='2'/>
+<Option name='Rate' value='3'/>
+<Option name='LVLH' value='4'/>
+<Option name='SunPoint' value='5'/>
+<Option name='TargetTrack' value='6'/>
+<Option name='Generic' value='7'/>
+<Option name='Named' value='8'/>
+<!--Option name='MomentumDumping' value='9'/ not exclusive -->
+</Drange>
+</Variable>
+<Variable name='Name' kind='string' format='STRING' description='Name'/>
+<Variable name='Id' kind='ID' format='UINT16'/>
+<Variable name='TargetName' kind='string' format='STRING' description='Active target name'/>
+<Variable name='SubMode' kind='SubModeEnum' format='UINT8' description='Active sub-mode'>
+<Drange name='SubModeEnum'>
+<Option name='Idle' value='1'/>
+<Option name='SpinDown' value='2'/>
+<Option name='SlewAccel' value='3'/>
+<Option name='SlewCoast' value='4'/>
+<Option name='SlewDeccel' value='5'/>
+<Option name='SpinUp' value='6'/>
+<Option name='Track' value='7'/>
+</Drange>
+</Variable>
+<Variable name='PointingError' kind='angle' format='FLOAT32' units='deg' description='Angular pointing error'/>
+<Variable name='EulerAngle' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler angles'/>
+<Variable name='EulerError' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler error angles'/>
+<Variable name='EulerOffset' kind='attitude' format='FLOAT32' length='3' units='deg' description='Euler offset angles'/>
+<Variable name='TrackThreshold' kind='angle' format='FLOAT32' units='deg'
+description='Angular error that triggers the TrackAchieved message'/>
+<Variable name='Status' kind='StatusEnum' format='UINT8' description='Reply message status'>
+<Drange name='StatusEnum'>
+<Option name='Accepted' value='1'/>
+<Option name='WheelsOffline' value='2'/>
+<Option name='RodsOffline' value='3'/>
+<Option name='RateUnknown' value='4'/>
+<Option name='AttitudeUnknown' value='5'/>
+<Option name='OrbitUnknown' value='6'/>
+<Option name='SunUnknown' value='7'/>
+<Option name='Unavailable' value='8'/>
+<Option name='NoActiveTarget' value='9'/>
+<Option name='NoSupported' value='10'/>
+<Option name='InvalidLos' value='11'/>
+<Option name='InvalidReference' value='12'/>
+</Drange>
+</Variable>
+<Variable name='InertialLos' kind='WellKnownVectorEnum' format='UINT8' description='Well known vectors'>
+<Drange name='WellKnownVectorEnum'>
+<Option name='Moon' value='1'/>
+<Option name='Nadir' value='2'/>
+<Option name='OrbitNormal' value='3'/>
+<Option name='Sun' value='4'/>
+<Option name='Target' value='5'/>
+<Option name='Velocity' value='6'/>
+<Option name='Zenith' value='7'/>
+<Option name='Unknown' value='8'/>
+</Drange>
+</Variable>
+<Variable name='InertialReference' kind='WellKnownVectorEnum' format='UINT8' description='Well known vectors'>
+<Drange name='WellKnownVectorEnum2'>
+<Option name='Moon' value='1'/>
+<Option name='Nadir' value='2'/>
+<Option name='OrbitNormal' value='3'/>
+<Option name='Sun' value='4'/>
+<Option name='Target' value='5'/>
+<Option name='Velocity' value='6'/>
+<Option name='Zenith' value='7'/>
+<Option name='Unknown' value='8'/>
+</Drange>
+</Variable>
+<Variable name='BodyLos' kind='LOS' length='3' format='FLOAT64' description='body vector along which we wish to point'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='BodyReference' kind='LOS' length='3' format='FLOAT64' description='body vector to align with the inertial reference'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='AngularRate' kind='attitude' format='FLOAT32' length='3' units='rad/s'/>
+<Variable name='IsPossible' kind='ManeuverPossibleEnum' format='UINT8' description='Expresses ability to satisfy a mode/plan request'>
+<Drange name='ManeuverPossibleEnum'>
+<Option name='YES' value='1'/>
+<Option name='NO' value='2'/>
+</Drange>
+</Variable>
+<Variable name='Duration' kind='time' units='s' format='FLOAT32' description='Time to complete a slew'/>
+<Variable name='MaxPower' kind='power' units='W' format='FLOAT32' description='Max Power involved to accomplish a maneuver'/>
+<Variable name='Energy' kind='energy' units='J' format='FLOAT32' description='Integrated power to do a move'/>
+<Variable name='PositionType' kind='PositionEnum' format='UINT8' description='How to interpret pos,vel,acc'>
+<Drange name='PositionEnum'>
+<Option name="ECI_TOD" value="1"/>
+<Option name="ECI_FK5" value="2"/>
+<Option name="ECI_J2000" value="3"/>
+<Option name="ECEF" value="4"/>
+<Option name="LLA" value="5" description="Geodetic lat, lon, altitude"/>
+<Option name="LLR" value="6" description="Geocentric lat, lon, radius"/>
+<Option name="Local" value="7"/>
+<Option name="ECI_J2000_UNIT" value="8"/>
+<Option name="ECEF_UNIT" value="9"/>
+</Drange>
+</Variable>
+<Variable name='Position' kind='attitude' format='FLOAT64' length='3' units='m'
+description='Could be any position type'/>
+<Variable name='Velocity' kind='attitude' format='FLOAT32' length='3' units='m/s'
+description='Could be any position type'/>
+<Variable name='Acceleration' kind='attitude' format='FLOAT32' length='3' units='m/s^2'
+description='Could be any position type'/>
+<Variable name='GroundSpeed' kind='speed' format='FLOAT32' units='m/s'
+description='Pierce point speed over the ground while crossing the target'/>
+<Variable name='Azimuth' kind='angle' format='FLOAT32' units='deg'
+description='Pierce point angle ground (referenced from north) while crossing the target'/>
+<Variable name='TargetStatus' kind='TargetStatusEnum' format='UINT8'>
+<Drange name='TargetStatusEnum'>
+<Option name='Exists' value='1'/>
+<Option name='New' value='2'/>
+<Option name='NotFound' value='3'/>
+<Option name='Activated' value='4'/>
+<Option name='Confirmed' value='5'/>
+</Drange>
+</Variable>
+<Variable name='NamedModeStatus' kind='NamedModeStatusEnum' format='UINT8' description='Reply message status for NamedMode messages'>
+<Drange name='NamedModeStatusEnum'>
+<Option name='Accepted' value='1'/>
+<Option name='NotFound' value='2'/>
+<Option name='Overwriting' value='3'/>
+</Drange>
+</Variable>
+<Notification>
+<DataMsg name='ModeStatus' id='1' msgArrival='EVENT'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='Mode'/>
+<VariableRef name='SubMode'/>
+<VariableRef name='TargetName'/>
+</DataMsg>
+</Notification>
+<Command>
+<CommandMsg name='GetModeStatus' id='2' >
+<Qualifier name='TelemetryLevel' value='2'/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name='TrackingStatus' id='3' msgArrival='PERIODIC' msgRate='10'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='Mode'/>
+<VariableRef name='PointingError'/>
+<VariableRef name='EulerAngle'/>
+<VariableRef name='EulerError'/>
+</DataMsg>
+</Notification>
+<Command>
+<CommandMsg name='GetTrackingStatus' id='4' >
+<Qualifier name='TelemetryLevel' value='2'/>
+</CommandMsg>
+</Command>
+<Command>
+<CommandMsg name='SetTrackThreshold' id='5'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='TrackThreshold'/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name='TrackAchieved' id='6' msgArrival='EVENT'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='Mode'/>
+<VariableRef name='PointingError'/>
+<VariableRef name='EulerError'/>
+</DataMsg>
+</Notification>
+<Request>
+<CommandMsg name='SetMode' id='7' description='Set a well known mode'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Mode'/>
+<VariableRef name='EulerOffset'/>
+</CommandMsg>
+<DataReplyMsg name='ModeReply' id='8'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<Qualifier name='Notify' value='console'/>
+<VariableRef name='Mode'/>
+<VariableRef name='Status'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetGenericMode' id='9' description='Set a generically defined mode'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='InertialLos'/>
+<VariableRef name='InertialReference'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+<VariableRef name='EulerOffset'/>
+</CommandMsg>
+<DataReplyMsg name='GenericModeReply' id='10'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Mode'/>
+<VariableRef name='Status'/>
+</DataReplyMsg>
+</Request>
+<Command>
+<CommandMsg name='SetAttitudeRate' id='11'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Mode'/>
+<VariableRef name='AngularRate'/>
+</CommandMsg>
+</Command>
+<Request>
+<CommandMsg name='CreateNamedMode' id='12' description='Create a named generic mode'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+<VariableRef name='InertialLos'/>
+<VariableRef name='InertialReference'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+</CommandMsg>
+<DataReplyMsg name='NamedMode' id='13'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Id'/>
+<VariableRef name='NamedModeStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetNamedMode' id='14'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+</CommandMsg>
+<DataReplyMsg name='NamedModeReply' id='15'>
+<VariableRef name='NamedModeStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='PlanMode' id='16' description='Plan a slew for a well known mode'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Mode'/>
+<VariableRef name='EulerOffset'/>
+</CommandMsg>
+<DataReplyMsg name='PlanModeReply' id='17'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='IsPossible'/>
+<VariableRef name='Duration'/>
+<VariableRef name='MaxPower'/>
+<VariableRef name='Energy'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='PlanGenericMode' id='18' description='Plan a slew for a generic mode'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='InertialLos'/>
+<VariableRef name='InertialReference'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+<VariableRef name='EulerOffset'/>
+</CommandMsg>
+<DataReplyMsg name='PlanGenericModeReply' id='19'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='IsPossible'/>
+<VariableRef name='Duration'/>
+<VariableRef name='MaxPower'/>
+<VariableRef name='Energy'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='CreateTarget' id='20'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+<VariableRef name='PositionType'/>
+<VariableRef name='Position'/>
+</CommandMsg>
+<DataReplyMsg name='TargetId' id='21'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+<VariableRef name='Id'/>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetActiveTarget' id='22'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+</CommandMsg>
+<DataReplyMsg name='ActiveTarget' id='23'>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='LookAtTarget' id='24'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+<VariableRef name='PositionType'/>
+<VariableRef name='Position'/>
+</CommandMsg>
+<DataReplyMsg name='LookAtReply' id='25'>
+<VariableRef name='Name'/>
+<VariableRef name='Id'/>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetEncounterParameters' id='26'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='TargetName'/>
+<VariableRef name='GroundSpeed'/>
+<VariableRef name='Azimuth'/>
+</CommandMsg>
+<DataReplyMsg name='EncounterParameters' id='27'>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetTargetParameters' id='28'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Name'/>
+<VariableRef name='PositionType'/>
+<VariableRef name='Position'/>
+<VariableRef name='Velocity'/>
+<VariableRef name='Acceleration'/>
+</CommandMsg>
+<DataReplyMsg name='TargetParameters' id='29'>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='SetModeParameters' id='30' description='Allow external override of well known mode parameters. Zero vector is noop'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='Mode'/>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+</CommandMsg>
+<DataReplyMsg name='ModeParameters' id='31'>
+<VariableRef name='Status'/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name='LookAtTargetUsing' id='32'>
+<Qualifier name='TelemetryLevel' value='2'/>
+<VariableRef name='TargetName'/>
+<VariableRef name='PositionType'/>
+<VariableRef name='Position'/>
+<VariableRef name='Name'/>
+</CommandMsg>
+<DataReplyMsg name='LookAtUsingReply' id='33'>
+<VariableRef name='TargetName'/>
+<VariableRef name='Id'/>
+<VariableRef name='TargetStatus'/>
+</DataReplyMsg>
+</Request>
+</Interface>
+<Interface name='IPowerManagement' id='2'>
+<!--Needs more discussion-->
+<Variable name='DeviceHash' kind='int' format='UINT32' description='Logical address of device' />
+<Variable name='DeviceUsage' kind='UsageEnum' format='UINT8' description='Is the device required or optional'>
+<Drange name='UsageEnum' >
+<Option name='Required' value='1'/>
+<Option name='Optional' value='2'/>
+</Drange>
+</Variable>
+<Variable name='ReplyStatus' kind='ReplyStatusEnum' format='UINT8'>
+<Drange name='ReplyStatusEnum'>
+<Option name='Added' value='1'/>
+<Option name='AlreadyAdded' value='2'/>
+</Drange>
+</Variable>
+
+<Request>
+<CommandMsg name='AddDevice' id='1' >
+<VariableRef name='DeviceHash'/>
+<VariableRef name='DeviceUsage'/>
+</CommandMsg>
+<DataReplyMsg name='AddDeviceReply' id='2'>
+<VariableRef name='ReplyStatus'/>
+</DataReplyMsg>
+</Request>
+</Interface>
+<Interface name='IPointingController' id='3'>
+<Variable name='Name' kind='moniker' format='STRING' />
+<Variable name='ResourceName' kind='moniker' format='STRING' />
+<Variable name='SupportsTargets' kind='capability' format='UINT8' />
+<Variable name='IsGimbaled' kind='capability' format='UINT8' />
+<Variable name='TrackThreshold' kind='setting' format='FLOAT32' />
+<Request>
+<CommandMsg name='GetInfo' id='1'/>
+<DataReplyMsg name='Info' id='2'>
+<VariableRef name='Name'/>
+<VariableRef name='ResourceName'/>
+<VariableRef name='SupportsTargets'/>
+<VariableRef name='IsGimbaled'/>
+<VariableRef name='TrackThreshold'/>
+</DataReplyMsg>
+</Request>
+</Interface>
+<Interface name='IScanning' id='4' description='Programmable scan controller that drives pointing and rate commands in IAdcsCommanding' >
+<Variable name='BeginTarget' kind='angle' format='FLOAT32' units='deg' />
+<Variable name='Compare' kind='mode' format='UINT8' >
+<Drange name='CompareType' >
+<Option name='GreaterThan' value='1'/>
+<Option name='LessThan' value='2'/>
+</Drange>
+</Variable>
+<Variable name='Direction' kind='mode' format='UINT8' >
+<Drange name='DirectionType' >
+<Option name='Horizontal' value='1'/>
+<Option name='Vertical' value='2'/>
+</Drange>
+</Variable>
+<Variable name='EndTarget' kind='angle' format='FLOAT32' units='deg' />
+<Variable name='Initiate' kind='mode' format='UINT8' >
+<Drange name='InitiationType' >
+<Option name='Now' value='1'/>
+<Option name='Latitude' value='2'/>
+</Drange>
+</Variable>
+<Variable name='Mode' kind='ModeType' format='UINT8' >
+<Drange name='ModeType' >
+<Option name='TBD-One' value='1'/>
+<Option name='TBD-Two' value='2'/>
+</Drange>
+</Variable>
+<Variable name='NumBars' kind='count' format='UINT8' />
+<Request>
+<CommandMsg name='DefineRaster' id='1' description='Define a raster pattern' >
+<VariableRef name='BeginTarget' />
+<VariableRef name='EndTarget' />
+<VariableRef name='Mode'/>
+<VariableRef name='Direction'/>
+<VariableRef name='NumBars'/>
+<VariableRef name='Initiate'/>
+<VariableRef name='Compare'/>
+</CommandMsg>
+<DataReplyMsg name='RasterDefined' id='2' />
+</Request>
+</Interface>
+</xTEDS>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" name="StringAndBuffer_xTEDS"
+       version="1.0">
+
+  <Application name="Qmgr" kind="Manager"/>
+
+  <Interface name="Qmgr" id="1" description="Porting the target queue manager" scope="Public">
+    <!-- Variable Defs -->
+    <Variable name="locationInformation" kind="position" units="m" format="FLOAT64" length="3" description="Position of the satellite">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="ECI"/>
+      <Qualifier name="FrameResolved" value="ECI"/>
+    </Variable>
+    <Variable name="targetId" kind="ID" format="UINT32" description="Target ID"/>
+    <Variable name="priority" kind="priority" format="UINT32" description="Priority"/>
+    <Variable name="targetName" kind="string" format="STRING" description="Target Name"/>
+    <Variable name="taskId" kind="string" format="STRING" description="Observation Task ID"/>
+    <Variable name="QueueString" kind="string" format="STRING" description="Queue Update Message"/>
+    <Variable name="windowStart" kind="time" format="FLOAT64" description="Target window start time"/>
+    <Variable name="windowEnd" kind="time" format="FLOAT64" description="Target window end time"/>
+    <Variable name="viewedTime" kind="time" format="FLOAT64" description="Marking a target as viewed"/>
+
+    <!-- For Phase 5, we're feeding the executive both target-based ids (from the catalog) and location reports -->
+    <Variable name="ObservationTargetType" kind="QmgrTargetType" format="UINT8" description="Type of detected SSA Event">
+      <Drange name="ObservationTargetTypeEnum">
+        <Option name="CATALOG_OBJECT" value="1"/>
+        <Option name="LOCATION_TARGET" value="2"/>
+        <Option name="TARGET_NOT_FOUND" value="3"/>
+      </Drange>
+    </Variable>
+    
+    <!-- Additional variable declarations used for status updates -->
+    <Variable name="totalTargets" kind="count" format="UINT16" description="Total number of targets in the list"/>
+    <Variable name="remainingTargets" kind="count" format="UINT16" description="Targets remaining (non-failed, non-achieved) in the list"/>
+    <Variable name="listStatus" kind="QmgrListStatus" format="UINT8" description="Overall status of the list">
+      <Drange name="listStatusEnum">
+        <Option name="EMPTY" value="1"/>
+        <Option name="UNSTARTED" value="2"/>
+        <Option name="IN_PROGRESS" value="3"/>
+        <Option name="COMPLETED" value="4"/>
+      </Drange>
+    </Variable>
+    
+    
+    <!-- Message Declarations -->
+    
+    <Request>
+      <CommandMsg name="GetTarget" id="1" description="Return the first element of the queue"/>
+      <DataReplyMsg name="targetReply" id="2">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+		    <VariableRef name="priority"/>
+		    <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+        <VariableRef name="ObservationTargetType"/>
+        <VariableRef name="locationInformation"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <Command>
+      <CommandMsg name="AddTarget" id ="3" description="Add a new target, with observation window, to the manager">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+        <VariableRef name="ObservationTargetType"/>
+        <VariableRef name="locationInformation"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="ClearTargets" id ="4" description="Clear the current target list"/>
+    </Command>
+
+	  <Command>
+      <CommandMsg name="MarkTargetViewed" id="5" description="Mark the provided target as viewed">
+        <VariableRef name="targetId"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="viewedTime"/>
+      </CommandMsg>
+    </Command>
+    
+    <!-- Notifications from the Queue Manager -->
+    
+    <Notification>
+      <DataMsg name="QueueChange" msgArrival="EVENT" id="7" description="Queue status update">
+        <VariableRef name="QueueString" />
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="WindowOpened" msgArrival="EVENT" id="8" description="Target observation window opened">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+      </DataMsg>
+    </Notification>
+
+	<Notification>
+      <DataMsg name="WindowClosed" msgArrival="EVENT" id="9" description="Target observation window closed">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ObservationTaskAchieved" msgArrival="EVENT" id="10" description="Observation task completed before window closed">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+        <VariableRef name="viewedTime"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ObservationTaskFailed" msgArrival="EVENT" id="11" description="Observation task failed">
+        <VariableRef name="targetId"/>
+        <VariableRef name="targetName"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="windowStart"/>
+        <VariableRef name="windowEnd"/>
+      </DataMsg>
+    </Notification>
+
+    <!--High Priority Target commands-->
+    <Command>
+      <CommandMsg name="AddHighPriorityTarget" id="12" description="Assert a high priority target, one which overrules the standard observation list">
+        <VariableRef name="targetName"/>
+        <VariableRef name="targetId"/>
+        <VariableRef name="taskId"/>
+        <VariableRef name="ObservationTargetType"/>
+        <VariableRef name="locationInformation"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="RemoveHighPriorityTarget" id="13" description="Rescind the current high priority observation target, if it exists">
+        <!--Ideally, would include the name/id, and match against the issued high priority request-->
+      </CommandMsg>
+    </Command>
+
+    <!-- An additional notification update, better formatted for determining actual status -->
+    <Notification>
+      <DataMsg name="ListStatus" msgArrival="EVENT" id="14" description="Current list status notification">
+        <VariableRef name="totalTargets"/>
+        <VariableRef name="remainingTargets"/>
+        <VariableRef name="listStatus"/>
+        <!-- Reusing the target type enum, would like to provide info on what is, if any, the current target type-->
+        <VariableRef name="ObservationTargetType"/>
+        <!-- If OTT isn't TARGET_NOT_FOUND, the current tgt name will be in 'targetName' -->
+        <VariableRef name="targetName"/>
+      </DataMsg>
+    </Notification>
+    
+    
+  </Interface>
+
+</xTEDS>

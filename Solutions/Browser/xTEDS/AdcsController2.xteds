@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" name="ADCS_Control_App_xTeds" version="1.0">
+<Application name="AdcsController2" version="1.0" kind="Software" description="Implements the top-level interface to the ADCS"/>
+	<Interface name="IAdcsCommanding" id="1">
+		<Variable name="Time" kind="Time" format="UINT32" units="s"/>
+		<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+		<Variable name="Mode" kind="ModeEnum" format="UINT8" description="Active control mode">
+			<Drange name="ModeEnum">
+				<Option name="Standby" value="1"/>
+				<Option name="Detumble" value="2"/>
+				<Option name="Rate" value="3"/>
+				<Option name="LVLH" value="4"/>
+				<Option name="SunPoint" value="5"/>
+				<Option name="TargetTrack" value="6"/>
+				<Option name="Generic" value="7"/>
+				<Option name="Named" value="8"/>
+				<Option name="MomentumDumping" value="9"/>
+			</Drange>
+		</Variable>
+		<Variable name="Name" kind="string" format="UINT8" length="32" description="Name"/>
+		<Variable name="ModeId" kind="ID" format="UINT16"/>
+		<Variable name="TargetId" kind="ID" format="UINT16"/>
+		<Variable name="TargetName" kind="string" format="UINT8" length="32" description="Active target name"/>
+		<Variable name="SubMode" kind="SubModeEnum" format="UINT8" description="Active sub-mode">
+			<Drange name="SubModeEnum">
+				<Option name="Idle" value="1"/>
+				<Option name="SpinDown" value="2"/>
+				<Option name="Slew" value="3"/>
+				<Option name="SpinUp" value="4"/>
+				<Option name="Track" value="5"/>
+			</Drange>
+		</Variable>
+		<Variable name="PointingError" kind="angle" format="FLOAT32" units="deg" description="Angular pointing error"/>
+		<Variable name="EulerAngle" kind="attitude" format="FLOAT32" length="3" units="deg" description="Euler angles"/>
+		<Variable name="EulerError" kind="attitude" format="FLOAT32" length="3" units="deg" description="Euler error angles"/>
+		<Variable name="EulerOffset" kind="attitude" format="FLOAT32" length="3" units="deg" description="Euler offset angles"/>
+		<Variable name="TrackThreshold" kind="angle" format="FLOAT32" units="deg"
+			description="Angular error that triggers the TrackAchieved message"/>
+		<Variable name="Reason" kind="ReasonEnum" format="UINT8" description="Fault message reason">
+			<Drange name="ReasonEnum">
+				<Option name="WheelsOffline" value="1"/>
+				<Option name="RodsOffline" value="2"/>
+				<Option name="NoRateInfo" value="3"/>
+				<Option name="NoAttitudeInfo" value="4"/>
+				<Option name="PropagatorFailure" value="5"/>
+			</Drange>
+		</Variable>
+		<Variable name="InertialLOS" kind="WellKnownVectorEnum" format="UINT8" description="Well known vectors">
+			<Drange name="WellKnownVectorEnum">
+				<Option name="Moon" value="1"/>
+				<Option name="Nadir" value="2"/>
+				<Option name="OrbitNormal" value="3"/>
+				<Option name="Sun" value="4"/>
+				<Option name="Target" value="5"/>
+				<Option name="Velocity" value="6"/>
+				<Option name="Zenith" value="7"/>
+			</Drange>
+		</Variable>
+		<Variable name="InertialReference" kind="WellKnownVectorEnum" format="UINT8" description="Well known vectors">
+			<Drange name="WellKnownVectorEnum">
+				<Option name="Moon" value="1"/>
+				<Option name="Nadir" value="2"/>
+				<Option name="OrbitNormal" value="3"/>
+				<Option name="Sun" value="4"/>
+				<Option name="Target" value="5"/>
+				<Option name="Velocity" value="6"/>
+				<Option name="Zenith" value="7"/>
+			</Drange>
+		</Variable>
+		<Variable name="BodyLOS" kind="LOS" length="3" format="FLOAT64" description="body vector along which we wish to point">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="BodyReference" kind="LOS" length="3" format="FLOAT64" description="body vector to align with the inertial reference">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="AngularRate" kind="attitude" format="FLOAT32" length="3" units="rad/s"/>
+		<Variable name="IsPossible" kind="ManeuverPossibleEnum" format="UINT8" description="Expresses ability to satisfy a mode/plan request">
+			<Drange name="ManeuverPossibleEnum">
+				<Option name="YES" value="1"/>
+				<Option name="NO" value="2"/>
+			</Drange>
+		</Variable>
+		<Variable name="Duration" kind="time" units="s" format="FLOAT32" description="Time to complete a slew"/>
+		<Variable name="MaxPower" kind="power" units="W" format="FLOAT32" description="Max Power involved to accomplish a maneuver"/>
+		<Variable name="Energy" kind="energy" units="J" format="FLOAT32" description="Integrated power to do a move"/>
+		<Variable name="PositionType" kind="PositionEnum" format="UINT8" description="How to interpret pos,vel,acc">
+			<Drange name="PositionEnum">
+				<Option name="ECI" value="1"/>
+				<Option name="ECEF" value="2"/>
+				<Option name="LLA" value="3"/>
+				<Option name="Local" value="4"/>
+			</Drange>
+		</Variable>
+		<Variable name="Position" kind="attitude" format="FLOAT64" length="3" units="m"
+			description="Could be ECI, ECEF, LLA, Local"/>
+		<Variable name="Velocity" kind="attitude" format="FLOAT32" length="3" units="m/s"
+			description="Could be ECI, ECEF, LLA, Local"/>
+		<Variable name="Acceleration" kind="attitude" format="FLOAT32" length="3" units="m/s^2"
+			description="Could be ECI, ECEF, LLA, Local"/>
+		<Variable name="GroundSpeed" kind="speed" format="FLOAT32" units="m/s"
+			description="Pierce point speed over the ground while crossing the target"/>
+		<Variable name="Azimuth" kind="angle" format="FLOAT32" units="deg"
+			description="Pierce point angle ground (referenced from north) while crossing the target"/>
+		<Notification>
+			<DataMsg name="ModeStatus" id="1" msgArrival="EVENT">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="SubMode"/>
+				<VariableRef name="TargetName"/>
+			</DataMsg>
+		</Notification>
+		<Command>
+			<CommandMsg name="GetModeStatus" id="2" >
+				<Qualifier name="TelemetryLevel" value="2"/>
+			</CommandMsg>
+		</Command>
+		<Notification>
+			<DataMsg name="TrackingStatus" id="3" msgArrival="PERIODIC" msgRate="10">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="PointingError"/>
+				<VariableRef name="EulerAngle"/>
+				<VariableRef name="EulerError"/>
+			</DataMsg>
+		</Notification>
+		<Command>
+			<CommandMsg name="GetTrackingStatus" id="4" >
+				<Qualifier name="TelemetryLevel" value="2"/>
+			</CommandMsg>
+		</Command>
+		<Command>
+			<CommandMsg name="SetTrackThreshold" id="5">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="TrackThreshold"/>
+			</CommandMsg>
+		</Command>
+		<Notification>
+			<DataMsg name="TrackAchieved" id="6" msgArrival="EVENT">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="PointingError"/>
+				<VariableRef name="EulerError"/>
+			</DataMsg>
+		</Notification>
+		<Command>
+			<CommandMsg name="SetMode" id="7">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="EulerOffset"/>
+			</CommandMsg>
+			<FaultMsg name="Unable" id="8">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="Reason"/>
+			</FaultMsg>
+		</Command>
+		<Command>
+			<CommandMsg name="SetGenericMode" id="9">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="InertialLOS"/>
+				<VariableRef name="InertialReference"/>
+				<VariableRef name="BodyLOS"/>
+				<VariableRef name="BodyReference"/>
+				<VariableRef name="EulerOffset"/>
+			</CommandMsg>
+			<FaultMsg name="Unable" id="10">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="Reason"/>
+			</FaultMsg>
+		</Command>
+		<Command>
+			<CommandMsg name="SetAngularRate" id="11">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="AngularRate"/>
+			</CommandMsg>
+		</Command>
+		<Request>
+			<CommandMsg name="CreateNamedMode" id="12">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+				<VariableRef name="InertialLOS"/>
+				<VariableRef name="InertialReference"/>
+				<VariableRef name="BodyLOS"/>
+				<VariableRef name="BodyReference"/>
+			</CommandMsg>
+			<DataReplyMsg name="NamedMode" id="13">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="ModeId"/>
+			</DataReplyMsg>
+			<FaultMsg name="ModeExists" id="14">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+			</FaultMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="PlanMode" id="15">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="EulerOffset"/>
+			</CommandMsg>
+			<DataReplyMsg name="AdcsStandbyModeReply" id="16">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="IsPossible"/>
+				<VariableRef name="Duration"/>
+				<VariableRef name="MaxPower"/>
+				<VariableRef name="Energy"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="PlanGenericMode" id="17">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="InertialLOS"/>
+				<VariableRef name="InertialReference"/>
+				<VariableRef name="BodyLOS"/>
+				<VariableRef name="BodyReference"/>
+				<VariableRef name="EulerOffset"/>
+			</CommandMsg>
+			<DataReplyMsg name="AdcsStandbyModeReply" id="18">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="IsPossible"/>
+				<VariableRef name="Duration"/>
+				<VariableRef name="MaxPower"/>
+				<VariableRef name="Energy"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="CreateTarget" id="19">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+				<VariableRef name="PositionType"/>
+				<VariableRef name="Position"/>
+			</CommandMsg>
+			<DataReplyMsg name="TargetId" id="20">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+				<VariableRef name="TargetId"/>
+			</DataReplyMsg>
+			<FaultMsg name="AlreadyExists" id="21">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="TargetName"/>
+			</FaultMsg>
+		</Request>
+		<Command>
+			<CommandMsg name="SetActiveTarget" id="22">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+			</CommandMsg>
+		</Command>
+		<Command>
+			<CommandMsg name="SetEncounterParameters" id="23">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="TargetName"/>
+				<VariableRef name="GroundSpeed"/>
+				<VariableRef name="Azimuth"/>
+			</CommandMsg>
+		</Command>
+		<Command>
+			<CommandMsg name="SetTargetParameters" id="24">
+				<Qualifier name="TelemetryLevel" value="2"/>
+				<VariableRef name="Name"/>
+				<VariableRef name="PositionType"/>
+				<VariableRef name="Position"/>
+				<VariableRef name="Velocity"/>
+				<VariableRef name="Acceleration"/>
+			</CommandMsg>
+		</Command>
+	</Interface>
+	<Interface name="IPowerManagement" id="2">
+		<!--Needs more discussion-->
+	</Interface>
+
+</xTEDS>

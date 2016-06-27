@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="SSA_Sensor_xTEDS" version="1.0">
+  
+	<Device name="SSA_Sensor" kind="ImagingSensor" description="Integrated Sensor Package for Surveillance of Space-based Objects">
+    <Qualifier name="FullImageWidth" value="1392" units="pixels"/>  <!-- CCD operational dimensions -->
+    <Qualifier name="FullImageHeight" value="1040" units="pixels"/>
+    <Qualifier name="FOV" value="65" units="deg"/>                  <!-- The effective full Field of View angle along the horizontal (X) CCD dimension -->
+  </Device>
+
+  <!-- Sensor Imaging Interface -->
+  <Interface name="Image" id="1">
+    <Variable name="StartTime" kind="time" format="UINT32" units="s" description="Time to start image (0 is Now)"/>
+    <Variable name="StartSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="ImageTime" kind="time" format="UINT32" units="s" description="Timetag of delivered image product"/>
+    <Variable name="ImageSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="Duration" kind="time" format="UINT32" units="s" description="Time to continue taking images (0 = until further notice)" />
+    <Variable name="DurationSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="GateSize" kind="gateSize" format="UINT16" units="pixels" length="2" description="CCD gate size (x,y)"/>
+    <Variable name="GatePosition" kind="gatePosition" format="UINT16" units="pixels" length="2" description="CCD gate position (x,y)"/>
+    <Variable name="ImageRate" kind="imageRate" format="UINT8" units="Hz" description="image rate for multiframe images"/>
+    <Variable name="ImageMode" kind="mode" format="UINT8">
+      <Drange name="ImageModeEnum">
+        <Option name="END" value="1" description="Force end of current image taking"/>
+        <Option name="SNAPSHOT" value="2" description="Single image"/>
+        <Option name="MULTIFRAME" value="3" description="Take a sequence of images"/>
+      </Drange>
+    </Variable>
+    <Variable name="ColorMode" kind="mode" format="UINT8">
+      <Drange name="ColorModeEnum">
+        <Option name="RGB" value="1" description="RGB 24 bit pixels"/>
+        <Option name="BW16" value="2" description="greyscale, 16 bits per pixel"/>
+        <Option name="BW8" value="3" description="greyscale, 8 bits per pixel"/>
+      </Drange>
+    </Variable>
+    <Variable name="ImageSegment" kind="data" format="UINT8" units="bytes" length="1426" description="image pixel data"/>
+    <Variable name="ImageNumber" kind="counter" format="UINT16" description="Image Identifier"/>
+    <Variable name="ImageRequestStatus" kind="status" format="UINT8">
+      <Drange name="ImageRequestStatusEnum">
+        <Option name="REQUEST_OK" value="1"/>
+        <Option name="BAD_PARAMETERS" value="2"/>
+        <Option name="UNSUPPORTED_MODE" value="3"/>
+        <Option name="IMAGER_BUSY" value="4"/>
+        <Option name="ACQUISITION_COMPLETE" value="5"/>
+      </Drange>
+    </Variable>
+    <Variable name="Row" kind="counter" format="UINT16" units="pixels" description="Starting row for this image packet"/>
+    <Variable name="Column" kind="counter" format="UINT16" units="pixels" description="Starting column for image packet"/>
+    <Variable name="NumBytes" kind="counter" format="UINT16" description="Number of bytes in this packet"/>
+    <Variable name="SegmentCounter" kind="counter" format="UINT16" description="Sequence Counter for Image Segments (1 based)"/>
+    <Variable name="NumSegments" kind="counter" format="UINT16" description="Number of segments in full image"/>
+    <Variable name="SecondsToReady" kind="time" format="UINT8" description="Number of Seconds until camera ready"/>
+
+    <Command>
+      <CommandMsg name="ImageRequest" id="1">
+        <VariableRef name="StartTime"/>
+        <VariableRef name="StartSubS"/>
+        <VariableRef name="Duration"/>
+        <VariableRef name="DurationSubS"/>
+        <VariableRef name="GateSize"/>
+        <VariableRef name="GatePosition"/>
+        <VariableRef name="ImageRate"/>
+        <VariableRef name="ColorMode"/>
+        <VariableRef name="ImageMode"/>
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="RequestStatus" id="4" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ImageRequestStatus"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="DeviceStatus" id="5" msgArrival="PERIODIC" msgRate="1">
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="SecondsToReady"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="HeaderMsg" id="2" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="ImageTime"/>
+        <VariableRef name="ImageSubS"/>
+        <VariableRef name="ImageNumber"/>
+        <VariableRef name="NumSegments"/>
+        <VariableRef name="GateSize"/>
+        <VariableRef name="GatePosition"/>
+        <VariableRef name="ImageRate"/>
+        <VariableRef name="ColorMode"/>
+        <VariableRef name="ImageMode"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="SegmentMsg" id="3" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="3"/>
+        <VariableRef name="ImageNumber"/>
+        <VariableRef name="SegmentCounter"/>
+        <VariableRef name="Row"/>
+        <VariableRef name="Column"/>
+        <VariableRef name="NumBytes"/>
+        <VariableRef name="ImageSegment"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!-- Sensor Target Reporting Interface -->
+	<Interface name="iTargetReport" id="2">
+		<Variable name="Time" kind="time" format="UINT32" units="s"/>
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor= ".000001" scaleUnits="s"/>
+		<Variable name="TargetCount" kind="count" format="UINT16" description="Number of targets in the list"/>
+		<Variable name="Index" kind="index" format="UINT16" description="Element index of a target within the list (1-based)"/>
+		<Variable name="Position" kind="position" units="m" format="FLOAT64" length="3" description="Position of the target">
+		  <Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="ECI"/>
+			<Qualifier name="FrameResolved" value="ECI"/>
+		</Variable>
+
+    <Variable name="Velocity" kind="speed" units="m/s" format="FLOAT64" length="3" >
+      <Qualifier name="Representation" value="vector" />
+      <Qualifier name="FrameMeasured" value="ECI"/>
+      <Qualifier name="FrameResolved" value="ECI"/>
+    </Variable>
+
+    <Notification>
+      <DataMsg  name="TargetInfo" msgArrival="EVENT" id="3" description="Target info">
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="TargetCount"/>
+        <VariableRef name="Index"/>
+        <VariableRef name="Position"/>
+        <VariableRef name="Velocity"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+
+  <!-- Device Power Interface -->
+  <Interface name="DevicePower" id="3">
+    <Qualifier name="CurrentWarning" value="45.0" units="A"/>
+    <Qualifier name="CurrentLimit" value="48.0" units="A"/>
+    <Qualifier name="AsimOnlyPower" value="2.5" units="W"/>
+    <Qualifier name="AvgPower" value="520.0" units="W"/>
+    <Qualifier name="MaxPower" value="1250.0" units="W"/>
+    <Qualifier name="PowerBehavior" value="Constant_Power"/>
+    <Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s"/>
+    <Variable name="DevPwrState" kind="powerState" format="UINT8" defaultValue="1">
+      <Drange name="DevPwrStateEnum">
+        <Option name="OFF" value="1" description="No power applied to device"/>
+        <Option name="ON" value="2" description="Power applied to device"/>
+      </Drange>
+    </Variable>
+    <Variable name="SetPwrStateStatus" kind="mode" format="UINT8" defaultValue="1">
+      <Drange name="SetPwrStateStatusEnum">
+        <Option name="OK" value="1"/>
+        <Option name="ERROR" value="2"/>
+      </Drange>
+    </Variable>
+
+    <Request>
+      <CommandMsg name="DevPwrSetState" id="1">
+        <VariableRef name="DevPwrState"/>
+      </CommandMsg>
+      <DataReplyMsg name="DevPwrSetStateReply" id="2">
+        <VariableRef name="SetPwrStateStatus"/>
+        <VariableRef name="DevPwrState"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetDevPwrState" id="3"/>
+      <DataReplyMsg name="DevPwrStateReply" id="4">
+        <VariableRef name="DevPwrState"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="DevicePowerStatus" id="5" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="Time"/>
+        <VariableRef name="SubS"/>
+        <VariableRef name="DevPwrState"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+	
+	<Interface name="DeviceSafety" id="4">
+		<!-- Keep out angles and temperature -->
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor="0.000001" scaleUnits="s" />
+		<Variable name="DeviceTemperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20" yLow="-10" yHigh="50" rHigh="60"/>
+
+		<Notification>
+		  <DataMsg name="DeviceTemperatureMsg" id="3" msgArrival="PERIODIC" msgRate="1">
+			 <Qualifier name="TelemetryModulo" value="30"  />
+			 <Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time" />
+			<VariableRef name="SubS" />
+			<VariableRef name="DeviceTemperature"/>
+		  </DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="ASIM" id="5">
+		<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+		<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+		<Variable name="SWCoreLibRev" kind="index" format="UINT8"/>
+		<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT8"/>
+		<Variable name="GUID" kind="GUID" format="BUFFER" />
+
+		<Request>
+			<CommandMsg name="GetVersionInfo" id="1" />
+			<DataReplyMsg name="VersionInfoReply" id="2">
+				<VariableRef name="CRCProgCode"/>
+				<VariableRef name="CRCxTEDS"/>
+				<VariableRef name="SWCoreLibRev"/>
+				<VariableRef name="HWFPGAFirmwareRev"/>
+				<VariableRef name="GUID" />
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

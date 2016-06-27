@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="LripApplication_xTEDS" version="1.0">
+
+    <Application name="LripApplication" version="1.0" kind="Software" description="Detects anomalies from images."/>
+
+    
+<!-- Anomaly Detection Reporting Interface -->
+    <Interface name="LripApplicationInterface" id="1" scope="Public">
+
+<!-- Start of the variable definitions --> 
+        <Variable name="LripAlgorithmStatus" kind="status" format ="UINT8">
+          <Drange name="LripAlgorithmStateType">
+            <Option name="IDLE" value="0"/>
+            <Option name="REQUESTING_IMAGES" value="1"/>
+            <Option name="ALGORITHM_PROCESSING" value="2"/>
+            <Option name="ALGORITHM_ABORTING" value="3"/>
+          </Drange>
+        </Variable>
+        
+        <Variable name="ImageRequestStatus" kind="status" format="UINT8">
+          <Drange name="ImageRequestStatusEnum">
+            <Option name="IDLE" value="0"/>
+            <Option name="REQUEST_OK" value="1"/>
+            <Option name="BAD_PARAMETERS" value="2"/>
+            <Option name="UNSUPPORTED_MODE" value="3"/>
+            <Option name="IMAGER_BUSY" value="4"/>
+            <Option name="ACQUISITION_COMPLETE" value="5"/>
+            <Option name="REQUEST_ABORTING" value="6"/>
+          </Drange>
+        </Variable>
+
+        <Variable name="ShutterState" kind="status" format="UINT8">
+            <Drange name="ShutterStateEnum">
+                <Option name="OPEN" value="0"/>
+                <Option name="CLOSED" value="1"/>
+            </Drange>
+        </Variable>
+
+        <Variable name="ShutterStatus" kind="status" format="UINT8">
+            <Drange name="ShutterStatusEnum">
+                <Option name="OPEN" value="0"/>
+                <Option name="CLOSED" value="1"/>
+            </Drange>
+        </Variable>
+
+        <Variable name="LripType" kind="counter" format="UINT32" description="The type of LRIP algorithm">
+            <Drange name="LripTypeEnum">
+                <Option name="SWISS_AUTO" value="0"/>
+                <Option name="SWISS_5" value="1"/>
+                <Option name="SWISS_R" value="2"/>
+                <Option name="SWISS_D" value="3"/>
+            </Drange>
+        </Variable>
+
+
+        <Variable name="ImageId" kind="counter" format="UINT32" description="Increamenting image ID"/>
+        <Variable name="AssetId" kind="counter" format="UINT32" description="SDT asset model ID"/>
+        <Variable name="NumImagesRequested" kind="counter" format="UINT32" description="How many images the Lrip Algorithm is expecting to be returned"/>
+        <Variable name="TimeTagSec" kind="counter" format="UINT32" units="seconds" description="Timetag in seconds"/>
+        <Variable name="TimeTagMsec" kind="counter" format="UINT32" units="milliseconds" description="Timetag in milliseconds"/>
+        <Variable name="PollIntervalMilliSeconds" kind="counter" format="UINT32" units="millseconds" description="The time interval between requesting a new image"/>
+        <Variable name="ImageValid" kind="counter" format="UINT32" description="Image validity flag"/>
+        <Variable name="Rows" kind="counter" format="UINT32" units="pixels" description="Rows in image (Y-dimension)"/>
+        <Variable name="Columns" kind="counter" format="UINT32" units="pixels" description="Columns in image (X-dimension)"/>
+        <Variable name="CameraFov" kind="counter" format="FLOAT32" units="degrees" description="The FOV of the camera"/>
+        <Variable name="TargetPixel" kind="counter" format="UINT32" length="2" units="pixels" description="The target pixel location"/>
+        <Variable name="ImageLength" kind="counter" format="UINT32" units="pixels" description="Rows times Columns in image"/>
+        <Variable name="ImageData" kind="image" format="BUFFER"/>
+
+        <Variable name="LripValidity" kind="counter" format="UINT32" description="The validity of the LRIP solution"/>
+        <Variable name="NumberOfTargets" kind="counter" format="UINT32" description="Number of anomalies detected"/>
+        <Variable name="NavPosition" kind="counter" format="FLOAT64" length="3" description="The navigation estimate of position"/>
+        <Variable name="NavVelocity" kind="counter" format="FLOAT64" length="3" description="The navigation estimate of velocity"/>
+        <Variable name="NavBoresiteQuat" kind="counter" format="FLOAT64" length="4" description="The navigation boresite quaternion"/>
+        <Variable name="NavBoresiteAngRate" kind="counter" format="FLOAT64" length="3" description="The navigation boresite angular rate"/>
+        <Variable name="TargetPosition" kind="counter" format="FLOAT32" length="600" description="The position of the target"/>
+        <Variable name="TargetVelocity" kind="counter" format="FLOAT32" length="600" description="The velocity of the target"/>
+        <Variable name="TargetIntensity" kind="counter" format="FLOAT32" length="200" description="The intensity of the target"/>
+
+
+        <!-- Start of the command message definitions -->
+        <Command>
+            <CommandMsg  name="StartImagesAcquisition" id="1" description="Command LripApplication to request images and process output"/>
+        </Command>
+
+        <Command>
+            <CommandMsg  name="RequestLripStatus" id="5" description="Command LripApplication to request images and process output"/>
+        </Command>
+
+        <Command>
+            <CommandMsg name="SetShutterState" id="10">
+                <VariableRef name="ShutterState"/>
+            </CommandMsg>
+        </Command>
+
+        
+<!-- Start of the notification message definitions -->
+        <Notification>
+            <DataMsg  name="RequestImages" id="30" msgArrival="EVENT" description="Command LripApplication to request images and process output">
+                <VariableRef name="AssetId"/>
+                <VariableRef name="NumImagesRequested"/>
+                <VariableRef name="Rows"/>
+                <VariableRef name="Columns"/>
+                <VariableRef name="PollIntervalMilliSeconds"/>
+                <VariableRef name="ShutterState"/>
+                <VariableRef name="CameraFov"/>
+            </DataMsg>
+        </Notification>
+
+        <Notification>
+            <DataMsg name="AlgorithmStatus" id="35" msgArrival="EVENT">
+		        <Qualifier name="TelemetryLevel" value="2"/>
+                    <VariableRef name="LripAlgorithmStatus"/>
+                    <VariableRef name="ImageRequestStatus"/>
+                    <VariableRef name="ShutterStatus"/>
+            </DataMsg>
+        </Notification>
+
+        
+        <Notification>
+            <DataMsg name="LripImage" id="40" msgArrival="EVENT">
+                <Qualifier name="TelemetryLevel" value="2"/>
+                <VariableRef name="AssetId"/>
+                <VariableRef name="ImageId"/>
+                <VariableRef name="TimeTagSec"/>
+                <VariableRef name="TimeTagMsec"/>
+                <VariableRef name="ImageValid"/>
+                <VariableRef name="ImageLength"/>
+                <VariableRef name="Rows"/>
+                <VariableRef name="Columns"/>
+                <VariableRef name="CameraFov"/>
+                <VariableRef name="TargetPixel"/>
+              <!--<VariableRef name="ImageData"/>-->
+            </DataMsg>
+        </Notification>
+
+
+        <Notification>
+            <DataMsg  name="LripOutput" msgArrival="EVENT" id="45" description="LRIP Anomaly Information">
+                <VariableRef name="LripValidity"/>
+                <VariableRef name="LripType"/>
+                <VariableRef name="NumberOfTargets"/>
+                <VariableRef name="TimeTagSec"/>
+                <VariableRef name="TimeTagMsec"/>
+                <VariableRef name="NavPosition"/>
+                <VariableRef name="NavVelocity"/>
+                <VariableRef name="NavBoresiteQuat"/>
+                <VariableRef name="NavBoresiteAngRate"/>
+                <VariableRef name="TargetPosition"/>
+                <VariableRef name="TargetVelocity"/>
+                <VariableRef name="TargetIntensity"/>
+                <VariableRef name="CameraFov"/>
+            </DataMsg>
+        </Notification>
+
+
+    </Interface>
+
+
+
+<!-- SSA Surveillance Reporting Interface -->
+    <Interface name="iSsaEventReporting" id="2">
+<!-- Start of the variable definitions -->
+        <Variable name="Time" kind="time" format="UINT32" units="s"/>
+        <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor= ".000001" scaleUnits="s"/>
+        <Variable name="ListCount" kind="count" format="UINT16" description="Number of list entries to expect"/>
+        <Variable name="Index" kind="index" format="UINT16" description="Element index of an entry within the list (1-based)"/>
+        <Variable name="ObjectName" kind="string" format="INT8" length="25" description="Object Catalog Name"/>
+        <Variable name="ObjectId" kind="ID" format="UINT32" description="Object Catalog ID"/>
+        <Variable name="Position" kind="position" units="m" format="FLOAT64" length="3" description="Position of the target">
+            <Qualifier name="Representation" value="vector"/>
+            <Qualifier name="FrameMeasured" value="ECI"/>
+            <Qualifier name="FrameResolved" value="ECI"/>
+        </Variable>
+        <Variable name="Velocity" kind="speed" units="m/s" format="FLOAT64" length="3" >
+            <Qualifier name="Representation" value="vector" />
+            <Qualifier name="FrameMeasured" value="ECI"/>
+            <Qualifier name="FrameResolved" value="ECI"/>
+        </Variable>
+        <Variable name="EventType" kind="SSA_Event" format="UINT8" description="Type of detected SSA Event">
+            <Drange name="SSA_Event_Enum">
+                <Option name="CATALOG_OBJECT_MOVED" value="1"/>
+                <Option name="CATALOG_OBJECT_NOT_FOUND" value="2"/>
+                <Option name="NEW_OBJECT_FOUND" value="3"/>
+            </Drange>
+        </Variable>
+        <Variable name="InterestLevel" kind="SSA_Interest_Level" format="UINT8" description="New Interest Level of Object">
+            <Drange name="SSA_Interest_Level_Enum">
+                <Option name="UNDEFINED" value="0"/>
+                <Option name="LOW" value="1"/>
+                <Option name="ADVISORY" value="2"/>
+                <Option name="ELEVATED" value="3"/>
+                <Option name="HIGH" value="4"/>
+                <Option name="SEVERE" value="5"/>
+            </Drange>
+        </Variable>
+        
+<!-- Start of the notification message definitions -->
+        <Notification>
+            <DataMsg  name="SurveillanceEvent" msgArrival="EVENT" id="2" description="Space Sureveillance Event Notification">
+                <VariableRef name="Time"/>
+                <VariableRef name="SubS"/>
+                <VariableRef name="ListCount"/>
+                <VariableRef name="Index"/>
+                <VariableRef name="EventType"/>
+                <VariableRef name="ObjectName"/>
+                <VariableRef name="ObjectId"/>
+                <VariableRef name="Position"/>
+                <VariableRef name="Velocity"/>
+                <VariableRef name="InterestLevel"/>
+            </DataMsg>
+        </Notification>
+    </Interface>
+
+</xTEDS>
+

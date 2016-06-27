@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" running="true">
+  <Parameter name="AspireStandalone" />
+  <Clock displayFormat="GPS">
+    <Model xsi:type="AspireClock" name="Aspire" compId="746d5d6d-231d-4958-9b68-2bd5a2c2b729" />
+  </Clock>
+  <Model xsi:type="Hpiu" compId="12400000-0000-0000-0000-000000000000" xtedsFile="HPIU+Host.xteds" remotePort="3050" dontRegister="true">
+    <Transport xsi:type="MsgTransport" destination="39" port="40" />
+  </Model>
+  <Model xsi:type="AspireShell" compId="12410000-0000-0000-0000-000000000000" xtedsFile="HPImager.xteds" dontRegister="true">
+    <Transport xsi:type="MsgTransport" destination="39" port="41" />
+  </Model>
+  <Model xsi:type="AspireShell" compId="12420000-0000-0000-0000-000000000000" xtedsFile="CAPS.xteds" dontRegister="true">
+    <Transport xsi:type="MsgTransport" destination="39" port="42" />
+  </Model>
+  <Model xsi:type="AspireShell" compId="12430000-0000-0000-0000-000000000000" xtedsFile="SpaceWeather.xteds" dontRegister="true">
+    <Transport xsi:type="MsgTransport" destination="39" port="43" />
+  </Model>
+  <Model xsi:type="CcsdsMux" localUdpPort="3039" remoteUdpPort="3038">
+    <Transport xsi:type="MsgTransport" port="39" />
+  </Model>
+  <Model xsi:type="SignalGenerator">
+    <Signal xsi:type="Counter" name="counter0" />
+  </Model>
+</Scenario>

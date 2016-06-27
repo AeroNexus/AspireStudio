@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="StringAndBuffer_xTEDS"
+version="1.0">
+
+<Application name="StringAndBufferExample" kind="ExampleSoftware"/>
+
+<Interface name="iStringBuf" id="1" description="Interface encapsulating a string and a byte buffer">
+<Variable name="Keeper" kind="string" format="STRING" description="An ASPIRE string stat persists outside the message handler"/>
+<Variable name="RootString" kind="string" format="STRING" description="An ASPIRE string"/>
+<Variable name="BufferSize" kind="count" format="UINT32" description="Length of the desired byte buffer"/>
+<Variable name="BufferName" kind="string" format="STRING" description="An ASPIRE string"/>
+<Variable name="ByteBuffer" kind="string" format="BUFFER" description="An ASPIRE buffer"/>
+<Variable name="Status" kind="string" format="STRING" description="An ASPIRE string"/>
+<Request>
+<CommandMsg name="StringBufRqst" id="1" description="A request to provide a byte buffer of specified size and a name">
+<VariableRef name="RootString"/>
+<VariableRef name="BufferSize"/>
+</CommandMsg>
+<DataReplyMsg name="StringBufReply" id="2" description="The reply message contining the string and the byte buffer">
+<VariableRef name="BufferName"/>
+<VariableRef name="ByteBuffer"/>
+</DataReplyMsg>
+</Request>
+<Command>
+<CommandMsg name="PersistentString" id="3" description="An emample showing a persistent string">
+<VariableRef name="Keeper"/>
+</CommandMsg>
+</Command>
+<Notification>
+<DataMsg name="StatusMsg" id="4" msgArrival="PERIODIC" msgRate="1" >
+<VariableRef name="Status"/>
+</DataMsg>
+</Notification>
+
+</Interface>
+
+</xTEDS>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="PowerSwitch_xTEDS" version="1.1">
+<Application name="PowerSwitch" version="1.0" kind="PowerManagement" description="Implements logical function power switching"/>
+	<Interface name="IPowerSwitch" id="1">
+		<Variable name="Mode" kind="ModeEnum" format="UINT8" description="Active control mode">
+			<Drange name="ModeEnum">
+				<Option name="Off" value="1"/>
+				<Option name="Standby" value="2"/>
+				<Option name="Receive" value="3"/>
+				<Option name="Transmit" value="4"/>
+				<Option name="On" value="5"/>
+			</Drange>
+		</Variable>
+		<Variable name="SubSystem" kind="SubSystemType" format="UINT8" description="Name">
+			<Drange name="SubSystemType">
+				<Option name="UhfRadio" value="1"/>
+				<Option name="SBandRadio" value="2"/>
+				<Option name="XBandRadio" value="3"/>
+				<Option name="SGLS" value="4"/>
+				<Option name="CDL" value="5"/>
+				<Option name="Payload1" value="6"/>
+				<Option name="Payload2" value="7"/>
+			</Drange>
+		</Variable>
+		<Variable name="Status" kind="StatusEnum" format="UINT8" description="Disposition of request">
+			<Drange name="StatusEnum">
+				<Option name="Accepted" value="1"/>
+				<Option name="UndefinedSubSystem" value="2"/>
+				<Option name="UndefinedMode" value="3"/>
+			</Drange>
+		</Variable>
+
+		<Request>
+			<CommandMsg name="SetMode" id="1" description="Set a well known mode">
+				<VariableRef name="SubSystem"/>
+				<VariableRef name="Mode"/>
+			</CommandMsg>
+			<DataReplyMsg name="ModeReply" id="2">
+				<VariableRef name="SubSystem"/>
+				<VariableRef name="Mode"/>
+				<VariableRef name="Status"/>
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

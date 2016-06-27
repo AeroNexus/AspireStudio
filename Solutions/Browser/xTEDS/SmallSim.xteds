@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="SmallSim_xTEDS" version="1.0">
+  
+	<Application name="SmallSim" kind="Software" description="Proxy for bdStudio or BAIT"/>
+
+	<Interface name="ISim" id="1" >
+		<Variable name="LosEci" kind="vector" format="FLOAT64" length="3" />
+		<Variable name="Time" kind="time" format="INT32" />
+		<Variable name="SubS" kind="time" format="INT32" />
+		<Variable name="Status" kind="status" format="STRING" />
+		<Variable name="Verbosity" kind="boolean" format="UINT8" />
+
+		<Request>
+			<CommandMsg name="GetStatus" id="1" />
+			<DataReplyMsg name="StatusReply" id="2" >
+				<VariableRef name="Status" />
+			</DataReplyMsg>
+		</Request>
+
+		<Notification>
+			<DataMsg name="SBSS_Los" id="3" msgArrival="EVENT" >
+				<VariableRef name="LosEci"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="GBT_Los" id="4" msgArrival="EVENT" >
+				<VariableRef name="LosEci"/>
+			</DataMsg>
+		</Notification>
+
+		<Request>
+			<CommandMsg name="Verbose" id="5" >	
+				<VariableRef name="Verbosity" />
+			</CommandMsg>
+			<DataReplyMsg name="VerboseReply" id="6" />
+		</Request>
+
+		<Notification>
+			<DataMsg name="AppTime" id="7" msgArrival="PERIODIC" msgRate="5" >
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+			</DataMsg>
+		</Notification>
+
+	</Interface>
+	
+</xTEDS>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xTEDS name="IntelligentAgent_xTEDS" version="1.0" xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Application name="IntelligentAgent" kind="Software"/>
+    <Interface name="IEstimatingZoneStateOfHealth" id="1">
+        <Variable name="estimatingStateOfHealthStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthIsNominalStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="initializingStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthyStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthy1AStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthy1BStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthy2AStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthy2BStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="healthIsOffNominalStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="unknownStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="failedStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Variable name="resettingProcessStatus" kind="TBD" format="UINT8">
+            <Drange name="StateStatus" description="Status for each state in the statechart">
+                <Option name="NeverEntered" value="0" description="The state has never been entered"/>
+                <Option name="Entered" value="1" description="The state has been entered. The state machine is currently in this state"/>
+                <Option name="Exited" value="2" description="The state has been entered and subsequently exited. The state machine is not in this state."/>
+            </Drange>
+        </Variable>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIs2A" id="1"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIs2B" id="2"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="XZCTRL" id="3"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="XZBKUP" id="4"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="EstimatingZoneStateOfHealthStatusMessage" id="5">
+                <VariableRef name="estimatingStateOfHealthStatus"/>
+                <VariableRef name="healthIsNominalStatus"/>
+                <VariableRef name="initializingStatus"/>
+                <VariableRef name="healthyStatus"/>
+                <VariableRef name="healthy1AStatus"/>
+                <VariableRef name="healthy1BStatus"/>
+                <VariableRef name="healthy2AStatus"/>
+                <VariableRef name="healthy2BStatus"/>
+                <VariableRef name="healthIsOffNominalStatus"/>
+                <VariableRef name="unknownStatus"/>
+                <VariableRef name="failedStatus"/>
+                <VariableRef name="resettingProcessStatus"/>
+            </DataMsg>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIsInitializing" id="6"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIsFailed" id="7"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIsUnknown" id="8"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIs1A" id="9"/>
+        </Notification>
+        <Notification>
+            <DataMsg msgArrival="EVENT" msgRate="0.0" name="StateIs1B" id="10"/>
+        </Notification>
+    </Interface>
+</xTEDS>

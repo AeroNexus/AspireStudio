@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="bdStudioComms_xTEDS" version="1.0">
+
+  <Application name="bdStudioComms" version="1.0" kind="Software" description="Agent used to get data from Aspire and push to bdStudio."/>
+
+  <!-- Mission Info Agent Interface -->
+  <Interface name="bdStudioCommsInterface" id="1" scope="Public">
+    <Variable name="ModelId" kind="ID" format="INT32"	description="Entity identifier"/>
+    <Variable name="ComponentId" kind="ID" format="INT32"	description="Component ID within an entity: used for sub components"/>
+    <Variable name="AssetId" kind="counter" format="UINT32" description="SDT asset model ID"/>
+    <Variable name="ImageId" kind="counter" format="UINT32" description="Increamenting image ID"/>
+    <Variable name="TimeTagSec" kind="counter" format="UINT32" units="seconds" description="Timetag in seconds"/>
+    <Variable name="TimeTagMsec" kind="counter" format="UINT32" units="milliseconds" description="Timetag in milliseconds"/>
+    <Variable name="ImageValid" kind="counter" format="UINT32" description="Image validity flag"/>
+    <Variable name="Rows" kind="counter" format="UINT32" units="pixels" description="Rows in image (Y-dimension)"/>
+    <Variable name="Columns" kind="counter" format="UINT32" units="pixels" description="Columns in image (X-dimension)"/>
+    <Variable name="ImageLength" kind="counter" format="UINT32" units="pixels" description="Rows times Columns in image"/>
+
+    <Variable name="NavPosition" kind="counter" format="FLOAT64" length="3" description="The navigation estimate of position"/>
+    <Variable name="NavVelocity" kind="counter" format="FLOAT64" length="3" description="The navigation estimate of velocity"/>
+    <Variable name="NavBoresiteQuat" kind="counter" format="FLOAT64" length="4" description="The navigation boresite quaternion"/>
+    <Variable name="NavBoresiteAngRate" kind="counter" format="FLOAT64" length="3" description="The navigation boresite angular rate"/>
+    <Variable name="CameraFov" kind="counter" format="FLOAT32" units="degrees" description="The FOV of the camera"/>
+
+    <!-- Start of the command message definitions -->
+      <Command>
+          <CommandMsg name="AbortImageAcquisition" id="1">
+              <VariableRef name="ModelId"/>
+              <VariableRef name="ComponentId"/>
+          </CommandMsg>
+      </Command>
+
+      
+<!-- Start of the notification message definitions -->
+      <Notification>
+        <DataMsg name="ImageHeader" id="50" msgArrival="EVENT">
+            <Qualifier name="TelemetryLevel" value="2"/>
+            <VariableRef name="AssetId"/>
+            <VariableRef name="ImageId"/>
+            <VariableRef name="TimeTagSec"/>
+            <VariableRef name="TimeTagMsec"/>
+            <VariableRef name="ImageValid"/>
+            <VariableRef name="ImageLength"/>
+            <VariableRef name="Rows"/>
+            <VariableRef name="Columns"/>
+            <VariableRef name="NavPosition"/>
+            <VariableRef name="NavVelocity"/>
+            <VariableRef name="NavBoresiteQuat"/>
+            <VariableRef name="NavBoresiteAngRate"/>
+            <VariableRef name="CameraFov"/>
+        </DataMsg>
+    </Notification>
+
+      
+  </Interface>
+
+
+  </xTEDS>

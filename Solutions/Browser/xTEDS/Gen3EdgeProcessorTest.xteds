@@ -1,0 +1,210 @@
+<xTEDS xmlns="https://pnpsoftware.sdl.usu.edu/redmine/projects/xtedsschema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://pnpsoftware.sdl.usu.edu/redmine/projects/xtedsschema https://pnpsoftware.sdl.usu.edu/spa/xteds/current.xsd" name="EdgeProcessor_Xteds" version="1.4">
+  <Application version="1.0" name="Gen3EdgeProcessor" description="Gen3EdgeProcessor" kind="EP" programMemoryRequired="200" dataMemoryRequired="200"/>
+  <!--  This is the xTEDS for a multi device Gen3 Edge Processor -->
+  <Interface name="ASIM" id="1">
+    <Request>
+      <CommandMsg name="GetVersionInfo" id="1"/>
+      <DataReplyMsg name="VersionInfoReply" id="2">
+        <Variable name="CRCProgCode" kind="CRC" dataType="UINT16" units=""/>
+        <Variable name="CRCxTEDS" kind="CRC" dataType="UINT16" units=""/>
+        <Variable name="SWCoreLibRev" kind="index" dataType="UINT08" units=""/>
+        <Variable name="HWFPGAFirmwareRev" kind="index" dataType="UINT08" units=""/>
+        <Variable name="GUID" kind='uuid' dataType='UINT08' units='uuid' numberOfArrayElements='16' />
+      </DataReplyMsg>
+    </Request>
+  </Interface>
+
+  <!-- This is the first device...a reaction wheel -->
+  <Interface name="iReactionWheel" id="2" description="Interface to a Reaction Wheel">
+    <Command>
+      <CommandMsg name="TorqueCommandMsg" description="Torque command vector for a Reaction Wheel" id="1">
+        <Variable name="TorqueCommand" description="Digital Torque Command in body frame" dataType="FLOAT32" numberOfArrayElements="3" kind="commandedTorque" units="Nm" testBypassTag="0x00000014" />
+      </CommandMsg>
+    </Command>
+
+    <Request>
+      <CommandMsg name="SetOpMode" description="Set the Reaction Wheel controller operational mode" id="2">
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="2" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+      </CommandMsg>
+      <DataReplyMsg name="SetOpModeReply" id="3" >
+        <Variable name="ReplyStatus" description="Reply status" kind="status" dataType="UINT08" units="" defaultValue="1" >
+          <Enumeration name="ReplyStatusEnum">
+            <Option name="OK" optionValue="1" description="Mode change accepted"/>
+            <Option name="ERROR" optionValue="2" description="Invalid OpMode"/>
+          </Enumeration>
+        </Variable>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="OperationalData" description="Reaction Wheel operational data output" msgRate="1.0" msgArrival="PERIODIC" id="4">
+        <Variable name="MeasurementTimesec" description="Time as defined by the on-board system" kind="time" units="sec" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="MeasurementTimeMicrosec" description="Time as defined by the on-board system " units="microsec" kind="time" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="DataValid" description="RW Data Validity Flag" kind="enum" dataType="UINT08" units="enumeration">
+          <Enumeration name="ValidityEnum">
+            <Option name="OK" optionValue="1" description="RW is operating OK"/>
+            <Option name="ERROR" optionValue="2" description="Invalid Data"/>
+          </Enumeration>
+        </Variable>
+        <Variable name="WheelSpeed" description="Wheel Speed Digital" kind="wheelSpeed" dataType="FLOAT32" units="RPM" testBypassTag="0x0000000c" />
+        <Variable name="DirectionOfRotation" description="Direction of Rotation of the wheel" kind="enum" dataType="UINT08" units="enumeration" testBypassTag="0x00000020">
+          <Enumeration name="RotationEnum">
+            <Option name="CounterClockWise" optionValue="1" description="Counter Clockwise Wheel Rotation" />
+            <Option name="ClockWise" optionValue="2" description="Clockwise Wheel Rotation" />
+          </Enumeration>
+        </Variable>
+        <Variable name="SatPercentage" description="Wheel saturation as a percentage" kind="saturationLevel" dataType="FLOAT32" units="percent" testBypassTag="0x00000008" />
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="1" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+        <Variable name="Momentum" description="Current wheel stored momentum" kind="angularMomentum" dataType="FLOAT32" units="Nms" testBypassTag="0x00000004" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!-- This is the second device...another reaction wheel -->
+  <Interface name="iReactionWheel" id="3" description="Interface to a Reaction Wheel">
+    <Command>
+      <CommandMsg name="TorqueCommandMsg" description="Torque command vector for a Reaction Wheel" id="1">
+        <Variable name="TorqueCommand" description="Digital Torque Command in body frame" dataType="FLOAT32" numberOfArrayElements="3" kind="commandedTorque" units="Nm" testBypassTag="0x00000014" />
+      </CommandMsg>
+    </Command>
+
+    <Request>
+      <CommandMsg name="SetOpMode" description="Set the Reaction Wheel controller operational mode" id="2">
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="2" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+      </CommandMsg>
+      <DataReplyMsg name="SetOpModeReply" id="3" >
+        <Variable name="ReplyStatus" description="Reply status" kind="status" dataType="UINT08" units="" defaultValue="1" >
+          <Enumeration name="ReplyStatusEnum">
+            <Option name="OK" optionValue="1" description="Mode change accepted"/>
+            <Option name="ERROR" optionValue="2" description="Invalid OpMode"/>
+          </Enumeration>
+        </Variable>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="OperationalData" description="Reaction Wheel operational data output" msgRate="1.0" msgArrival="PERIODIC" id="4">
+        <Variable name="MeasurementTimesec" description="Time as defined by the on-board system" kind="time" units="sec" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="MeasurementTimeMicrosec" description="Time as defined by the on-board system " units="microsec" kind="time" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="DataValid" description="RW Data Validity Flag" kind="enum" dataType="UINT08" units="enumeration">
+          <Enumeration name="ValidityEnum">
+            <Option name="OK" optionValue="1" description="RW is operating OK"/>
+            <Option name="ERROR" optionValue="2" description="Invalid Data"/>
+          </Enumeration>
+        </Variable>
+        <Variable name="WheelSpeed" description="Wheel Speed Digital" kind="wheelSpeed" dataType="FLOAT32" units="RPM" testBypassTag="0x0000000c" />
+        <Variable name="DirectionOfRotation" description="Direction of Rotation of the wheel" kind="enum" dataType="UINT08" units="enumeration" testBypassTag="0x00000020">
+          <Enumeration name="RotationEnum">
+            <Option name="CounterClockWise" optionValue="1" description="Counter Clockwise Wheel Rotation" />
+            <Option name="ClockWise" optionValue="2" description="Clockwise Wheel Rotation" />
+          </Enumeration>
+        </Variable>
+        <Variable name="SatPercentage" description="Wheel saturation as a percentage" kind="saturationLevel" dataType="FLOAT32" units="percent" testBypassTag="0x00000008" />
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="1" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+        <Variable name="Momentum" description="Current wheel stored momentum" kind="angularMomentum" dataType="FLOAT32" units="Nms" testBypassTag="0x00000004" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!-- This is the third device...another reaction wheel -->
+  <Interface name="iReactionWheel" id="4" description="Interface to a Reaction Wheel">
+    <Command>
+      <CommandMsg name="TorqueCommandMsg" description="Torque command vector for a Reaction Wheel" id="1">
+        <Variable name="TorqueCommand" description="Digital Torque Command in body frame" dataType="FLOAT32" numberOfArrayElements="3" kind="commandedTorque" units="Nm" testBypassTag="0x00000014" />
+      </CommandMsg>
+    </Command>
+
+    <Request>
+      <CommandMsg name="SetOpMode" description="Set the Reaction Wheel controller operational mode" id="2">
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="2" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+      </CommandMsg>
+      <DataReplyMsg name="SetOpModeReply" id="3" >
+        <Variable name="ReplyStatus" description="Reply status" kind="status" dataType="UINT08" units="" defaultValue="1" >
+          <Enumeration name="ReplyStatusEnum">
+            <Option name="OK" optionValue="1" description="Mode change accepted"/>
+            <Option name="ERROR" optionValue="2" description="Invalid OpMode"/>
+          </Enumeration>
+        </Variable>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="OperationalData" description="Reaction Wheel operational data output" msgRate="1.0" msgArrival="PERIODIC" id="4">
+        <Variable name="MeasurementTimesec" description="Time as defined by the on-board system" kind="time" units="sec" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="MeasurementTimeMicrosec" description="Time as defined by the on-board system " units="microsec" kind="time" dataType="UINT32" timeModel="GPST1" />
+        <Variable name="DataValid" description="RW Data Validity Flag" kind="enum" dataType="UINT08" units="enumeration">
+          <Enumeration name="ValidityEnum">
+            <Option name="OK" optionValue="1" description="RW is operating OK"/>
+            <Option name="ERROR" optionValue="2" description="Invalid Data"/>
+          </Enumeration>
+        </Variable>
+        <Variable name="WheelSpeed" description="Wheel Speed Digital" kind="wheelSpeed" dataType="FLOAT32" units="RPM" testBypassTag="0x0000000c" />
+        <Variable name="DirectionOfRotation" description="Direction of Rotation of the wheel" kind="enum" dataType="UINT08" units="enumeration" testBypassTag="0x00000020">
+          <Enumeration name="RotationEnum">
+            <Option name="CounterClockWise" optionValue="1" description="Counter Clockwise Wheel Rotation" />
+            <Option name="ClockWise" optionValue="2" description="Clockwise Wheel Rotation" />
+          </Enumeration>
+        </Variable>
+        <Variable name="SatPercentage" description="Wheel saturation as a percentage" kind="saturationLevel" dataType="FLOAT32" units="percent" testBypassTag="0x00000008" />
+        <Variable name="OpMode" description="Controller operational mode" kind="mode" dataType="UINT08" units="" defaultValue="1" testBypassTag="0x00000010" >
+          <Enumeration name="OpModeEnum">
+            <Option name="GROSS_TORQUE" optionValue="1" description="Direct torque without friction compensation" />
+            <Option name="ADAPTIVE_NET_TORQUE" optionValue="2" description="Applied torque is adaptively corrected for dynamic friction" />
+            <Option name="ADAPTIVE_NET_OMEGA" optionValue="3" description="Applied torque is does not compensate for friction; final W is held." />
+          </Enumeration>
+        </Variable>
+        <Variable name="Momentum" description="Current wheel stored momentum" kind="angularMomentum" dataType="FLOAT32" units="Nms" testBypassTag="0x00000004" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!-- This is the fourth device...IMU -->
+  <Interface name="iAttitudeRate" id="5" description="Attitude rate interface">
+
+    <Notification>
+      <DataMsg name="AngularRateMsg" msgArrival="PERIODIC" msgRate="100" id="1">
+        <Qualifier name="TelemetryModulo" qualifierValue="100"  />
+        <Qualifier name="TelemetryLevel" qualifierValue="1"/>
+        <Variable name="Time" kind="time" dataType="UINT32" units="s" />
+        <Variable name="SubS" kind="subSeconds" units="counts" dataType="UINT32" scaleFactor=".000001" scaleUnits="s" />
+        <Variable name="AngularRate" kind="attitudeRate" units="rad/s" dataType="FLOAT32" numberOfArrayElements="3" description="Angular rates about each primary axis " testBypassTag="0x00000000" >
+          <Qualifier name="Representation" qualifierValue="vector" />
+          <Qualifier name="FrameMeasured" qualifierValue="DVF" />
+          <Qualifier name="FrameResolved" qualifierValue="SVF" />
+        </Variable>
+        <Variable name="RateVariance" kind="variance" units="rad2/sec2" dataType="FLOAT32" numberOfArrayElements="3" description="Angular rate variance about each primary axis" testBypassTag="0x0000000c" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+</xTEDS>

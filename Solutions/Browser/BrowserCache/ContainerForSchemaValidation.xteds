@@ -1,0 +1,899 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="AMM_Std_IF_Template_xTEDS" description="Containiner holding xTEDS Standard Interface Templates for the Autonomous Mission Manager Architecture" version="1.0">
+  
+  <Application name="ContainerForSchemaValidation" kind="AutonomyFlightSoftware" />
+  
+  <!-- Below this point are the interface templates for each of the standard AMM Architecture categories -->
+  <!-- To keep these definitions centrally managed and to facilitate checking against the xTEDS Schema -->
+  <!-- all interfaces are contained within this single file. The intent is that any of these individual -->
+  <!-- standard interface templates may be cut and pasted into a specific AMM Component's xTEDS and -->
+  <!-- extended as needed. Note that the interface IDs are monotonically incremented within this container -->
+  <!-- and may need to be changed to be unique and not conflict with other interfaces in your xTEDS. -->
+
+
+  <!--====================================-->
+  <!-- EVENT DETECTION STANDARD INTERFACE -->
+  <!--====================================-->
+
+  <Interface name="EventDetection" id="1" description="Standard interface for an event detection service">
+
+    <Variable name="EventTimestamp" kind="Time" format="FLOAT64" units="s" description="The time the event was detected"/>
+    <Variable name="EventId" kind="ID" format="UINT32" description="A unique id assigned to each event detected by this service"/>
+    <Variable name="EventName" kind="String" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="EventType" kind="Status" format="UINT08">
+      <Drange name="EventTypeEnum">
+        <Option value="0" name="NOMINAL"/>
+        <Option value="1" name="TARGET"/>
+        <Option value="2" name="FAULT"/>
+        <Option value="3" name="THREAT"/>
+        <Option value="4" name="ANOMALY"/>
+      </Drange>
+    </Variable>
+    <Variable name="EventSeverity" kind="Status" format="UINT08">
+      <Drange name="EventSeverityEnum">
+        <Option value="0" name="INFORMATION"/>
+        <Option value="1" name="WARNING"/>
+        <Option value="2" name="ALERT"/>
+        <Option value="3" name="CRITICAL"/>
+      </Drange>
+    </Variable>
+
+    <!-- Additional Variables that apply to all events for a specific event notification service are defined here -->
+    <!-- Additional Variables for event unique parameters are defined here -->
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name -->
+      <DataMsg name="EventDetected" id="1" msgArrival="EVENT" description="Event properties sent when the event is detected">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="EventTimestamp"/>
+        <VariableRef name="EventId"/>
+        <VariableRef name="EventName"/>
+        <VariableRef name="EventType"/>
+        <VariableRef name="EventSeverity"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific event notification service are defined here -->
+        <!-- Additional VariableRefs for event unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <!-- Note: It is not a requirement that events must be cleared. Typically INFORMATION events are not cleared.
+            Events can be cleared when the condition associated with the event no longer applies. -->
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name -->
+      <DataMsg name="EventCleared" id="2" msgArrival="EVENT" description="Event properties sent when the event has been cleared">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="EventTimestamp"/>
+        <VariableRef name="EventId"/>
+        <VariableRef name="EventName"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific event notification service are defined here -->
+        <!-- Additional VariableRefs for event unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--=================================-->
+  <!-- OBJECT STATE STANDARD INTERFACE -->
+  <!--=================================-->
+  
+  <Interface name="ObjectState" id="2" description="Standard interface for a service that provides the state of a single object - i.e. the component that implements this service">
+    <!-- Qualifiers should be used to express static properties of an interface -->
+    <!-- Values should be standardized in the CDD - MEASURED, ESTIMATED, DERIVED, etc. -->
+    <Qualifier name="StateDeterminationType" value="ESTIMATED"/>
+
+    <Variable name="StateTimestamp" kind="Time" format="FLOAT64" units="s" description="The entry or exit time of a state"/>
+    <Variable name="StateName" kind="State" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="StateList" kind="CommaSeparatedList" format="STRING" description="A comma separated list of state names"/>
+
+    <!-- Additional Variables that apply to a specific state service are defined here -->
+    <!-- An example of an extended variable set -->
+    <!-- Variable name="StateConfidence" kind="ConfidenceLevel" format="UINT16" -->
+
+    <Request>
+      <CommandMsg name="GetObjectState" id="1" description="Get the current state of a object">
+      </CommandMsg>
+      <DataReplyMsg name="GetObjectStateReply" id="2">
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetObjectStateList" id="3" description="Get the list of state names for the object">
+      </CommandMsg>
+      <DataReplyMsg name="GetObjectStateListReply" id="4">
+        <VariableRef name="StateList"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="ObjectStateEntry" id="5" msgArrival="EVENT" description="Event message containing the current object state and time of entry">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ObjectStateExit" id="6" msgArrival="EVENT" description="Event message containing the prior object state and exit time">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--========================================-->
+  <!-- STATE DETERMINATION STANDARD INTERFACE -->
+  <!--========================================-->
+
+  <!-- The StateDetermination service is typically provided by assessment components that perform state estimation, aggregation, or fusion. -->
+  <Interface name="StateDetermination" id="3" description="Standard interface for a service that provides states for multiple objects">
+    <!-- Qualifiers should be used to express static properties of an interface -->
+    <!-- Values should be standardized in the CDD - MEASURED, ESTIMATED, DERIVED, VARIOUS, etc. -->
+    <Qualifier name="StateDeterminationType" value="ESTIMATED"/>
+    <!-- Use VARIOUS if the values are different for different objects -->
+
+    <Variable name="StateTimestamp" kind="Time" format="FLOAT64" units="s" description="The entry or exit time of a state"/>
+    <Variable name="ObjectName" kind="Object" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="ObjectList" kind="CommaSeparatedList" format="STRING" description="A comma separated list of object names"/>
+    <Variable name="StateName" kind="State" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="StateList" kind="CommaSeparatedList" format="STRING" description="A comma separated list of state names"/>
+
+    <!-- Additional Variables that apply to a specific state service are defined here -->
+    <!-- An example of an extended variable set -->
+    <!-- Variable name="StateConfidence" kind="ConfidenceLevel" format="UINT16" -->
+
+    <Request>
+      <CommandMsg name="GetObjectList" id="1" description="Get the list of objects">
+      </CommandMsg>
+      <DataReplyMsg name="GetObjectListReply" id="2">
+        <VariableRef name="ObjectList"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetObjectStateList" id="3" description="Get the list of state names for the specified object">
+        <VariableRef name="ObjectName"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetObjectStateListReply" id="4">
+        <VariableRef name="StateList"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetObjectState" id="5" description="Get the current state of the specified object">
+        <VariableRef name="ObjectName"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetObjectStateReply" id="6">
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="SendObjectStates" id="7" description="Send an ObjectStatesResponse message for each object"/>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ObjectStatesResponse" id="8" msgArrival="EVENT" description="Event message sent in response to a SendObjectStates command">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ObjectStateEntry" id="9" msgArrival="EVENT" description="Event message containing the current object state and time of entry">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ObjectStateExit" id="10" msgArrival="EVENT" description="Event message containing the prior object state and the exit time">
+        <Qualifier name="TelemetryLevel" value="2"/>
+        <VariableRef name="StateTimestamp"/>
+        <VariableRef name="StateName"/>
+        <!-- Example message extension for a specific state producer -->
+        <!-- VariableRef name="StateConfidence" -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  
+  <!--===================================-->
+  <!-- ACTIVITY STATE STANDARD INTERFACE -->
+  <!--===================================-->
+
+  <Interface name="ActivityState" id="4" description="Standard interface for an ActivityState service typically provided by activity planners and executives">
+
+    <Variable name="ActivityTimestamp" kind="Time" format="FLOAT64" units="s" description="The time the activity state changed"/>
+    <Variable name="ActivityId" kind="ID" format="UINT32"/>
+    <Variable name="ActivityName" kind="String" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="ActivityState" kind="State" format="INT16">
+      <Drange name="ActivityStateEnum">
+        <Option value="0" name="INVALID_REQUEST"/>
+        <!-- The requested activity does not exist -->
+        <Option value="1" name="NOT_PLANNED"/>
+        <!-- The activity could not be planned as requested -->
+        <Option value="2" name="PLANNED"/>
+        <!-- The activity has been inserted into the plan -->
+        <Option value="3" name="DISPATCHED"/>
+        <!-- A command has been sent to execute the activity. Activity execution is pending -->
+        <Option value="4" name="EXECUTING"/>
+        <!-- The activity is currently executing -->
+        <Option value="5" name="TERMINATED"/>
+        <!-- A command has been sent to terminate the activity -->
+        <Option value="6" name="EXECUTION_FAILED"/>
+        <!-- The activity has completed abnormally or was terminated during execution -->
+        <Option value="7" name="EXECUTION_SUCCEEDED"/>
+        <!-- The activity has completed normally -->
+        <Option value="8" name="DELETED_NOT_PLANNED"/>
+        <!-- The activity instance is deleted. The activity could not be planned as requested -->
+        <Option value="9" name="DELETED_FROM_PLAN"/>
+        <!-- The activity instance is deleted after being planned -->
+        <Option value="10" name="DELETED_EXECUTION_COMPLETE"/>
+        <!-- The activity instance is deleted after completing execution -->
+      </Drange>
+    </Variable>
+
+    <Request>
+      <CommandMsg name="GetActivityState" id="1" description="Get the Activity State">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetActivityStateReply" id="2">
+        <VariableRef name="ActivityTimestamp"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityState"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="SendActivityStates" id="3" description="Send an ActivityStatesResponse message for each executing and/or planned activity managed by the component"/>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ActivityStatesResponse" id="4" msgArrival="EVENT" description="Sent in response to a SendActivityStates command">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityTimestamp"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityState"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="ActivityStateUpdate" id="5" msgArrival="EVENT" description="Sent each time the activity's state changes">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityTimestamp"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityState"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  <!--======================================-->
+  <!-- ACTIVITY PLANNING STANDARD INTERFACE -->
+  <!--======================================-->
+
+  <Interface name="ActivityPlanning" id="5" description="Standard interface for an activity planning service">
+
+    <Variable name="ActivityId" kind="ID" format="UINT32" description="Unique activity identity"/>
+    <Variable name="ActivityName" kind="String" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="ActivityPriority" kind="tbd" format="UINT8" rangeMin="0" rangeMax="255"/>
+    <!-- 0 is the lowest priority and 255 is the highest -->
+    <Variable name="EarliestStartTime" kind="Time" format="FLOAT64" units="s"/>
+    <!-- 0.0 signifies now -->
+    <Variable name="LatestStartTime" kind="Time" format="FLOAT64" units="s"/>
+    <!-- 0.0 signifies no limit -->
+    <Variable name="MinimumDuration" kind="Time" format="UINT32" units="s"/>
+    <!-- 0 signifies use activity default -->
+    <Variable name="MaximumDuration" kind="Time" format="UINT32" units="s"/>
+    <!-- 0 signifies use activity default -->
+    <Variable name="ActivityRequestStatus" kind="Status" format="INT16">
+      <Drange name="ActivityRequestStatusEnum">
+        <Option value="0" name="INVALID_REQUEST"/>
+        <!-- The request parameters were invalid -->
+        <Option value="1" name="NOT_PLANNED"/>
+        <!-- The activity could not be planned as requested -->
+        <Option value="2" name="PLANNED"/>
+        <!-- The activity has been inserted into the plan -->
+      </Drange>
+    </Variable>
+
+    <!-- Additional Variables that apply to all activities for a specific planner are defined here -->
+    <!-- Additional Variables for activity unique parameters are defined here  - e.g. Lat, Lon, Elevation, SlantAngle, and DayNightConstraint for an imaging activity -->
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. AddImagingActivity -->
+      <CommandMsg name="AddActivity" id="1" description="Add a mission or housekeeping activity to the plan">
+        <VariableRef name="ActivityId"/>
+        <!-- Can be assigned by the requestor - e.g. the ground, but must be unique. If 0 it will be assigned by the ActivityPlanning service -->
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </CommandMsg>
+      <DataReplyMsg name="AddActivityReply" id="2">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityRequestStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. UpdateImagingActivity -->
+      <CommandMsg name="UpdateActivity" id="3" description="Adjust the properties of a planned mission or housekeeping activity">
+        <VariableRef name="ActivityId"/>
+        <!-- Must be the id of a planned activity -->
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </CommandMsg>
+      <DataReplyMsg name="UpdateActivityReply" id="4">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityRequestStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="DeleteActivity" id="5" description="Delete a planned activity">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="DeleteAllActivities" id="6" description="Delete all planned activities"/>
+    </Command>
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. GetImagingActivityProperties -->
+      <CommandMsg name="GetActivityProperties" id="7" description="Get the Activity's standard and unique properties">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetActivityPropertiesReply" id="8">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <!-- Typically used by a ground system to get an updated list of activities -->
+      <CommandMsg name="SendActivityProperties" id="9" description="Send an ActivityPropertiesResponse for each planned activity"/>
+    </Command>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. ImagingActivityPropertiesResponse -->
+      <DataMsg name="ActivityPropertiesResponse" id="10" msgArrival="EVENT" description="Sent in response to a SendActivityProperties command">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. ImagingActivityPropertiesUpdate -->
+      <DataMsg name="ActivityPropertiesUpdate" id="11" msgArrival="EVENT" description="Activity properties sent each time any of the properties change">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  
+  <!--=============================================-->
+  <!-- ACTIVITY PLANNING STATISTICS STANDARD INTERFACE -->
+  <!--=============================================-->
+ 
+  <Interface name="ActivityPlanningStatistics" id="7" description="Standard housekeeping statistics interface for an activity planning service">
+
+    <Variable name="InvalidRequests" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesNotPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesCurrentlyPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesExecuted" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesExecuting" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesTerminated" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesFailed" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesSucceeded" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesDeleted" kind="tbd" format="UINT16"/>
+
+    <Request>
+      <CommandMsg name="GetStatistics" id="1" description="Get the activity planning Statistics">
+      </CommandMsg>
+      <DataReplyMsg name="GetStatisticsReply" id="2">
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="ActivitiesNotPlanned"/>
+        <VariableRef name="ActivitiesPlanned"/>
+        <VariableRef name="ActivitiesCurrentlyPlanned"/>
+        <VariableRef name="ActivitiesExecuted"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesTerminated"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="ResetStatistics" id="3" description="Reset all statistics">
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ActivityPlanningStatistics" id="4" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="ActivitiesNotPlanned"/>
+        <VariableRef name="ActivitiesPlanned"/>
+        <VariableRef name="ActivitiesCurrentlyPlanned"/>
+        <VariableRef name="ActivitiesExecuted"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesTerminated"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--===================================-->
+  <!-- STATE PLANNING STANDARD INTERFACE -->
+  <!--===================================-->
+  
+  <Interface name="StatePlanning" id="8">
+
+    <Variable name="StateId" kind="ID" format="UINT32" description="Unique state identity"/>
+    <Variable name="StateName" kind="String" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="StatePriority" kind="tbd" format="UINT8" rangeMin="0" rangeMax="255"/>
+    <!-- 0 is the lowest priority and 255 is the highest -->
+    <Variable name="EarliestStartTime" kind="Time" format="FLOAT64" units="s"/>
+    <!-- 0.0 signifies now -->
+    <Variable name="LatestStartTime" kind="Time" format="FLOAT64" units="s"/>
+    <!-- 0.0 signifies no limit -->
+    <Variable name="MinimumDuration" kind="Time" format="UINT32" units="s"/>
+    <!-- 0 signifies use State default -->
+    <Variable name="MaximumDuration" kind="Time" format="UINT32" units="s"/>
+    <!-- 0 signifies use State default -->
+    <Variable name="StateRequestStatus" kind="Status" format="INT16">
+      <Drange name="StateRequestStatusEnum">
+        <Option value="0" name="INVALID_REQUEST"/>
+        <!-- The request parameters were invalid -->
+        <Option value="1" name="NOT_PLANNED"/>
+        <!-- The State could not be planned as requested -->
+        <Option value="2" name="PLANNED"/>
+        <!-- The State has been inserted into the plan -->
+      </Drange>
+    </Variable>
+
+    <!-- Additional Variables that apply to all States for a specific planner are defined here -->
+    <!-- Additional Variables for State unique parameters are defined here e.g. Lat, Lon, Elevation, for an earth pointing ADCS state -->
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. AddEarthTrack -->
+      <CommandMsg name="AddState" id="1" description="Add a State goal to the plan">
+        <VariableRef name="StateId"/>
+        <!-- Can be assigned by the requestor - e.g. the ground, but must be unique. If 0 it will be assigned by the StatePlanning service -->
+        <VariableRef name="StateName"/>
+        <VariableRef name="StatePriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all States for a specific planner are defined here -->
+        <!-- Additional VariableRefs for State unique parameters are defined here -->
+      </CommandMsg>
+      <DataReplyMsg name="AddStateReply" id="2">
+        <VariableRef name="StateId"/>
+        <VariableRef name="StateRequestStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. UpdateEarthTrack -->
+      <CommandMsg name="UpdateState" id="3" description="Adjust the properties of a planned state goal">
+        <VariableRef name="StateId"/>
+        <!-- Must be the id of a planned State -->
+        <VariableRef name="StatePriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all States for a specific planner are defined here -->
+        <!-- Additional VariableRefs for State unique parameters are defined here -->
+      </CommandMsg>
+      <DataReplyMsg name="UpdateStateReply" id="4">
+        <VariableRef name="StateId"/>
+        <VariableRef name="StateRequestStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="DeleteState" id="5" description="Delete a planned State goal">
+        <VariableRef name="StateId"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="DeleteAllStates" id="6" description="Delete all planned State goals"/>
+    </Command>
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. GetEarthTrack -->
+      <CommandMsg name="GetStateProperties" id="7" description="Get the State's standard and unique properties">
+        <VariableRef name="StateId"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetStatePropertiesReply" id="8">
+        <VariableRef name="StateId"/>
+        <VariableRef name="StateName"/>
+        <VariableRef name="StatePriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all States for a specific planner are defined here -->
+        <!-- Additional VariableRefs for State unique parameters are defined here -->
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <!-- Typically used by a ground system to get an updated list of States -->
+      <CommandMsg name="SendStateProperties" id="9" description="Send a StatePropertiesResponse for each planned State"/>
+    </Command>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. EarthTrackPropertiesResponse -->
+      <DataMsg name="StatePropertiesResponse" id="10" msgArrival="EVENT" description="Sent in response to a SendStateProperties command">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="StateId"/>
+        <VariableRef name="StateName"/>
+        <VariableRef name="StatePriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all States for a specific planner are defined here -->
+        <!-- Additional VariableRefs for State unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. EarthTrackPropertiesUpdate -->
+      <DataMsg name="StatePropertiesUpdate" id="11" msgArrival="EVENT" description="State properties sent each time any of the properties change">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="StateId"/>
+        <VariableRef name="StateName"/>
+        <VariableRef name="StatePriority"/>
+        <VariableRef name="EarliestStartTime"/>
+        <VariableRef name="LatestStartTime"/>
+        <VariableRef name="MinimumDuration"/>
+        <VariableRef name="MaximumDuration"/>
+        <!-- Additional VariableRefs that apply to all States for a specific planner are defined here -->
+        <!-- Additional VariableRefs for State unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  <!--==============================================-->
+  <!-- STATE PLANNING STATISTICS STANDARD INTERFACE -->
+  <!--==============================================-->
+  
+  <Interface name="StatePlanningStatistics" id="9" description="Standard housekeeping statistics interface for a state planning service">
+
+    <Variable name="InvalidRequests" kind="tbd" format="UINT16"/>
+    <Variable name="StatesNotPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="StatesPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="StatesCurrentlyPlanned" kind="tbd" format="UINT16"/>
+    <Variable name="StatesEntered" kind="tbd" format="UINT16"/>
+    <Variable name="StatesActive" kind="tbd" format="UINT16"/>
+    <Variable name="StatesExited" kind="tbd" format="UINT16"/>
+    <Variable name="StatesDeleted" kind="tbd" format="UINT16"/>
+
+    <Request>
+      <CommandMsg name="GetStatistics" id="1" description="Get the State planning Statistics">
+      </CommandMsg>
+      <DataReplyMsg name="GetStatisticsReply" id="2">
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="StatesNotPlanned"/>
+        <VariableRef name="StatesPlanned"/>
+        <VariableRef name="StatesCurrentlyPlanned"/>
+        <VariableRef name="StatesEntered"/>
+        <VariableRef name="StatesActive"/>
+        <VariableRef name="StatesExited"/>
+        <VariableRef name="StatesDeleted"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="ResetStatistics" id="3" description="Reset all statistics">
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="StatePlanningStatistics" id="4" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="StatesNotPlanned"/>
+        <VariableRef name="StatesPlanned"/>
+        <VariableRef name="StatesCurrentlyPlanned"/>
+        <VariableRef name="StatesEntered"/>
+        <VariableRef name="StatesActive"/>
+        <VariableRef name="StatesExited"/>
+        <VariableRef name="StatesDeleted"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--=========================-->
+  <!-- PLAN STANDARD INTERFACE -->
+  <!--=========================-->
+
+  <Interface name="Plan" id="10" description="Standard interface for a Plan service">
+
+    <Variable name="PlanId" kind="ID" format="UINT32"/>
+    <Variable name="PlanTime" kind="Time" format="FLOAT64" units="s"/>
+    <Variable name="PlanFormat" kind="String" format="STRING"/>
+    <!-- This could become a enumerated variable (perhaps with an OTHER option) but is a STRING for now to avoid the need for schema changes -->
+    <Variable name="Plan" kind="String" format="STRING"/>
+    <Variable name="FileName" kind="String" format="STRING"/>
+
+    <Request>
+      <CommandMsg name="GetPlan" id="1" description="Get the current Plan">
+      </CommandMsg>
+      <DataReplyMsg name="GetPlanReply" id="2">
+        <VariableRef name="PlanId"/>
+        <VariableRef name="PlanTime"/>
+        <VariableRef name="PlanFormat"/>
+        <VariableRef name="Plan"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="SendPlan" id="3" description="Send a PlanNotify message for the current plan"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="WritePlan" id="4" description="Write the current plan to the specified file">
+        <VariableRef name="FileName"/>
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="PlanNotify" id="5" msgArrival="EVENT" description="Sent each time a plan is generated or changes">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="PlanId"/>
+        <VariableRef name="PlanTime"/>
+        <VariableRef name="PlanFormat"/>
+        <VariableRef name="Plan"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--=======================================-->
+  <!-- ACTIVITY EXECUTION STANDARD INTERFACE -->
+  <!--=======================================-->
+  
+  <Interface name="ActivityExecution" id="11" description="Standard interface for an activity execution service">
+
+    <Variable name="ActivityId" kind="ID" format="UINT32" description="Unique activity identity"/>
+    <Variable name="ActivityName" kind="String" format="INT08" length="33"/><!-- 33-byte, null terminated string -->
+    <Variable name="ActivityPriority" kind="tbd" format="UINT8" rangeMin="0" rangeMax="255"/>
+    <!-- 0 is the lowest priority and 255 is the highest -->
+    <Variable name="StartTime" kind="Time" format="FLOAT64" units="s"/>
+    <!-- 0.0 signifies now - i.e. as soon as possible -->
+    <Variable name="ActivityRequestStatus" kind="Status" format="INT16">
+      <Drange name="ActivityRequestStatusEnum">
+        <Option value="0" name="INVALID_REQUEST"/>
+        <!-- The request parameters were invalid -->
+        <Option value="1" name="REQUEST_DENIED"/>
+        <!-- The request was valid by the activity could not be executed as requested - e.g. there was a conflict -->
+        <Option value="2" name="REQUEST_ACCEPTED"/>
+        <!-- The activity has been accepted and its execution is pending -->
+      </Drange>
+    </Variable>
+
+    <!-- Additional Variables that apply to all activities for a specific executive are defined here -->
+    <!-- Additional Variables for activity unique parameters are defined here  - e.g. Lat, Lon, Elevation for an imaging activity -->
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. ExecuteImagingActivity -->
+      <CommandMsg name="ExecuteActivity" id="1" description="Execute a mission or housekeeping activity at the specified time">
+        <VariableRef name="ActivityId"/>
+        <!-- Can be assigned by the requestor - e.g. the ground, but must be unique. If 0 it will be assigned by the ActivityPlanning service -->
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="StartTime"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific executive are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </CommandMsg>
+      <DataReplyMsg name="ExecuteActivityReply" id="2">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityRequestStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="AbortActivity" id="3" description="Terminate (if necessary) and delete an executing or pending activity">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="DeleteActivity" id="4" description="Delete a pending activity">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+    </Command>
+
+    <Command>
+      <CommandMsg name="DeleteAllActivities" id="5" description="Delete all pending activities"/>
+    </Command>
+
+    <Request>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. GetImagingActivityProperties -->
+      <CommandMsg name="GetActivityProperties" id="6" description="Get the Activity's standard and unique properties">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetActivityPropertiesReply" id="7">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="StartTime"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <!-- Typically used by a ground system to get an updated list of activities -->
+      <CommandMsg name="SendActivityProperties" id="8" description="Send an ActivityPropertiesResponse for each executing and pending activity"/>
+    </Command>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. ImagingActivityPropertiesResponse -->
+      <DataMsg name="ActivityPropertiesResponse" id="9" msgArrival="EVENT" description="Sent in response to a SendActivityProperties command">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="StartTime"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <!-- If VariableRefs are added to this message, each extended message must be given a unique name - e.g. ImagingActivityPropertiesUpdate -->
+      <DataMsg name="ActivityPropertiesUpdate" id="10" msgArrival="EVENT" description="Activity properties sent each time any of the properties change">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="StartTime"/>
+        <!-- Additional VariableRefs that apply to all activities for a specific planner are defined here -->
+        <!-- Additional VariableRefs for activity unique parameters are defined here -->
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+  <!--==================================================-->
+  <!-- ACTIVITY EXECUTION STATISTICS STANDARD INTERFACE -->
+  <!--==================================================-->
+  
+  <Interface name="ActivityExecutionStatistics" id="12" description="Standard housekeeping statistics interface for an activity execution service">
+
+    <Variable name="InvalidRequests" kind="tbd" format="UINT16" description="Number of ExecuteActivity requests that were invalid"/>
+    <Variable name="ActivitiesDenied" kind="tbd" format="UINT16" description="Number of ExecuteActivity requests that were denied"/>
+    <Variable name="ActivitiesAccepted" kind="tbd" format="UINT16" description="Number of ExecuteActivity requests that were accepted"/>
+    <Variable name="ActivitiesPending" kind="tbd" format="UINT16"  description="Number of activities waiting to be executed"/>
+    <Variable name="ActivitiesExecuting" kind="tbd" format="UINT16" description="Number of activities currently executing"/>
+    <Variable name="ActivitiesSucceeded" kind="tbd" format="UINT16" description="Number of activities that completed execution successfully"/>
+    <Variable name="ActivitiesFailed" kind="tbd" format="UINT16" description="Number of activities that completed execution with a failure"/>
+    <Variable name="ActivitiesTerminated" kind="tbd" format="UINT16" description="Number of activities that were terminated by an AbortActivity command"/>
+    <Variable name="ActivitiesDeleted" kind="tbd" format="UINT16" description="Number of activities that were deleted by AbortActivity, DeleteActivity, and DeleteAllActivities commands"/>
+
+    <Request>
+      <CommandMsg name="GetStatistics" id="1" description="Get the activity planning Statistics">
+      </CommandMsg>
+      <DataReplyMsg name="GetStatisticsReply" id="2">
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="ActivitiesDenied"/>
+        <VariableRef name="ActivitiesAccepted"/>
+        <VariableRef name="ActivitiesPending"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesTerminated"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="ResetStatistics" id="3" description="Reset all statistics">
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ActivityPlanningStatistics" id="4" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="InvalidRequests"/>
+        <VariableRef name="ActivitiesDenied"/>
+        <VariableRef name="ActivitiesAccepted"/>
+        <VariableRef name="ActivitiesPending"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesTerminated"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  <!--=====================================-->
+  <!-- END OF STANDARD INTERFACE TEMPLATES -->
+  <!--=====================================-->
+  
+</xTEDS> 

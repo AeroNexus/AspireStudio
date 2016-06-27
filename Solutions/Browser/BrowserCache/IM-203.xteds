@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="ThreeAxisMagnetometerXTEDS" version="1.0">
+
+	<Device name="IM-203" kind="Magnetometer" manufacturerId="Goodrich" modelId="IM-203" description="3-axis magnetometer" />
+
+	<Interface name="MagneticFlux" id="1">
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="BVector" kind="magFlux" units="gauss" format="FLOAT32" length="3" description="Magnetic flux observed at this device" >
+			<Qualifier name="Representation" value="vector" />
+			<Qualifier name="FrameMeasured" value="DVF" />
+			<Qualifier name="FrameResolved" value="DVF" />
+		</Variable>
+
+		<Notification>
+			<DataMsg name="MagField" msgArrival="PERIODIC" msgRate="10" id="1">
+				<Qualifier name="TelemetryModulo" value="100"  />
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="BVector" />
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="DevicePower" id="2">
+		<Qualifier name="CurrentWarning" value=".6" units="A"/>
+		<Qualifier name="CurrentLimit" value=".8" units="A"/>
+		<Qualifier name="AsimOnlyPower" value="0.5" units="W"/>
+		<Qualifier name="AvgPower" value="9.0" units="W"/>
+		<Qualifier name="MaxPower" value="16.0" units="W"/>
+		<Qualifier name="PowerBehavior" value="Constant_Power"/>
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="DevPwrState" kind="powerState" format="UINT08" defaultValue="1">
+			<Drange name="DevPwrStateEnum">
+				<Option name="OFF" value="1" description="No power applied to device" />
+				<Option name="ON" value="2" description="Power applied to device" />
+			</Drange>
+		</Variable>
+		<Variable name="SetPwrStateStatus" kind="mode" format="UINT08" defaultValue="1">
+			<Drange name="SetPwrStateStatusEnum" >
+				<Option name="OK" value="1"/>
+				<Option name="ERROR" value="2"/>
+			</Drange>
+		</Variable>
+
+		<Request>
+			<CommandMsg name="DevPwrSetState" id="1">
+				<VariableRef name="DevPwrState" />
+			</CommandMsg>
+			<DataReplyMsg name="DevPwrSetStateReply" id="2">
+				<VariableRef name="SetPwrStateStatus" />
+				<VariableRef name="DevPwrState" />
+			</DataReplyMsg>
+		</Request>
+
+		<Request>
+			<CommandMsg name="GetDevPwrState" id="3" />
+			<DataReplyMsg name="DevPwrStateReply" id="4">
+				<VariableRef name="DevPwrState" />
+			</DataReplyMsg>
+		</Request>
+
+		<Notification>
+			<DataMsg name="DevicePowerStatus" id="5" msgArrival="EVENT">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time" />
+				<VariableRef name="SubS" />
+				<VariableRef name="DevPwrState" />
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="DeviceTemperature" id="3">
+		<!-- Keep out temperatures -->
+		<Variable name="Time" kind="time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20" yLow="-10" yHigh="50" rHigh="60"/>
+
+		<Request>
+			<CommandMsg name="GetDeviceTemperature" id="1" />
+			<DataReplyMsg name="DeviceTempReply" id="2">
+				<VariableRef name="Temperature"/>
+			</DataReplyMsg>
+		</Request>
+
+		<Notification>
+			<DataMsg name="DeviceTemp" id="3" msgArrival="PERIODIC" msgRate="1">
+				<Qualifier name="TelemetryModulo" value="30" />
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time" />
+				<VariableRef name="SubS" />
+				<VariableRef name="Temperature"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="ASIM" id="4">
+		<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+		<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+		<Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+		<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+		<Variable name="GUID" kind="GUID" format="UINT08" length="16"/>
+
+		<Request>
+			<CommandMsg name="GetVersionInfo" id="1"/>
+			<DataReplyMsg name="VersionInfoReply" id="2">
+				<VariableRef name="CRCProgCode"/>
+				<VariableRef name="CRCxTEDS"/>
+				<VariableRef name="SWCoreLibRev"/>
+				<VariableRef name="HWFPGAFirmwareRev"/>
+				<VariableRef name="GUID"/>
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

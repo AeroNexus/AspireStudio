@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+name='SunSolution_xTEDS' version='3.0'>
+<Application name='SunSolution' version='1.0' kind='SHAP' description='Calculates the current unit vector LOS to Sun from all available Sun Sensor data' />
+<Interface name='ISunSolution' id='1'>
+<Variable name='Time' kind='Time' format='UINT32' units='s' />
+<Variable name='RequestTimeGps' kind='time' units='s' format='UINT32' />
+<Variable name='SolutionQuality' kind='status' format='UINT8' defaultValue='0' description='indicates whether the solution derived from 3 heads, is propagated, or is a coarse guess'>
+<Drange name='SolutionQualityEnum'>
+<Option name='NoLos' value='0'/>
+<Option name='GoodLos' value='1'/>
+<Option name='PropagatedLos' value='2'/>
+<Option name='CoarseLos' value='3'/>
+</Drange>
+</Variable>
+<Variable name='SubS' kind='SubSeconds' units='counts' format='UINT32' scaleFactor='.000001' scaleUnits='s' />
+<Variable name='SunUnitJ2000' kind='position' length='3' format='FLOAT64' description='Sun unit vector from SC to Sun'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='J2000'/>
+<Qualifier name='FrameResolved' value='J2000'/>
+</Variable>
+<Variable name='SunPresence' kind='boolean' format='UINT8' description='indicates whether the sun is visible by any sensors or not'/>
+<Variable name='SunUnit' kind='LOS' length='3' format='FLOAT32' description='Unit vector LOS to Sun in spacecraft frame'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameMeasured' value='SVF'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Notification>
+<DataMsg name='SunLosMsg' id='1' msgArrival='PERIODIC' msgRate='10'  description='Broadcast of current Sun LOS in spacecraft frame'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<Qualifier name='TelemetryModulo' value='10'  />
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='SunPresence'/>
+<VariableRef name='SolutionQuality'/>
+<VariableRef name='SunUnit'/>
+</DataMsg>
+</Notification>
+<Notification>
+<DataMsg name='SunState' id='2' msgArrival='EVENT'  description='Sun eclipse event'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='SunPresence'/>
+</DataMsg>
+</Notification>
+<Request>
+<CommandMsg name='GetSunFromAlmanac' id='3' description='Get sun ECI position using MJD. If MJD==0, now'>
+<VariableRef name='RequestTimeGps'/>
+</CommandMsg>
+<DataReplyMsg name='SunFromAlmanac' id='4' description='Sun position from Astronomical Almanac'>
+<VariableRef name='RequestTimeGps'/>
+<VariableRef name='SunUnitJ2000'/>
+</DataReplyMsg>
+</Request>
+</Interface>
+</xTEDS>

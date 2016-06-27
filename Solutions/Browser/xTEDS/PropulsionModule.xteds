@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+	 xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ 	 xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+  name="PropulsionModule_xTEDS" version="2.1">
+
+  <Application name="PropulsionModule"
+      kind="PropulsionModule" 
+      description="Propulsion Module" />
+  
+<!-- STANDARD PROPULSION INTERFACE -->
+	<Interface name="IPropulsion" id="1">
+    <!-- Location of propulsion jet origin in device reference frame -->
+    <Qualifier name="JetCentroidX" value="0.0" units="cm" />
+    <Qualifier name="JetCentroidY" value="0.0" units="cm" />
+    <Qualifier name="JetCentroidZ" value="10.0" units="cm" />
+    <!-- Max Thrust Authority in each device frame axis (positive and negative) -->
+	  <!-- Note that Thrust applied other than through the vehicle center of mass will result in a net torque -->
+    <Qualifier name="MaxThrustPosX" value="0.0" units="N" />
+    <Qualifier name="MaxThrustPosY" value="0.0" units="N" />
+    <Qualifier name="MaxThrustPosZ" value="0.0" units="N" />
+    <Qualifier name="MaxThrustNegX" value="0.0" units="N" />
+    <Qualifier name="MaxThrustNegY" value="0.0" units="N" />
+    <Qualifier name="MaxThrustNegZ" value="22.0" units="N" />
+    <!-- Variable definitions -->
+	<Variable name="Time" kind="time" format="UINT32" units="s" />
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+    <Variable name="TimeCmd" kind="time" format="UINT32" units="s" description="Time to start thrust (seconds part)" />
+    <Variable name="SubSCmd" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" description="Time to start thrust (microseconds part)" />
+    <Variable name="RemainingBurnTimeSecs" kind="time" format="UINT32" units="s" description="Time remaining in burn (seconds part)" />
+    <Variable name="RemainingBurnTimeSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" description="Time remaining in burn (subseconds part)" />
+    <Variable name="ImpulseVectorCmd" kind="impulse" units="Ns" format="FLOAT32" length="3" description="Impulse vector command" />
+	<Variable name="CurrentThrustVector" kind="force" units="N" format="FLOAT32" length="3" description="Current thrust vector (x,y,z)" />
+	<Variable name="AvailThrustScaleFactor" kind="scaleFactor" units="" format="FLOAT32" description="Scale factor indicating available fraction of jet thrust" />
+	<Variable name="TimeToReady" kind="time" units="s" format="UINT32" />
+	<Variable name="CatalystTemperature" kind="temperature" units="degC" format="FLOAT32" testBypassTag="0x03B0" />
+    <Variable name="PropellantLevel" kind="fillLevel" units="percent" format="FLOAT32" description="Current propuulsion tank fill level in percent" />
+	<Variable name="ImpulseCmdReply" kind="mode" format="UINT8" defaultValue="1">
+		<Drange name="ImpulseCmdReplyEnum">
+			<Option name="OK" value="1" description="Impulse Command accepted" />
+			<Option name="InvalidImpulse" value="2" description="Invalid Impulse" />
+			<Option name="StartTimeTooSoon" value="3" description="Propulsion resources cannot be readied withing specified time" />
+			<Option name="ActuationAlreadyScheduled" value="4" description="Thruster actuation has already been scheduled" />
+		</Drange>
+	</Variable>
+    <Variable name="ActuationStatus" kind="TBD" format="UINT8" defaultValue="1">
+      <Drange name="ActuationStatusEnum">
+        <Option name="ThrustResourceAvailable" value="1" description="Thrust resource is available for commanding" />
+        <Option name="ActuationScheduled" value="2" description="Thruster actuation has already been scheduled" />
+        <Option name="PreparingToThrust" value="3" description="Module is preparing to Thrust" />
+        <Option name="ThrustingInProgress" value="4" description="Thruster actuation is in progress" />
+        <Option name="ThrustRequestTerminated" value="5" description="Received request to terminate" />
+      </Drange>
+    </Variable>
+
+    <Request>
+      <CommandMsg name="CmdDevFrameImpulse" id="1">
+        <VariableRef name="TimeCmd" />
+        <VariableRef name="SubSCmd" />
+        <VariableRef name="ImpulseVectorCmd" />
+      </CommandMsg>
+      <DataReplyMsg name="CmdDevFrameImpulseReply" id="2" >
+        <VariableRef name="ImpulseCmdReply"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetThrustActuationStatus" id="3">
+      </CommandMsg>
+      <DataReplyMsg name="GetThrustActuationStatusReply" id="4" >
+        <VariableRef name="ActuationStatus"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="ClearExistingCmd" id="5">
+      </CommandMsg>
+      <DataReplyMsg name="ClearExistingCmdReply" id="6" >
+        <VariableRef name="ActuationStatus"/>
+      </DataReplyMsg>
+    </Request>
+		
+		<Notification>
+			<DataMsg name="PropulsionData" msgArrival="PERIODIC" msgRate="1" id="7">
+				<Qualifier name="TelemetryModulo" value="100"  />
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+        <VariableRef name="ActuationStatus"/>
+        <VariableRef name="AvailThrustScaleFactor" />
+				<VariableRef name="CurrentThrustVector" />
+        <VariableRef name="RemainingBurnTimeSecs" />
+        <VariableRef name="RemainingBurnTimeSubS" />
+				<VariableRef name="TimeToReady" />
+        <VariableRef name="CatalystTemperature" />
+        <VariableRef name="PropellantLevel" />
+			</DataMsg>
+		</Notification>
+	
+	</Interface>
+  
+  <!--===========================-->
+  <!-- STANDARD TORQUE INTERFACE -->
+  <!--===========================-->
+  <Interface name="ITorque" id="2">
+    <!-- Max Pure Torque Authority in each device frame axis (positive and negative) -->
+    <Qualifier name="MaxTorquePosX" value="0.0" units="Nm" />
+    <Qualifier name="MaxTorquePosY" value="0.0" units="Nm" />
+    <Qualifier name="MaxTorquePosZ" value="0.0" units="Nm" />
+    <Qualifier name="MaxTorqueNegX" value="0.0" units="Nm" />
+    <Qualifier name="MaxTorqueNegY" value="6.2" units="Nm" />
+    <Qualifier name="MaxTorqueNegZ" value="6.2" units="Nm" />
+    <Variable name="TorqueVectorCmd" kind="torque" units="Nm" format="FLOAT32" length="3" description="Torque vector command" />
+    <Variable name="TorqueDuration" kind="time" format="UINT32" units="s" description="Duration over which to apply torque (seconds part)" />
+    <Variable name="TorqueDurationSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" description="Duration over which to apply torque (microseconds part)" />
+    <Variable name="TorqueStatusReply" kind="mode" format="UINT08" defaultValue="1">
+      <Drange name="TorqueReplyEnum">
+        <Option name="OK" value="1" description="Torque Command accepted" />
+        <Option name="InvalidTorque" value="2" description="Invalid Torque Specified" />
+        <Option name="InvalidDuration" value="3" description="Duration Specified is invalid" />
+        <Option name="NotReady" value="4" description="Resource is not ready" />
+      </Drange>
+    </Variable>
+    
+    <Request>
+      <CommandMsg name="CmdDevFrameTorque" id="8">
+        <VariableRef name="TorqueVectorCmd"/>
+        <VariableRef name="TorqueDuration"/>
+        <VariableRef name="TorqueDurationSubS"/>
+      </CommandMsg>
+      <DataReplyMsg name="CmdDevFrameTorqueStatusReply" id="9" >
+        <VariableRef name="TorqueStatusReply"/>
+      </DataReplyMsg>
+    </Request>
+    
+  </Interface>
+
+  <!--=================================-->
+  <!-- STANDARD DEVICE POWER INTERFACE -->
+  <!--=================================-->
+  <Interface name="IDevicePower" id="3">
+    <Qualifier name="CurrentWarning" value=".6" units="A"/>
+    <Qualifier name="CurrentLimit" value=".8" units="A"/>
+    <Qualifier name="AsimOnlyPower" value="0.5" units="W"/>
+    <Qualifier name="AvgPower" value="9.0" units="W"/>
+    <Qualifier name="MaxPower" value="16.0" units="W"/>
+    <Qualifier name="PowerBehavior" value="Constant_Power"/>
+    <Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+    <Variable name="DevPwrState" kind="powerState" format="UINT08" defaultValue="1">
+      <Drange name="DevPwrStateEnum">
+        <Option name="OFF" value="1" description="No power applied to device" />
+        <Option name="ON" value="2" description="Power applied to device" />
+      </Drange>
+    </Variable>
+    <Variable name="SetPwrStateStatus" kind="mode" format="UINT08" defaultValue="1">
+      <Drange name="SetPwrStateStatusEnum" >
+        <Option name="OK" value="1"/>
+        <Option name="ERROR" value="2"/>
+      </Drange>
+    </Variable>
+
+    <Request>
+      <CommandMsg name="DevPwrSetState" id="1">
+        <VariableRef name="DevPwrState" />
+      </CommandMsg>
+      <DataReplyMsg name="DevPwrSetStateReply" id="2">
+        <VariableRef name="SetPwrStateStatus" />
+        <VariableRef name="DevPwrState" />
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetDevPwrState" id="3" />
+      <DataReplyMsg name="DevPwrStateReply" id="4">
+        <VariableRef name="DevPwrState" />
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="DevicePowerStatus" id="5" msgArrival="EVENT">
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="Time" />
+        <VariableRef name="SubS" />
+        <VariableRef name="DevPwrState" />
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!--========================================================================-->
+  <!-- STANDARD DEVICE SAFETY INTERFACE (with extensions for specific device) -->
+  <!--========================================================================-->
+  <Interface name="IDeviceSafety" id="4">
+    <!-- Temperatures and limits -->
+    <Variable name="Time" kind="time" format="UINT32" units="s" />
+    <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001"
+		scaleUnits="s" />
+    <Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20"
+		yLow="-10" yHigh="50" rHigh="60" testBypassTag="0x00C0" />
+
+    <Request>
+      <CommandMsg name="GetDeviceTemperature" id="1" />
+      <DataReplyMsg name="DeviceTempReply" id="2">
+        <VariableRef name="Temperature"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="DeviceTemp" id="3" msgArrival="PERIODIC" msgRate="1">
+        <Qualifier name="TelemetryModulo" value="30" />
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="Time" />
+        <VariableRef name="SubS" />
+        <VariableRef name="Temperature"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+  <!--=========================-->
+  <!-- STANDARD ASIM INTERFACE -->
+  <!--=========================-->
+  <Interface name="ASIM" id="5">
+    <Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+    <Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+    <Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+    <Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+    <Variable name="GUID" kind="GUID" format="BUFFER" />
+
+    <Request>
+      <CommandMsg name="GetVersionInfo" id="1"/>
+      <DataReplyMsg name="VersionInfoReply" id="2">
+        <VariableRef name="CRCProgCode"/>
+        <VariableRef name="CRCxTEDS"/>
+        <VariableRef name="SWCoreLibRev"/>
+        <VariableRef name="HWFPGAFirmwareRev"/>
+        <VariableRef name="GUID"/>
+      </DataReplyMsg>
+    </Request>
+  </Interface>
+
+  <Interface name="TestBypass" id="6" scope="Private">
+    <Variable name="TankPressure" kind="pressure" format="FLOAT32" units="KPa"
+		testBypassTag="0x04A0" >
+	  <Qualifier name='TestBypassDirection' value='ToAsim' />
+	</Variable>
+    <!--Variable name="TankTemperature" kind="temperature" format="FLOAT32" units="degC"
+		testBypassTag="0x0010" >
+	  <Qualifier name='TestBypassDirection' value='ToAsim' />
+	</Variable-->
+  <Variable name="LatchValveState" kind="status" format="UINT8" testBypassTag="0x0480" >
+	  <Qualifier name='TestBypassDirection' value='FromAsim' />
+	  <Drange name="LatchValveStateEnum">
+		  <Option name="Closed" value="1" description="Inactive, normally closed" />
+		  <Option name="Open" value="2" description="Active, propellant flowing" />
+	  </Drange>
+	</Variable>
+	<Variable name="ThrusterValveState" kind="status" format="UINT8" testBypassTag="0x02e0" >
+	  <Qualifier name='TestBypassDirection' value='FromAsim' />
+	  <Drange name="ThrusterValveStateEnum">
+		  <Option name="Closed" value="1" description="Inactive, normally closed" />
+		  <Option name="Open" value="2" description="Active, propellant flowing" />
+	  </Drange>
+	</Variable>
+  </Interface>
+</xTEDS>

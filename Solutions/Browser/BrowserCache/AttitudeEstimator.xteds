@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="Attitude_xTEDS" version="1.0">
+<Application name="AttitudeEstimator" version="1.0" kind="Software"
+description="Maintains the vehicle attitude and angular rate from multiple sources" />
+<Interface name="IAttitude" id="1">
+<Variable kind="Time" name="Time" format="UINT32" units="Seconds" />
+<Variable kind="SubSeconds" name="SubS" units="Counts" format="UINT32" scaleFactor=".000001" scaleUnits="Seconds" />
+<Variable name="AttitudeRate" kind="attitudeRate" units="rad/s" format="FLOAT32" length="3" description="Angular rates about each primary axis of the vehicle" >
+<Qualifier name="Representation" value="vector"/>
+<Qualifier name="FrameMeasured" value="ECITOD"/>
+<Qualifier name="FrameResolved" value="SVF"/>
+</Variable>
+<Variable name="Attitude" kind="attitude" units='ijkM' format="FLOAT64" length="4" description="Attitude quaternion, ECI to body" >
+<Qualifier name="Representation" value="quaternion"/>
+<Qualifier name="FrameMeasured" value="ECITOD"/>
+<Qualifier name="FrameResolved" value="SVF"/>
+</Variable>
+<Variable name="AttitudeKnowledge" kind="AttitudeKnowledgeEnum" format="UINT8">
+<Drange name="AttitudeKnowledgeEnum">
+<Option name="Unknown" value="1"/>
+<Option name="Sensed" value="2"/>
+<Option name="Estimated" value="3"/>
+<Option name="Propagated" value="4"/>
+</Drange>
+</Variable>
+<Variable name="Parameter" kind="time" format="UINT8">
+<Drange name="ParameterEnum">
+<Option name="RateFilterTc" value="1"/>
+</Drange>
+</Variable>
+<Variable name="Value" kind="time" format="FLOAT64" units="s"/>
+<Variable name="TrimRate" kind="angularVelocity" format="FLOAT64" length="3" units="s"/>
+
+<Notification>
+<DataMsg name="AttitudeMsg" msgArrival="PERIODIC" msgRate="10" id="1">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="Attitude"/>
+<VariableRef name="AttitudeRate" />
+<VariableRef name="AttitudeKnowledge" />
+</DataMsg>
+</Notification>
+
+<Command>
+<CommandMsg name="SetParameter" id="2">
+<VariableRef name="Parameter"/>
+<VariableRef name="Value"/>
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg name="GetParameter" id="3">
+<VariableRef name="Parameter"/>
+</CommandMsg>
+<DataReplyMsg name="ParameterReply" id="4">
+<VariableRef name="Parameter"/>
+<VariableRef name="Value"/>
+</DataReplyMsg>
+</Request>
+
+<Command>
+<CommandMsg name="TrimAttitudeRate" id="5">
+<VariableRef name="Time"/>
+<VariableRef name="SubS"/>
+<VariableRef name="TrimRate"/>
+</CommandMsg>
+</Command>
+
+</Interface>
+</xTEDS>

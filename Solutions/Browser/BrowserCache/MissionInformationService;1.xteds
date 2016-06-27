@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<xTEDS
+xmlns='http://www.PnPInnovations.com/Aspire/xTEDS'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xsi:schemaLocation='http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd'
+name='MissionInfoService_xTEDS' version='1.0'>
+<Application name="MissionInformationService" version='1.0' kind='MissionSoftware' description='Broker of all vehicle specific information'/>
+
+<!-- This interface allows consumers to acquire vehicle-level metadata -->
+<Interface name='iVehicle' id='1' description='Provides an interface to serve and update the vehicle properties'>
+<Variable name='Time' kind='time' format='UINT32' units='s'/>
+<Variable name='SubS' kind='subSeconds' units='counts' format='UINT32' scaleFactor='0.000001' scaleUnits='s'/>
+<Variable name='SpacecraftId' kind='GUID' format='BUFFER' description='Unique ID of satellite, in UID format'/>
+<Variable name='SpacecraftName' kind='string' format='STRING' description='Satellite Name'/>
+<Variable name='SpacecraftMass' kind='mass' format='FLOAT32' units='kg' description='mass of spacecraft'/>
+<Variable name='SpacecraftCenterOfMass' kind='position' length='3' format='FLOAT32' units='m' description='center of mass of spacecraft'>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+<Variable name='SpacecraftInertiaMatrix' kind='inertia' units='kg*m^2' length='9' format='FLOAT32' description='Spacecraft inertia matrix about the CM'>
+<Qualifier name='Representation' value='matrix'/>
+<Qualifier name='Rows' value='3'/>
+<Qualifier name='Cols' value='3'/>
+<Qualifier name='FrameResolved' value='SVF'/>
+</Variable>
+
+<Request>
+<CommandMsg name='GetSpacecraftIdentity' id='1' description='Request vehicle identity'/>
+<DataReplyMsg name='SpacecraftIdentityReply' id='2' description='Reply containing ID and Name of vehicle'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='SpacecraftId'/>
+<VariableRef name='SpacecraftName'/>
+</DataReplyMsg>
+</Request>
+
+<Notification>
+<DataMsg name='SpacecraftMassProperties' id='4' msgArrival='EVENT'>
+<VariableRef name='Time'/>
+<VariableRef name='SubS'/>
+<VariableRef name='SpacecraftMass'/>
+<VariableRef name='SpacecraftCenterOfMass'/>
+<VariableRef name='SpacecraftInertiaMatrix'/>
+</DataMsg>
+</Notification>
+
+</Interface>
+
+<!-- This interface allows consumers to acquire device-level metadata not included in the device's xTEDS -->
+<Interface name='iDevice' id='2' description="Provides device-level metadata not included in the devices xTEDS">
+<Variable name='CompId' kind='GUID' format='BUFFER' description='Unique ID of a component'/>
+<Variable name='Status' format='UINT8' kind='status' description='reply status in DevicePackagingInfo'>
+<Drange name='PackagingStatus'>
+<Option name='ValidPackaging' value='1'/>
+<Option name='NotFound' value='2'/>
+</Drange>
+</Variable>
+<Variable name='Location' kind='position' format='FLOAT32' length='3' units='m' description='The location of the origin of the device coordinate system in spacecraft coordinates'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameFrom' value='SVF'/>
+<Qualifier name='FrameTo' value='DVF'/>
+</Variable>
+<Variable name='Orientation' kind='attitude' format='FLOAT64' length='4' description='rotation from spacecraft coordinates to device coordinates'>
+<Qualifier name='Representation' value='quaternion'/>
+<Qualifier name='FrameFrom' value='SVF'/>
+<Qualifier name='FrameTo' value='DVF'/>
+</Variable>
+
+<Request>
+<CommandMsg name='GetDevicePackagingInfo' id='1' description='Request to retrieve device packaging metadata'>
+<VariableRef name='CompId'/>
+</CommandMsg>
+<DataReplyMsg name='DevicePackagingInfo' id='2'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Orientation'/>
+<VariableRef name='Location'/>
+<VariableRef name='CompId'/>
+<VariableRef name='Status'/>
+</DataReplyMsg>
+</Request>
+
+</Interface>
+
+
+<Interface name='iFlightPlan' id='3' description='Mission flight parameters'>
+<Variable name='Time' kind='time' format='UINT32' units='s' />
+<Variable name='Epoch' kind='time' format='UINT32' units='s' />
+<Variable name='SubS' kind='subSeconds' units='counts' format='UINT32' scaleFactor='0.000001' scaleUnits='s'/>
+<Variable name='InsertionPosition' kind='position' format='FLOAT64' length='3' units='m' description='location of spacecraft at insertion into a trajectory'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='ITRF'/>
+</Variable>
+<Variable name='InsertionVelocity' kind='velocity' format='FLOAT64' length='3' units='m/s' description='velocity of spacecraft at insertion into a trajectory'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='ITRF'/>
+</Variable>
+
+<Request>
+<CommandMsg name='InsertionParameters' id='1' description='Request to retrieve spacecraft insertion parameters'/>
+<DataReplyMsg name='InsertionParametersReply' id='2'>
+<Qualifier name='TelemetryLevel' value='1'/>
+<VariableRef name='Epoch'/>
+<VariableRef name='InsertionPosition'/>
+<VariableRef name='InsertionVelocity'/>
+</DataReplyMsg>
+</Request>
+
+</Interface>
+
+
+<Interface name='iAdcs' id='4'>
+<Variable name='HighRatePropagationInSlew' kind='boolean' format='UINT8' description='Use propagated attitude during a slew even if a sensor drops out'/>
+<Variable name='MaxAngularAcceleration' kind='limit' format='FLOAT32' units='rad/s^2' description='Maximum angular accelaration that can possibly be commanded'/>
+<Variable name='MaxAngularJerk' kind='angularJerk' units='rad/s^3' format='FLOAT32' description='maximum angular jerk tolerable'/>
+<Variable name='MaxAngularRate' kind='limit' format='FLOAT32' units='rad/s' description='Maximum angular rate that can possibly be commanded'/>
+<Variable name='MaxDeployRate' kind='limit' format='FLOAT32' units='rad/s' description='Maximum angular rate that solar arrays may be deployed'/>
+<Variable name='BodyLos' kind='unitVector' format='FLOAT64' length='3' description='Body unit vector to point towards in a perticular mode'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='DVF'/>
+</Variable>
+<Variable name='BodyReference' kind='unitVector' format='FLOAT64' length='3' description='Body reference vector specific mode'>
+<Qualifier name='Representation' value='vector'/>
+<Qualifier name='FrameResolved' value='DVF'/>
+</Variable>
+
+<Request>
+<CommandMsg name='GetSunPoint' id='1'/>
+<DataReplyMsg name='SunPointReply' id='2'>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='GetLimits' id='3'/>
+<DataReplyMsg name='LimitsReply' id='4'>
+<VariableRef name='MaxAngularRate'/>
+<VariableRef name='MaxAngularAcceleration'/>
+<VariableRef name='MaxAngularJerk'/>
+<VariableRef name='HighRatePropagationInSlew'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='GetDeployRate' id='5'>
+</CommandMsg>
+<DataReplyMsg name='DeployRateReply' id='6'>
+<VariableRef name='MaxDeployRate'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='GetNadirPoint' id='7'/>
+<DataReplyMsg name='NadirPointReply' id='8'>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name='GetTargetPoint' id='9'/>
+<DataReplyMsg name='TargetPointReply' id='10'>
+<VariableRef name='BodyLos'/>
+<VariableRef name='BodyReference'/>
+</DataReplyMsg>
+</Request>
+
+</Interface>
+
+</xTEDS>

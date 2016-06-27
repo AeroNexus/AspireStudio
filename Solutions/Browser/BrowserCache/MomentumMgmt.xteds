@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="MomentumMgmt_xTEDS" description="ActivityAgent xTEDS" version="2.5">
+
+<Application name="MomentumMgmt" kind="AutonomyFlightSoftware" description="Autonomous Tasking Executive (ATE), ActivityAgent"/>
+
+<!-- Note: An ActivityAgent must implement the ActivityInterface and should implement the ActivityAgentStatusInterface. -->
+
+<Interface name="ActivityInterface" id="1"><!-- This is a template for an ActivityAgent Interface. Unique activity parameters must be added as necessary. -->
+
+<Variable name="ActivityName" kind="string" format="INT8" length="33"/><!-- 33-byte, null terminated string -->
+<Variable name="ActivityId" kind="ID" format="UINT32"/>
+<Variable name="ScheduleStatus" kind="status" format="INT16">
+<Drange name="ScheduleStatusEnum">
+<Option value="0"  name="INVALID_REQUEST"/><!-- The request parameters were invalid -->
+<Option value="3"  name="NOT_SCHEDULED"/><!-- The activity could not be scheduled as requested -->
+<Option value="4"  name="SCHEDULED"/><!-- The activity has been inserted into the schedule -->
+</Drange>
+</Variable>
+<Variable name="ActivityState" kind="status" format="INT16">
+<Drange name="ActivityStateEnum">
+<Option value="0"  name="NOT_CREATED"/><!-- An activity for the specified AcitvityId does not exist -->
+<Option value="3"  name="NOT_SCHEDULED"/><!-- The activity could not be scheduled as requested -->
+<Option value="4"  name="SCHEDULED"/><!-- The activity has been inserted into the schedule -->
+<Option value="6"  name="ENABLED"/><!-- The activity has been sent a command to execute -->
+<Option value="7"  name="TERMINATED"/><!-- The activity has been sent a command to abort -->
+<Option value="8"  name="EXECUTING"/><!-- The activity is currently executing -->
+<Option value="9"  name="EXECUTION_FAILED"/><!-- The activity has completed abnormally or was aborted -->
+<Option value="10"  name="EXECUTION_SUCCEEDED"/><!-- The activity has completed normally -->
+<Option value="11" name="DELETED_INVALID"/><!-- The activity instance is deleted. The request parameters were invalid -->
+<Option value="12" name="DELETED_NOT_SCHEDULED"/><!-- The activity instance is deleted. The activity could not be scheduled as requested -->
+<Option value="13" name="DELETED_FROM_SCHEDULE"/><!-- The activity instance is deleted after being scheduled -->
+<Option value="14" name="DELETED_EXECUTING"/><!-- The activity instance is deleted after being enabled -->
+<Option value="15" name="DELETED_EXECUTION_COMPLETE"/><!-- The activity instance is deleted after completing execution -->
+</Drange>
+</Variable>
+
+<!-- Add Variables for the unique activity parameters -->
+
+<Command> <!-- Provides the capability to request an Activity from the ground -->
+<CommandMsg name="RequestActivityCmd" id="001" description="Determine activity state variables and request to be scheduled">
+<VariableRef name="ActivityId"/><!-- Use 0 for on-board requests. The ActivityId will then be assigned by the ActivityManager -->
+
+<!-- Add VariableRefs for the unique activity parameters -->
+
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg name="RequestActivity" id="002" description="Determine activity state variables and request to be scheduled">
+<VariableRef name="ActivityId"/><!-- Use 0 for on-board requests. The ActivityId will then be assigned by the ActivityManager -->
+
+<!-- Add VariableRefs for the unique activity parameters -->
+
+</CommandMsg>
+<DataReplyMsg name="RequestActivityReply" id="003">
+<VariableRef name="ActivityId"/>
+<VariableRef name="ScheduleStatus"/>
+</DataReplyMsg>
+</Request>
+
+<Command> <!-- Provides the capability to update an Activity from the ground -->
+<CommandMsg name="UpdateRequestCmd" id="004" description="Update activity state variables and request a schedule update if necessary">
+<VariableRef name="ActivityId"/>
+
+<!-- Add VariableRefs for the unique activity parameters -->
+
+</CommandMsg>
+</Command>
+
+<Request>
+<CommandMsg name="UpdateRequest" id="005" description="Update activity state variables and request a schedule update if necessary">
+<VariableRef name="ActivityId"/>
+
+<!-- Add VariableRefs for the unique activity parameters -->
+
+</CommandMsg>
+<DataReplyMsg name="UpdateRequestReply" id="006">
+<VariableRef name="ActivityId"/>
+<VariableRef name="ScheduleStatus"/>
+</DataReplyMsg>
+</Request>
+
+<Command>
+<CommandMsg name="Reschedule" id="007" description="The activity has been removed from the schedule and needs to be rescheduled">
+<VariableRef name="ActivityId"/>
+</CommandMsg>
+</Command>
+
+<Command>
+<CommandMsg name="Delete" id="008" description="Delete the activity">
+<VariableRef name="ActivityId"/>
+</CommandMsg>
+</Command>
+
+<Command>
+<CommandMsg name="Execute" id="009" description="Execute the activity">
+<VariableRef name="ActivityId"/>
+</CommandMsg>
+</Command>
+
+<Command>
+<CommandMsg name="Abort" id="010" description="Abort execution of the activity">
+<VariableRef name="ActivityId"/>
+</CommandMsg>
+</Command>
+
+<Command>
+<CommandMsg name="SendActivityStateMsg" id="011" description="Send the ActivityStateMsg DataMsg">
+<VariableRef name="ActivityId"/>
+</CommandMsg>
+</Command>
+
+<Notification>
+<DataMsg name="ActivityStateMsg" id="012" msgArrival="EVENT">
+<Qualifier name="TelemetryLevel" value="1"/>
+<VariableRef name="ActivityId"/>
+<VariableRef name="ActivityName"/>
+<VariableRef name="ActivityState"/>
+</DataMsg>
+</Notification>
+
+</Interface>
+
+<Interface name="TaskControlInterface" id="4">
+
+<Command>
+<CommandMsg name="DestroyTask" id="001"/>
+</Command>
+<!-- Other possible commands include Suspend, Resume, SetPriority, and SetHeartBeatPeriod -->
+<!-- Other possible requests include GetPriority, and GetHeartBeatCount -->
+</Interface>
+
+<Interface name="ActivityTuningInterface" id="5">
+
+<Variable name="Saturation_Recovery" kind="limit" format="FLOAT32" units="percent"/>
+<Variable name="Saturation_Critical" kind="limit" format="FLOAT32" units="percent"/>
+<Variable name="MinPriority" kind="priority" format="UINT08"/>
+<Variable name="MaxPriority" kind="priority" format="UINT08"/>
+
+<!-- Messages to get/set tuning parameters -->
+
+<Command>
+<CommandMsg name="SetTuningParameters" id="1">
+<VariableRef name="Saturation_Recovery"/>
+<VariableRef name="Saturation_Critical"/>
+<VariableRef name="MinPriority"/>
+<VariableRef name="MaxPriority"/>
+</CommandMsg>
+</Command>
+<Request>
+<CommandMsg name="GetTuningParameters" id="2"/>
+<DataReplyMsg name="RequestTuningParametersReply" id="3">
+<VariableRef name="Saturation_Recovery"/>
+<VariableRef name="Saturation_Critical"/>
+<VariableRef name="MinPriority"/>
+<VariableRef name="MaxPriority"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+
+</xTEDS>

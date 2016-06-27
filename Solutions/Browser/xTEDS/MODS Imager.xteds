@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="Imager_xTEDS" description="ActivityAgent xTEDS" version="1.12">
+
+ <Device name="MODS" kind="Imager" description="An xTEDS for a Generic Imager" >
+ <Qualifier name="FullImageWidth" value="1392" units="pixels"/>
+ <Qualifier name="FullImageHeight" value="1040" units="pixels"/>
+ <!-- This is the full angle along the horizontal -->
+ <Qualifier name="FOV" value="4.6" units="deg" />
+ </Device>
+
+ <Interface name="Image" id="1">
+ <Variable name="StartTime" kind="time" format="UINT32" units="s" description="Time to start image"/>
+ <Variable name="StartSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="ImageTime" kind="time" format="UINT32" units="s" description="Time to start image"/>
+ <Variable name="ImageSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="Duration" kind="time" format="UINT32" units="s" description="Time to continue taking images (0 = until further notice)" />
+ <Variable name="DurationSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="GateSize" kind="gateSize" format="UINT16" units="pixels" length="2" description="initial gate size (x,y)"/>
+ <Variable name="GatePosition" kind="gatePosition" format="UINT16" units="pixels" length="2" description="initial gate position (x,y)"/>
+ <Variable name="ImageRate" kind="imageRate" format="UINT08" units="Hz" description="image rate for multiframe images"/>
+ <Variable name="ImageMode" kind="mode" format="UINT08" >
+ <Drange name="ImageModeEnum">
+	<Option name="END" value="1" description="Force end of current image taking" />
+	<Option name="SNAPSHOT" value="2" description="Single image" />
+	<Option name="MULTIFRAME" value="3" description="Take a sequence of images" />
+ </Drange>
+ </Variable>
+ <Variable name="ColorMode" kind="mode" format="UINT08" >
+ <Drange name="ColorModeEnum">
+	<Option name="RGB" value="1" description="RGB 24 bit pixels" />
+	<Option name="BW16" value="2" description="greyscale, 16 bits per pixel" />
+	<Option name="BW8" value="3" description="greyscale, 8 bits per pixel" />
+ </Drange>
+ </Variable>
+ <Variable name="ImageSegment" kind="data" format="UINT08" units="bytes" length="1426" description="image pixel data"/>
+ <Variable name="ImageNumber" kind="counter" format="UINT16" description="Image Identifier" />
+ <Variable name="ImageRequestStatus" kind="status" format="UINT08" >
+ <Drange name="ImageRequestStatusEnum">
+	<Option name="REQUEST_OK" value="1" />
+	<Option name="BAD_PARAMETERS" value="2" />
+	<Option name="UNSUPPORTED_MODE" value="3" />
+	<Option name="IMAGER_BUSY" value="4" />
+ </Drange>
+ </Variable>
+ <Variable name="Row" kind="counter" format="UINT16" units="pixels" description="Starting row for this image packet"/>
+ <Variable name="Column" kind="counter" format="UINT16" units="pixels" description="Starting column for image packet"/>
+ <Variable name="NumBytes" kind="counter" format="UINT16" description="Number of bytes in this packet"/>
+ <Variable name="SegmentCounter" kind="counter" format="UINT16" description="Sequence Counter for Image Segments (1 based)"/>
+ <Variable name="NumSegments" kind="counter" format="UINT16" description="Number of segments in full image"/>
+ <Variable name="SecondsToReady" kind="time" format="UINT08" description="Number of Seconds until camera ready"/>
+
+ <Command>
+ <CommandMsg name="ImageRequest" id="1">
+	<VariableRef name="StartTime"/>
+	<VariableRef name="StartSubS"/>
+	<VariableRef name="Duration" />
+	<VariableRef name="DurationSubS"/>
+	<VariableRef name="GateSize"/>
+	<VariableRef name="GatePosition"/>
+	<VariableRef name="ImageRate" />
+	<VariableRef name="ColorMode" />
+	<VariableRef name="ImageMode" />
+ </CommandMsg>
+ </Command>
+
+ <Notification>
+ <DataMsg name="RequestStatus" id="4" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="2"/>
+	<VariableRef name="ImageRequestStatus" />
+ </DataMsg>
+ </Notification>
+ 
+ <Notification>
+ <DataMsg name="DeviceStatus" id="5" msgArrival="PERIODIC" msgRate="1">
+	<Qualifier name="TelemetryLevel" value="1"/>
+	<VariableRef name="SecondsToReady" />
+ </DataMsg>
+ </Notification>
+ 
+ <Notification>
+ <DataMsg name="HeaderMsg" id="2" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="2"/>
+	<VariableRef name="ImageTime"/>
+	<VariableRef name="ImageSubS"/>
+	<VariableRef name="ImageNumber" />
+	<VariableRef name="NumSegments" />
+	<VariableRef name="GateSize"/>
+	<VariableRef name="GatePosition"/>
+	<VariableRef name="ImageRate" />
+	<VariableRef name="ColorMode" />
+	<VariableRef name="ImageMode" />
+ </DataMsg>
+ </Notification>
+
+ <Notification>
+ <DataMsg name="SegmentMsg" id="3" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="3"/>
+	<VariableRef name="ImageNumber" />
+	<VariableRef name="SegmentCounter" />
+	<VariableRef name="Row" />
+	<VariableRef name="Column" />
+	<VariableRef name="NumBytes" />
+	<VariableRef name="ImageSegment" />
+ </DataMsg>
+ </Notification>
+ </Interface>
+
+ <Interface name="Camera" id="2">
+ <Variable name="Time" kind="time" format="UINT32" units="s" />
+ <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="ShutterSpeed" kind="time" format="UINT32" units="s" scaleFactor=".00001" description="shutter speed/100000" />
+ <Variable name="Brightness" kind="gain" units="counts" format="UINT08" />
+ <Variable name="Gain" kind="gain" format="UINT16" units="counts" description="image gain"/>
+ <Variable name="ALC" kind="mode" format="UINT08" description="ALC mode">
+ <Drange name="ALCEnum">
+	<Option name="OFF" value="1" description="No automatic level control" />
+	<Option name="AGC" value="2" description="AGC" />
+	<Option name="AES" value="3" description="AES" />
+	<Option name="AUTO" value="4" description="AGC and AES" />
+ </Drange>
+ </Variable>
+ <Variable name="VideoLevel" kind="gain" format="UINT08" units="counts" description="Video level" />
+ <Command>
+ <CommandMsg name="Camera" id="1">
+	<VariableRef name="ShutterSpeed"/>
+	<VariableRef name="Brightness"/>
+	<VariableRef name="Gain" />
+	<VariableRef name="ALC"/>
+	<VariableRef name="VideoLevel" />
+ </CommandMsg>
+ </Command>
+ <Notification>
+ <DataMsg name="CameraSettings" id="2" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="1"/>
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="ShutterSpeed" />
+	<VariableRef name="Brightness" />
+	<VariableRef name="Gain" />
+	<VariableRef name="ALC" />
+	<VariableRef name="VideoLevel" />
+ </DataMsg>
+ </Notification>
+ </Interface>
+
+ <Interface name="TargetTrack" id="3">
+ <Variable name="Time" kind="time" format="UINT32" units="s" />
+ <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="StartTime" kind="time" format="UINT32" units="s" description="Time to start image"/>
+ <Variable name="StartSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="Duration" kind="time" format="UINT32" units="s" description="Time to continue taking images (0 = until further notice)" />
+ <Variable name="DurationSubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="GateSize" kind="gateSize" format="UINT16" units="pixels" length="2" description="Initial gate size (x,y)"/>
+ <Variable name="GatePosition" kind="gatePosition" format="UINT16" units="pixels" length="2" description="Initial gate position (x,y)"/>
+ <Variable name="Threshold" kind="threshold" format="UINT16" units="counts" description="All pixels below threshold are set = 0"/>
+ <Variable name="NumTgts" kind="counter" format="UINT08" units="counts" description="Number of targets in track message"/>
+ <Variable name="GateMode" kind="gateModeEnum" format="UINT08" description="Mode can be a sum of size, position, and threshold" >
+ <Drange name="GateModeEnum">
+	<Option name="FIXED" value="1" description="Gate size and position is fixed" />
+	<Option name="AUTO_SIZE" value="2" description="Gate is sized to fit the target" />
+	<Option name="AUTO_POSITION" value="3" description="Gate moves to keep the target inside the gate" />
+	<Option name="AUTO" value="4" description="Auto size and auto position" />
+ </Drange>
+ </Variable>
+ <Variable name="ThresholdMode" kind="thresholdModeEnum" format="UINT08" description="Mode can be a sum of size, position, and threshold" >
+ <Drange name="ThresholdModeEnum">
+	<Option name="FIXED" value="1" description="Gate size and position is fixed" />
+	<Option name="AUTO_SIZE" value="2" description="Gate threshold adapts to keep the target smaller than the gate" />
+	<Option name="AUTO_VALUE" value="3" description="Automatically adjust based upon background level + noise" />
+ </Drange>
+ </Variable>
+ <Variable name="ColorMode" kind="mode" format="UINT08" >
+ <Drange name="ColorModeEnum">
+	<Option name="BW16" value="2" description="greyscale, 16 bits per pixel" />
+	<Option name="BW8" value="3" description="greyscale, 8 bits per pixel" />
+ </Drange>
+ </Variable> 
+ <Variable name="TrackMode" kind="trackModeEnum" format="UINT08" >
+ <Drange name="TrackModeEnum">
+	<Option name="SINGLE" value="1" description="Single" />
+	<Option name="SINGLE_AUTO" value="2" description="Single auto" />
+	<Option name="MULTITARGET" value="3" description="Detections" />
+ </Drange>
+ </Variable>
+ <Variable name="TrackStatus" kind="trackStatusEnum" format="UINT08" description="Current track status" >
+ <Drange name="TrackStatusEnum">
+	<Option name="TRACK" value="1" description="tracking target(s)" />
+	<Option name="BREAK_LOCK" value="2" description="No target in the gate" />
+	<Option name="ACQUISIITON" value="3" description="Trying to acquire target using nominal parameters" />
+ </Drange>
+ </Variable>
+ <Variable name="TgtX" kind="track" format="FLOAT32" units="pixels" length="12" description="Target x postion"/>
+ <Variable name="TgtY" kind="track" format="FLOAT32" units="pixels" length="12" description="Target x postion"/>
+ <Variable name="TgtIntensity" kind="intensity" format="UINT16" units="counts" length="12" description="total target intensity"/>
+ <Variable name="TgtBoxes" kind="intensity" format = "UINT16" units="pixels" length="48" description="Left,Right,Top,Bottom, repeat x 12"/> 
+ <Variable name="IntCentroid" kind="track" format = "FLOAT32" units="pixels" length="2" description="Single Intensity Centroid Pair"/> 
+ <Variable name="NumPixels" kind="counter" format = "UINT08" units="pixels" description="Num Pixels valid in gate"/> 
+ <Variable name="SumIntensity" kind="intensity" format = "UINT16" units="pixels" description="Intensity Sum"/> 
+ <Command>
+ <CommandMsg name="Track" id="1">
+	<VariableRef name="StartTime"/>
+	<VariableRef name="StartSubS"/>
+	<VariableRef name="Duration" />
+	<VariableRef name="DurationSubS"/>
+	<VariableRef name="GateSize" />
+	<VariableRef name="GatePosition" />
+	<VariableRef name="Threshold" />
+	<VariableRef name="ThresholdMode" />
+	<VariableRef name="GateMode" />
+	<VariableRef name="TrackMode" />
+	<VariableRef name="ColorMode" />
+ </CommandMsg>
+ </Command>
+ <Notification>
+ <DataMsg name="TrackData" id="2" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="2"/>
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="GateSize" />
+	<VariableRef name="GatePosition" />
+	<VariableRef name="Threshold" />
+	<VariableRef name="ThresholdMode" />
+	<VariableRef name="GateMode" />
+	<VariableRef name="TrackMode" />
+	<VariableRef name="NumTgts" />
+	<VariableRef name="TgtX" />
+	<VariableRef name="TgtY" />
+	<VariableRef name="TgtIntensity" />
+	<VariableRef name="TgtBoxes"/>
+ </DataMsg>
+ </Notification>
+ <Notification>
+ <DataMsg name="Tracking" id="3" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="2"/>
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="GateSize" />
+	<VariableRef name="GatePosition" />
+	<VariableRef name="Threshold" />
+	<VariableRef name="ThresholdMode" />
+	<VariableRef name="GateMode" />
+	<VariableRef name="TrackMode" />
+	<VariableRef name="IntCentroid" />
+	<VariableRef name="NumPixels" />
+	<VariableRef name="SumIntensity" />
+ </DataMsg>
+ </Notification>
+ </Interface>
+ <Interface name="DevicePower" id="4">
+ <Qualifier name="CurrentWarning" value=".5" units="A"/>
+ <Qualifier name="CurrentLimit" value="1." units="A"/>
+ <Qualifier name="MinPower" value="0.5" units="W"/>
+ <Qualifier name="IdlePower" value="1.5" units="W"/>
+ <Qualifier name="MaxPower" value="10.3" units="W"/>
+ <Variable name="Time" kind="Time" format="UINT32" units="s" />
+ <Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="DevPwrState" kind="devPwrStateEnum" format="UINT08">
+ <Drange name="DevPwrStateEnum">
+	<Option name="OFF" value="1" description="No power applied to device" />
+	<Option name="ON" value="2" description="Power applied to device" />
+ </Drange>
+ </Variable>
+ <Command>
+ <CommandMsg name="DevPwrSetState" id="1">
+	<VariableRef name="DevPwrState" />
+ </CommandMsg>
+ <FaultMsg name="DevPwrStateNotSet" id="2">
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="DevPwrState" />
+ </FaultMsg>
+ </Command>
+ <Notification>
+ <DataMsg name="DevicePowerStatus" id="3" msgArrival="EVENT">
+	<Qualifier name="TelemetryLevel" value="1"/>
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="DevPwrState" />
+ </DataMsg>
+ </Notification>
+ </Interface>
+
+ <Interface name="DeviceSafety" id="5">
+ 
+ <!-- Keep out angles and temperature -->
+ <Variable name="Time" kind="time" format="UINT32" units="s" />
+ <Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+ <Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20" yLow="-10" yHigh="50" rHigh="60"/>
+ <!-- Keep out zone for Optical Field of View, 5 deg off boresite is "never enter" (red), 10 deg off boresite is "warning" (yellow) -->
+ <Variable name="FOV_Keepout" kind="flag" format="FLOAT32" units="deg" rLow="10" yLow="5" yHigh="0" rHigh="0">
+ <!-- "Exclusive" implies we want to avoid being in this keepout zone-->
+ <!-- "Inclusive" means we don't want to leave it (e.g. keeping a boresite pointed within the earth's limb) -->
+ <Qualifier name="KeepoutType" value="Exclusive" units="*" />
+ <!-- Object to avoid... In this case we do not want to point at the sun -->
+ <Qualifier name="AvoidanceObject" value="Sun" units="*" />
+ <!-- Shape of the exclusion area -->
+ <Qualifier name="KeepoutGeometry" value="Circular" units="*" />
+ <!-- Boresite LOS in component's coordinate frame -->
+ <Qualifier name="BoresiteLosX" value="0.0" units="*" />
+ <Qualifier name="BoresiteLosY" value="0.0" units="*" />
+ <Qualifier name="BoresiteLosZ" value="1.0" units="*" />
+ </Variable>
+ <Request>
+ <CommandMsg name="GetDeviceTemperature" id="1" />
+ <DataReplyMsg name="DeviceTempReply" id="2">
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="Temperature"/>
+ </DataReplyMsg>
+ </Request>
+ <Notification>
+ <DataMsg name="DeviceTemp" id="3" msgArrival="PERIODIC" msgRate="1">
+   <Qualifier name="TelemetryModulo" value="30" />
+	<Qualifier name="TelemetryLevel" value="1"/>
+	<VariableRef name="Time" />
+	<VariableRef name="SubS" />
+	<VariableRef name="Temperature"/>
+ </DataMsg>
+ </Notification>
+ </Interface>
+	<Interface name="ASIM" id="6">
+		<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+		<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+		<Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+		<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+		<Variable name="GUID" kind="GUID" format="UINT08" length="16" />
+
+		<Request>
+			<CommandMsg name="GetVersionInfo" id="1" />
+			<DataReplyMsg name="VersionInfoReply" id="2">
+				<VariableRef name="CRCProgCode"/>
+				<VariableRef name="CRCxTEDS"/>
+				<VariableRef name="SWCoreLibRev"/>
+				<VariableRef name="HWFPGAFirmwareRev"/>
+				<VariableRef name="GUID" />
+			</DataReplyMsg>
+		</Request>
+	</Interface>
+
+</xTEDS>

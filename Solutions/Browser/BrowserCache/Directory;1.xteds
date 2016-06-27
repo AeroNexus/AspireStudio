@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="Directory_xTEDS"
+version="1.0">
+<Application name="Directory" kind="Software"/>
+<Interface name="IDirectory" id="1">
+<Variable name="Address" format="BUFFER" kind="ID" />
+<Variable name="AppDev" format="UINT8" kind="ID" description="Application, Device or Component (A,D,C)"/>
+<Variable name="Kind" format="STRING" kind="string" />
+<Variable name="Name" format="STRING" kind="string" />
+<Variable name="ComponentId" format="BUFFER" kind="UID" />
+<Variable name="CompInfoStatus" format="UINT8" kind="CompInfoStatusType" >
+<Drange name="CompInfoStatusType">
+<Option name="Valid" value="1"/>
+<Option name="BadAddress" value="2"/>
+<Option name="UnknownAddress" value="3"/>
+<Option name="UnknownXteds" value="4"/>
+<Option name="UnknownName" value="5"/>
+<Option name="UnknownKind" value="6"/>
+</Drange>
+</Variable>
+<Variable name="Text" format="STRING" kind="string" />
+<Variable name="XtedsId" format="BUFFER" kind="UID" />
+
+<Notification>
+<DataMsg name="RegisterComponent" id="1" msgArrival="EVENT" description="A new component has Registered">
+<VariableRef name="Address"/>
+<VariableRef name="ComponentId"/>
+</DataMsg>
+</Notification>
+
+<Notification>
+<DataMsg name="ModifyComponent" id="2" msgArrival="EVENT"
+description="A component has been Modified. Note: XtedsId may have 0 length">
+<VariableRef name="Address"/>
+<VariableRef name="ComponentId"/>
+<VariableRef name="XtedsId"/>
+</DataMsg>
+</Notification>
+
+<Notification>
+<DataMsg name="UnregisterComponent" id="3" msgArrival="EVENT" description="A component has Unregistered">
+<VariableRef name="Address"/>
+</DataMsg>
+</Notification>
+
+<Request>
+<CommandMsg name="GetComponentInfo" id="4">
+<VariableRef name="Address"/>
+</CommandMsg>
+<DataReplyMsg name="ComponentInfo" id="5">
+<VariableRef name="Address"/>
+<VariableRef name="AppDev"/>
+<VariableRef name="Name"/>
+<VariableRef name="Kind"/>
+<VariableRef name="ComponentId"/>
+<VariableRef name="XtedsId"/>
+<VariableRef name="CompInfoStatus"/>
+</DataReplyMsg>
+</Request>
+
+<Request>
+<CommandMsg name="RequestXteds" id="6">
+<VariableRef name="XtedsId"/>
+</CommandMsg>
+<DataReplyMsg name="XtedsReply" id="7">
+<VariableRef name="XtedsId"/>
+<VariableRef name="Text"/>
+</DataReplyMsg>
+</Request>
+
+</Interface>
+<Interface name="Message_Count" id="2">
+<Variable name="Total_Messages_Recd" kind="Total" format="UINT32"/>
+<Variable name="Messages_Last_Second_Recd" kind="Total" format="UINT32"/>
+<Variable name="Total_Messages_Sent" kind="Total" format="UINT32"/>
+<Variable name="Messages_Last_Second_Sent" kind="Total" format="UINT32"/>
+<Variable name="DroppedxTEDS" kind="counter" format="UINT32"/>
+<Variable name="DroppedCancelxTEDS" kind="counter" format="UINT32"/>
+
+<Notification>
+<DataMsg name="Message_Count" id="1" msgArrival="PERIODIC" msgRate="1">
+<VariableRef name="Total_Messages_Recd"/>
+<VariableRef name="Messages_Last_Second_Recd"/>
+<VariableRef name="Total_Messages_Sent"/>
+<VariableRef name="Messages_Last_Second_Sent"/>
+</DataMsg>
+</Notification>
+</Interface>
+<Interface name="Message_Log" id="3">
+<Variable format="UINT08" name="Msg_Type" kind="TBD"/>
+<Variable format="UINT32" name="Address" kind="IP_long"/>
+<Variable format="UINT16" name="Port" kind="Port_of_Device"/>
+<Variable format="UINT32" name="Sensor_ID" kind="ID"/>
+<Command>
+<CommandMsg name="Enable_Logging" id="1">
+<VariableRef name="Msg_Type"/>
+<VariableRef name="Address"/>
+<VariableRef name="Port"/>
+<VariableRef name="Sensor_ID"/>
+</CommandMsg>
+</Command>
+<Command>
+<CommandMsg name="Disable_Logging" id="2">
+<VariableRef name="Msg_Type"/>
+<VariableRef name="Address"/>
+<VariableRef name="Port"/>
+<VariableRef name="Sensor_ID"/>
+</CommandMsg>
+</Command>
+</Interface>
+</xTEDS>

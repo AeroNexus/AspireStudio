@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ 	 name="RequestProvider_xTEDS"
+	 version="1.0">
+ 	<Application name="AdditionProvider" kind="ExampleSoftware"/>
+   <Interface name="iAdd" id="1">
+     <Variable name="Operand_1" kind="operand" format="FLOAT32" description="First operand"/>
+     <Variable name="Operand_2" kind="operand" format="FLOAT32" description="Second operand"/>
+     <Variable name="Sum" kind="result" format="FLOAT32" description="Summation"/>
+     <Request>
+       <CommandMsg name="AdditionRequestCmd" id="1">
+         <VariableRef name="Operand_1"/>
+         <VariableRef name="Operand_2"/>
+       </CommandMsg>
+       <DataReplyMsg name="AdditionRequestReply" id="2">
+         <VariableRef name="Sum"/>
+       </DataReplyMsg>
+     </Request>
+   </Interface>
+ </xTEDS>

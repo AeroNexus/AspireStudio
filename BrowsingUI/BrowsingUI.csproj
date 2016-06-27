@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{72AAC24D-CC5C-4F1E-A2D8-A0DEAE64662C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aspire.BrowsingUI</RootNamespace>
+    <AssemblyName>AspireBrowsingUI</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\ReferenceAssemblies\v4.0\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.8.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BlackboardActions\IssueQueryAction.cs" />
+    <Compile Include="Dialogs\IssueQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\IssueQueryDialog.Designer.cs">
+      <DependentUpon>IssueQueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SearchDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SearchDialog.Designer.cs">
+      <DependentUpon>SearchDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GenerateDashboardDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\GenerateDashboardDialog.Designer.cs">
+      <DependentUpon>GenerateDashboardDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SendMessageDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SendMessageDialog.Designer.cs">
+      <DependentUpon>SendMessageDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\ApplicationManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentViews\ApplicationManager.Designer.cs">
+      <DependentUpon>ApplicationManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\AppMgr\AppMgrProxy.cs" />
+    <Compile Include="DocumentViews\AppMgr\TargetFileMgr.cs" />
+    <Compile Include="DocumentViews\AppMgr\HostFileMgr.cs" />
+    <Compile Include="DocumentViews\DirectoryConsole.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentViews\DirectoryConsole.Designer.cs">
+      <DependentUpon>DirectoryConsole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\FileExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentViews\FileExplorer.Designer.cs">
+      <DependentUpon>FileExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\AppMgr\FileMgr.cs" />
+    <Compile Include="DocumentViews\HostedPayload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentViews\HostedPayload.Designer.cs">
+      <DependentUpon>HostedPayload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\MessageLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentViews\MessageLog.Designer.cs">
+      <DependentUpon>MessageLog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentViews\AppMgr\AppConfig.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Registration.cs" />
+    <Compile Include="BlackboardActions\SendMessageAction.cs" />
+    <Compile Include="BlackboardActions\SearchAction.cs" />
+    <Compile Include="BlackboardActions\CreateDashboardAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBench\DeviceUnderTestAttribute.cs" />
+    <Compile Include="TestBench\TestBenchDocumentView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestBench\TestBenchDocumentView.Designer.cs">
+      <DependentUpon>TestBenchDocumentView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TestBench\PublishTestResultAttribute.cs" />
+    <Compile Include="TestBench\Stubs.cs" />
+    <Compile Include="TestBench\TestBenchDocument.cs" />
+    <Compile Include="TestBench\TestBenchScriptObject.cs" />
+    <Compile Include="TestBench\TestBenchScriptObjectHelper.cs" />
+    <Compile Include="TestBench\TestResult_WS.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="DockedViews\" />
+    <Folder Include="PowerPanel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AspireStudio\AspireStudio.csproj">
+      <Project>{1801e82d-a6d6-420d-8a33-84a84d053fd2}</Project>
+      <Name>AspireStudio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CoreModels\CoreModels.csproj">
+      <Project>{a4fcdeb7-9dff-4f59-b69f-d6534af7594e}</Project>
+      <Name>CoreModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{e236dc25-fef2-4ca1-81c1-89782ed31b3d}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Primitives\Primitives.csproj">
+      <Project>{285341bd-c4c9-47d2-a57a-e5383b85534a}</Project>
+      <Name>Primitives</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UiToolbox\UiToolbox.csproj">
+      <Project>{082f6a94-fde9-4dba-8ac1-5e87dd609d3c}</Project>
+      <Name>UiToolbox</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{3d0c3d1f-4e9f-4066-93cb-3fa8a1a29549}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dialogs\IssueQueryDialog.resx">
+      <DependentUpon>IssueQueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SendMessageDialog.resx">
+      <DependentUpon>SendMessageDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentViews\ApplicationManager.resx">
+      <DependentUpon>ApplicationManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentViews\DirectoryConsole.resx">
+      <DependentUpon>DirectoryConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentViews\FileExplorer.resx">
+      <DependentUpon>FileExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentViews\HostedPayload.resx">
+      <DependentUpon>HostedPayload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentViews\MessageLog.resx">
+      <DependentUpon>MessageLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestBench\TestBenchDocumentView.resx">
+      <DependentUpon>TestBenchDocumentView.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\arrow_down_blue.png" />
+    <Content Include="Images\arrow_up_blue.png" />
+    <None Include="Resources\stop.png" />
+    <None Include="Resources\navigate_up.png" />
+    <None Include="Resources\navigate_down.png" />
+    <None Include="Resources\error.png" />
+    <None Include="Resources\check.png" />
+    <None Include="Images\unknown.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetDir)$(TargetName).* $(SolutionDir)AspireStudio\bin\$(Configuration)
+copy $(TargetDir)$(TargetName).* $(SolutionDir)AspireStudio\bin\$(Configuration)\Plugins</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

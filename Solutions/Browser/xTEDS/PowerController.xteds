@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="Power_Controller_xTEDS" version="1.0">
+  
+	<Application name="PowerController" kind="PowerControl" description="Subsystem-level Management of Spacecraft Power" >
+		<Qualifier name="Author" value="PnP_Innovations"/>
+		<Qualifier name="Version" value="1.1"/>
+		<Qualifier name="RevisionDate" value="04-17-2012"/>
+	</Application>
+
+	<Interface name="iPowerStatusInterface" id="1">
+		<Variable name="StatusCode" format="UINT08" kind="StatusCodeTypes" description="This field is a status corresponding to a fault.">
+			<Drange name="StatusCodeTypes">
+				<Option name="DataOK" value="1"/>
+				<Option name="DataNotAvailable" value="2"/>
+			</Drange>
+		</Variable>	
+		<Variable name="Time" kind="Time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="BusVoltage" kind="BusVoltage" format="FLOAT32" units="V" description="Spacecraft Bus Voltage" />
+		<Variable name="EnergyStoreCapacity" kind="capacity" format="FLOAT32" units="wattHours" description="Energy Storage Capacity">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Max"/>
+		</Variable>
+		<Variable name="EnergyStorePowerCapacity" kind="capacity" format="FLOAT32" units="W" description="Energy Storage Power Capacity">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Max"/>
+		</Variable>
+		<Variable name="CollectionPowerCapacity" kind="capacity" format="FLOAT32" units="W" description="Energy Collection Power Capacity">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Max"/>
+		</Variable>
+		<Variable name="DissipationPowerCapacity" kind="capacity" format="FLOAT32" units="W" description="Energy Dissipation Power Capacity">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Max"/>
+		</Variable>
+		<Variable name="StoredEnergy" kind="quantity" format="FLOAT32" units="wattHours" description="Energy Store Stored Energy">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>
+		<Variable name="EnergyStoreStateOfCharge" kind="quantity" format="FLOAT32" units="percent" description="Energy Store State Of Charge">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>		
+		<Variable name="EnergyStorePower" kind="power" format="FLOAT32" units="W" description="Energy Store Power">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>
+		<Variable name="CollectionPower" kind="power" format="FLOAT32" units="W" description="Energy Collection Power">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>
+		<Variable name="DissipationPower" kind="power" format="FLOAT32" units="W" description="Energy Dissipation Power">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>
+		<Variable name="DevicePower" kind="power" format="FLOAT32" units="W" description="Power Sourced to Devices">
+			<Qualifier name="Scope" value="System"/>
+			<Qualifier name="Category" value="Instantaneous"/>
+		</Variable>
+		<Variable name="TimeToYellowLimit" kind="duration" format="UINT32" units="s" description="Time until Yellow Limit Condition is Reached">
+			<Qualifier name="Scope" value="PowerController"/>
+			<Qualifier name="Target" value="PowerAdvisoryCondition"/>
+		</Variable>
+		<Variable name="TimeToRedLimit" kind="duration" format="UINT32" units="s" description="Time until Red Limit Condition is Reached">
+			<Qualifier name="Scope" value="PowerManagement"/>
+			<Qualifier name="Target" value="PowerWarningCondition"/>
+		</Variable>
+		<Variable name="StoreCurrent" kind="Current" format="FLOAT32" units="A" description="Charging is positive; discharging is negative"/>
+		<Variable name="LoadCurrent" kind="Current" format="FLOAT32" units="A" description="Current drawn by system loads"/>
+		<Variable name="CollectedCurrent" kind="Current" format="FLOAT32" units="A" description="Current arrays are currently collecting"/>
+		<Variable name="ShuntCurrent" kind="Current" format="FLOAT32" units="A" description="Current being shunted"/>
+		<Variable name="MaxCollectableCurrent" kind="Current" format="FLOAT32" units="A" description="Max current that could be produced by solar arrays"/>
+		<Variable name="MaxStoredCurrent" kind="Current" format="FLOAT32" units="A" description="Max current collection of batteries can source"/>
+		<Variable name="BatteryChargingState" format="UINT08" kind="ChargingTypes" description="Charging state of the battery">
+			<Drange name="ChargingTypes">
+				<Option name="Charging" value="1"/>
+				<Option name="Discharging" value="2"/>
+			</Drange>
+		</Variable>
+    
+		<!-- Notifications -->
+		<Notification>
+			<DataMsg name="PowerState" description="System-Level Power State" id="1" msgArrival="PERIODIC">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="BusVoltage"/>
+				<VariableRef name="EnergyStoreCapacity"/>
+				<VariableRef name="EnergyStorePowerCapacity"/>
+				<VariableRef name="CollectionPowerCapacity"/>
+				<VariableRef name="DissipationPowerCapacity"/>
+				<VariableRef name="StoredEnergy"/>
+				<VariableRef name="EnergyStoreStateOfCharge"/>
+				<VariableRef name="EnergyStorePower"/>
+				<VariableRef name="CollectionPower"/>
+				<VariableRef name="DissipationPower"/>
+				<VariableRef name="DevicePower"/>
+			</DataMsg>
+		</Notification>
+    
+		<Notification>
+			<DataMsg name="YellowLimitState" description="Predicted time to yellow limit event" id="2" msgArrival="PERIODIC">
+				<Qualifier name="TelemetryLevel" value="1"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="TimeToYellowLimit"/>
+			</DataMsg>
+		</Notification>
+		<Notification>
+			<DataMsg name="RedLimitState" description="Predicted time to red limit event" id="3" msgArrival="PERIODIC">
+				<Qualifier name="TelemetryLevel" value="1"/>			
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="TimeToRedLimit"/>
+			</DataMsg>
+		</Notification>
+		<Notification>
+			<DataMsg name="YellowLimitEvent" description="Yellow limit condition notification" id="4" msgArrival="EVENT">
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="EnergyStoreStateOfCharge"/>
+			</DataMsg>
+		</Notification>
+		<Notification>
+			<DataMsg name="RedLimitEvent" description="Red limit condition notification" id="5" msgArrival="EVENT">
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="EnergyStoreStateOfCharge"/>
+			</DataMsg>
+		</Notification>
+
+		<!-- Requests -->
+		<Request>
+			<CommandMsg name="GetCurrentValues" id="6"/>
+      <DataReplyMsg name="RequestCurrentValuesReply" id="7">
+        <VariableRef name="BusVoltage"/>
+				<VariableRef name="StoreCurrent"/>
+				<VariableRef name="LoadCurrent"/>
+		  	<VariableRef name="CollectedCurrent"/>
+		  	<VariableRef name="ShuntCurrent"/>
+		  	<VariableRef name="MaxCollectableCurrent"/>
+		  	<VariableRef name="MaxStoredCurrent"/>
+		  	<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+    
+	</Interface>
+
+  <Interface name="iPowerControllerTuning" id="2">
+
+		<Variable name="EnergyStoreSocYellowThreshold" kind="limit" format="FLOAT32" units="percent" defaultValue="50"/>
+    <Variable name="EnergyStoreSocRedThreshold" kind="limit" format="FLOAT32" units="percent" defaultValue="30"/>
+    <Variable name="DesiredMainBusVoltage" kind="limit" format="FLOAT32" units="V" defaultValue="28"/> 
+
+		<!-- Messages to set/get tuning parameters -->
+
+		<Command>
+			<CommandMsg name="SetPowerControlParameters" id="1">
+				<VariableRef name="EnergyStoreSocYellowThreshold"/>
+        <VariableRef name="EnergyStoreSocRedThreshold"/>
+				<VariableRef name="DesiredMainBusVoltage"/>
+			</CommandMsg>
+		</Command>
+    <Request>
+      <CommandMsg name="GetPowerControlParameters" id="2"/>
+      <DataReplyMsg name="RequestCurrentValuesReply" id="3">
+        <VariableRef name="EnergyStoreSocYellowThreshold"/>
+        <VariableRef name="EnergyStoreSocRedThreshold"/>
+        <VariableRef name="DesiredMainBusVoltage"/>
+      </DataReplyMsg>
+    </Request>
+
+	</Interface>
+</xTEDS>

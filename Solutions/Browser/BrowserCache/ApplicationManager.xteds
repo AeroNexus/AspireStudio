@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="ApplicationManager_xTEDS" version="1.1">
+
+<Application name="ApplicationManager" version="1.0" kind="AspireInfrastructure" description="Manages Aspire apps"/>
+<Interface name="IApplicationMgmt" id="1" >
+<Variable name="AspireReplyStatus" kind="AspireReplyStatusEnum" format="INT8">
+<Drange name="AspireReplyStatusEnum" >
+<Option name="OK" value="1"/>
+<Option name="Error" value="2"/>
+</Drange>
+</Variable>
+<Request>
+<CommandMsg name="StartAspire" id="1" description="Start the Aspire infrastructure">
+</CommandMsg>
+<DataReplyMsg name="StartAspireReply" id="2">
+<VariableRef name="AspireReplyStatus"/>
+</DataReplyMsg>
+</Request>
+<Request>
+<CommandMsg name="StopAspire" id="3" description="Start the Aspire infrastructure">
+</CommandMsg>
+<DataReplyMsg name="StopAspireReply" id="4">
+<VariableRef name="AspireReplyStatus"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+</xTEDS>

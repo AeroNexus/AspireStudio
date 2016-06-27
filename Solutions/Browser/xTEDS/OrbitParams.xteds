@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	 name="OrbitParams_xTEDS" version="2.1">
+	 
+<Application name="OrbitParams" version="1.0" kind="Software" description="Provides live orbit characteristics"/>
+
+<Interface name="iOrbitParams" id="1">
+	<Variable name="Time" kind="Time" format="UINT32" units="s" />
+	<Variable name="SubS" kind="SubSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+	<Variable name="Altitude" kind="OrbitAltitude" format="FLOAT64" units="km" description="Current altitude of satellite (above mean sea level)"/>
+  <Variable name="TimeToApoapsis" kind="remainingTime" format="FLOAT64" units="s" description="Time to next apoapsis"/>
+  <Variable name="TimeToPeriapsis" kind="remainingTime" format="FLOAT64" units="s" description="Time to next periapsis"/>
+  <Variable name="OrbitPeriod" kind="duration" format="FLOAT64" units="s" description="Period of curent orbit"/>
+	
+	<!-- Retrieves current orbit parameters -->
+	<Request>
+    <CommandMsg id="1" name="GetOrbitParameters" description="Gets the current orbit parameters to support planning"/>
+		<DataReplyMsg id="2" name="SetGenericCircularOrbitReply">
+			<Qualifier name="TelemetryLevel" value="3"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="Altitude"/>
+			<VariableRef name="TimeToApoapsis"/>
+			<VariableRef name="TimeToPeriapsis"/>
+			<VariableRef name="OrbitPeriod"/>
+		</DataReplyMsg>
+	</Request>
+	
+</Interface>
+</xTEDS>

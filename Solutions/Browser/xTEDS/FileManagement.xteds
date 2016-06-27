@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="FileMangement_xTEDS" version="1.0">
+  <Application name="FileManagement" version="1.0" kind="InfrastructureSoftware" description="Abstracts a File Management Interface for PnP Systems"/>
+
+
+  <Interface name="FileAccessInterface" id="1">
+		<!-- kind="String" was requested by ICS.  The only way to know the kind of data in a string in this xTEDS is to recognize a substring in the name attribute. -->
+		<!-- In the future, ICS will adapt their ground software to recognize the Representation qualifier for strings, and this xTEDS will change to specify kind="PathName" or kind="FileName". -->
+		<Variable name="FileHandle" format="UINT16" kind="Handle" description="This field is used to identify file requests."/>
+		<Variable name="PathName" format="INT08" kind="String" length="80" description="This field is the null-terminated path to the file.">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FileName" format="INT08" kind="String" length="80" description="This field is the null-terminated filename of the request.">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FileBuffer" format="UINT08" kind="File_Section" length="1426" description="This field is the buffer containing the portion of the file requested."/>
+		<Variable name="StatusCode" format="UINT08" kind="StatusCodeTypes" description="This field is a status corresponding to a fault.">
+			<Drange name="StatusCodeTypes">
+				<Option name="OperationOK" value="1"/>
+				<Option name="InvalidHandle" value="2"/>
+				<Option name="FileNotAvailable" value="3"/>
+				<Option name="InvalidOffset" value="4"/>
+				<Option name="CouldNotObtainHandle" value="5"/>
+				<Option name="ChecksumFailed" value="6"/>
+			</Drange>
+		</Variable>
+		<Variable name="FileFlag" format="UINT08" kind="FlagTypes" description="This field represents the type of handle to obtain.">
+			<Drange name="FlagTypes">
+				<Option name="ReadOnly" value="1"/>
+				<Option name="WriteOnly" value="2"/>
+				<Option name="ReadWrite" value="3"/>
+			</Drange>
+		</Variable>
+		<Variable name="ByteOffset" format="UINT32" kind="Offset" description="This field is the byte offset for reading and writing to files."/>
+		<Variable name="Length" format="UINT32" kind="Length" description="This field is the number of bytes to read/write from the offset."/>
+		<Variable name="Checksum" format="UINT16" kind="CheckSumToZero" description="The sum of this and the sum of the first Length elements of FileBuffer should be zero." />
+		<Request>
+			<CommandMsg name="OpenFileHandle" id="1">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+				<VariableRef name="FileFlag"/>
+			</CommandMsg>
+			<DataReplyMsg name="OpenHandleReply" id="2">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="FileHandle"/>
+			</DataReplyMsg>
+		</Request>
+		<Command>
+			<CommandMsg name="CloseFileHandle" id="3">
+				<VariableRef name="FileHandle"/>
+			</CommandMsg>
+			<FaultMsg name="CloseFileHandleError" id="4">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="StatusCode"/>
+			</FaultMsg>
+		</Command>
+		<Request>
+			<CommandMsg name="ReadPortion" id="5">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="Length"/>
+			</CommandMsg>
+			<DataReplyMsg name="ReadReply" id="6">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+				<VariableRef name="FileBuffer"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="WritePortion" id="7">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="Length"/>
+				<VariableRef name="FileBuffer"/>
+			</CommandMsg>
+			<DataReplyMsg name="WriteReply" id="8">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="Append" id="9">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="Length"/>
+				<VariableRef name="FileBuffer"/>
+			</CommandMsg>
+			<DataReplyMsg name="AppendReply" id="10">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="FileChecksum" id="11">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileChecksumReply" id="12">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Checksum"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="ReadPortionWithChecksum" id="13">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="Length"/>
+			</CommandMsg>
+			<DataReplyMsg name="ReadWithChecksumReply" id="14">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+				<VariableRef name="FileBuffer"/>
+				<VariableRef name="Checksum"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="LastFailedWriteWithChecksum" id="15"/>
+			<DataReplyMsg name="LastFailedWriteWithChecksumReply" id="16">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+			</DataReplyMsg>
+		</Request>
+		<Command>
+			<CommandMsg name="WritePortionWithChecksum" id="17">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="Length"/>
+				<VariableRef name="FileBuffer"/>
+				<VariableRef name="Checksum"/>
+			</CommandMsg>
+		</Command>
+		<Notification>
+			<DataMsg name="WriteWithChecksumStatus" id="18" msgArrival="EVENT">
+				<VariableRef name="FileHandle"/>
+				<VariableRef name="ByteOffset"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="Length"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+	<Interface name="FileManagementInterface" id="2">
+		<Variable name="FileListTextBuffer" format="INT08" length="1426" kind="BLOB" description="Blob buffer containing File Listing" />
+		<Variable name="FileName" format="INT08" length="80" kind="String" description="Name of File">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="PathName" format="INT08" length="80" kind="String" description="File Path Text">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FromFileName" format="INT08" length="80" kind="String" description="Name of Originating File">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FromPathName" format="INT08" length="80" kind="String" description="Originating File Path Text">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="ToFileName" format="INT08" length="80" kind="String" description="Name of Destination File">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="ToPathName" format="INT08" length="80" kind="String" description="Destination File Path Text">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FileSize" format="UINT32" kind="File_Size_Bytes" description="Size of File in Bytes" />
+		<Variable name="FileOwner" format="UINT08" length="16" kind="String" description="File owner text string">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="FileLocked" format="UINT08" kind="File_Lock_State" description="Indicates whether file is in use - 1 is available, 2 is locked" />
+		<Variable name="FilePermissions" format="UINT08" length="16" kind="String" description="File permissions text string">
+			<Qualifier name="Representation" value="string" />
+		</Variable>
+		<Variable name="StatusCode" format="UINT08" kind="StatusCodeTypes" description="Fail code for file management actions">
+			<Drange name="StatusCodeTypes">
+				<Option name="OperationOK" value="1"/>
+				<Option name="InvalidPath" value="2"/>
+				<Option name="InvalidFile" value="3"/>
+				<Option name="PathExists" value="4"/>
+				<Option name="FileExists" value="5"/>
+				<Option name="InvalidPathAndFile" value="6"/>
+				<Option name="InsufficientMemory" value="7"/>
+				<Option name="PathNotEmpty" value="8"/>
+			</Drange>
+		</Variable>
+		<Variable name="FileListCode" format="UINT08" kind="FileListCodeTypes" description="Type of File Listing - brief or complete">
+			<Drange name="FileListCodeTypes">
+				<Option name="Brief" value="1"/>
+				<Option name="Complete" value="2"/>
+			</Drange>
+		</Variable>
+		<Variable name="FreeSpace" format="UINT32" units="KB" kind="unusedFileSystemSpace" description="Size of file system free space" />
+
+		<Request>
+			<CommandMsg name="FileList" id="1">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileListCode"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileListReply" id="2">
+				<VariableRef name="PathName"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="FileListTextBuffer"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="FileInfo" id="3">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileInfoReply" id="4">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+				<VariableRef name="StatusCode"/>
+				<VariableRef name="FileSize"/>
+				<VariableRef name="FileOwner"/>
+				<VariableRef name="FileLocked"/>
+				<VariableRef name="FilePermissions"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="FileCopy" id="5">
+				<VariableRef name="FromPathName"/>
+				<VariableRef name="FromFileName"/>
+				<VariableRef name="ToPathName"/>
+				<VariableRef name="ToFileName"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileCopyReply" id="6">
+				<VariableRef name="FromPathName"/>
+				<VariableRef name="FromFileName"/>
+				<VariableRef name="ToPathName"/>
+				<VariableRef name="ToFileName"/>
+				<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="FileMove" id="7">
+				<VariableRef name="FromPathName"/>
+				<VariableRef name="FromFileName"/>
+				<VariableRef name="ToPathName"/>
+				<VariableRef name="ToFileName"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileMoveReply" id="8">
+				<VariableRef name="FromPathName"/>
+				<VariableRef name="FromFileName"/>
+				<VariableRef name="ToPathName"/>
+				<VariableRef name="ToFileName"/>
+				<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="FileDelete" id="9">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+			</CommandMsg>
+			<DataReplyMsg name="FileDeleteReply" id="10">
+				<VariableRef name="PathName"/>
+				<VariableRef name="FileName"/>
+				<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="PathCreate" id="11">
+				<VariableRef name="PathName"/>
+			</CommandMsg>
+			<DataReplyMsg name="PathCreateReply" id="12">
+				<VariableRef name="PathName"/>
+				<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+		<Request>
+			<CommandMsg name="PathDelete" id="13">
+				<VariableRef name="PathName"/>
+			</CommandMsg>
+			<DataReplyMsg name="PathDeleteReply" id="14">
+				<VariableRef name="PathName"/>
+				<VariableRef name="StatusCode"/>
+			</DataReplyMsg>
+		</Request>
+		<Notification>
+			<DataMsg name="FileSystemStateOfHealth" id="15" msgArrival="PERIODIC" msgRate="0.01">
+				<VariableRef name="FreeSpace"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+</xTEDS>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="MissionInfoAgent_xTEDS" version="1.0">
+  
+  <Device name="MissionInfoAgent" kind="InformationAgent" description="Agent used to get data from Aspire and push to bdStudio.">
+    <Qualifier name="DummyQualifier" value="1" units="pixels"/>  <!-- Dummy Qualifier -->
+  </Device>
+
+  <!-- Mission Info Agent Interface -->
+  <Interface name="MissionInfoAgentInterface" id="1">
+    <Variable name="Dummy1" kind="time" format="UINT32" units="s" description="Placeholder for future variable"/>
+    <Variable name="Dummy2" kind="time" format="UINT32" units="s" description="Placeholder for future variable"/>
+    <Variable name="ElapsedSeconds" kind="time" format="FLOAT64"  units="s"
+							description="Elapsed seconds since the start of the scenario"/>
+
+    <Notification>
+      <DataMsg name="DummyStatus" id="1" msgArrival="EVENT">
+        <VariableRef name="Dummy1"/>
+      </DataMsg>
+    </Notification>
+  </Interface>
+
+
+  </xTEDS>

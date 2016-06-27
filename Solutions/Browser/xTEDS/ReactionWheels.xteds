@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="ReactionWheels_xTEDS" version="3.0">
+	
+	<Application name="ReactionWheels" version="1.0" kind="Software" description="Reaction Wheel Assembly App" />
+
+	<Interface name="IReactionWheelAssembly" id="1">
+		<Variable name="Time" kind="Time" format="UINT32" units="s" />
+		<Variable name="SubS" kind="SubSeconds" format="UINT32" units="counts" scaleFactor=".000001" scaleUnits="s" />
+		<Variable name="NumWheels" kind="Count" format="UINT32" description="Number of wheels" />
+
+		<Variable name="TorqueCommand" kind="torque" length="3" format="FLOAT32" description="Commanded torque Body Frame">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="Momentum" kind="angularMomentum" length="3" format="FLOAT32" description="RWA Angular Momentum in Body Frame">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="ExcessMomentum" kind="angularMomentum" length="3" format="FLOAT32" description="Excess RWA Angular Momentum in Body Frame">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="ImpartedTorque" kind="torque" length="3" format="FLOAT32" description="Estimate of torque imparted by RWs on the SV">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="ImpartedAngularAcceleration" kind="angularAcceleration" length="3" format="FLOAT32" description="Estimate of angular acceleration imparted by RWs on the SV">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="MaxTorque" kind="torque" length="3" format="FLOAT32" description="Maximum body torque available from the assembly">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="MaxMomentum" kind="momentum" length="3" format="FLOAT32" description="Maximum body momentum available from the assembly">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameMeasured" value="SVF"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+
+		<Variable name="WheelStatus" kind="WheelStatusEnum" format="UINT8" description="Wheel status">
+			<Drange name="WheelStatusEnum">
+				<Option name="Offline" value="1"/>
+				<Option name="Axis1" value="2"/>
+				<Option name="Axes2" value="3"/>
+				<Option name="Axes3" value="4"/>
+			</Drange>
+		</Variable>
+		
+		<Command>
+			<CommandMsg id="1" name="BodyTorqueCmd" description="Commanded torque Body Frame">
+				<Qualifier name="TelemetryLevel" value="3"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="TorqueCommand"/>
+			</CommandMsg>
+		</Command>
+
+		<Notification>
+			<DataMsg id="2" name="MomentumMsg" msgArrival="PERIODIC" msgRate="1"  description="Excess RWA Angular Momentum in Body Frame">
+				<Qualifier name="TelemetryLevel" value="3"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="Momentum"/>
+				<VariableRef name="ExcessMomentum"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg id="3" name="ImpartedTorqueMsg" msgArrival="PERIODIC" msgRate="1"  description="Estimate of torque imparted by RWs on the SV">
+				<Qualifier name="TelemetryLevel" value="3"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="ImpartedTorque"/>
+				<VariableRef name="ImpartedAngularAcceleration"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg id="4" name="Capabilities" msgArrival="EVENT" description="Wheel assembly capabilites">
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="NumWheels"/>
+				<VariableRef name="MaxTorque"/>
+				<VariableRef name="MaxMomentum"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="WheelStatusMsg" id="5" msgArrival="EVENT" description="wheel status">
+				<Qualifier name="TelemetryLevel" value="3"/>
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+				<VariableRef name="WheelStatus"/>
+			</DataMsg>
+		</Notification>
+
+	</Interface>
+</xTEDS>

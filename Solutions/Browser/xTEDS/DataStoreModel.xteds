@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	 name="DataStoreModel_xTEDS" version="2.1">
+
+  <Application name="DataStoreModel" version="1.0" kind="Software" description="Model of an on-orbit data store" />
+
+  <Interface name="iDataStoreModel" id="1">
+    <Variable name="FillLevel" kind="fillLevel" format="FLOAT32" units="percent" description="Fill level of data store (0-100%)"/>
+    <Variable name="EquivalentImages" kind="count" format="UINT32" units="" description="Number of equivalent images in the data store"/>
+    <Variable name="StoredData" kind="count" format="UINT64" units="Bytes" description="Data in Store (Bytes)"/>
+    <Variable name="FillRate" kind="dataRate" format="FLOAT32" units="Bytes/sec" description="Rate at which data is filling store"/>
+    <Variable name="DrainRate" kind="dataRate" format="FLOAT32" units="Bytes/sec" description="Rate at which data is draining store"/>
+    <Variable name="DataBlockSize" kind="dataSize" format="UINT64" units="Bytes" description="Data size of single read/write exchange in Bytes"/>
+    <Variable name="DataStoreReturnCode" kind="DataStoreReturnCodeEnum" format="UINT08" description="Data Store Return Code">
+      <Drange name="DataStoreReturnCodeEnum">
+        <Option value="1" name="OK"/>
+        <Option value="2" name="DEVICE_BUSY"/>
+        <Option value="3" name="NOT_ENOUGH_SPACE"/>
+        <Option value="4" name="NO_DATA"/>
+      </Drange>
+    </Variable>
+
+    <Request>
+      <CommandMsg id="1" name="WriteDataBlock" description="Write a data block of specified size">
+        <VariableRef name="DataBlockSize"/> 
+        <VariableRef name="FillRate"/> <!-- 0 means use the natural throughput of data store -->
+      </CommandMsg>
+      <DataReplyMsg id="2" name="WriteDataBlockReply">
+        <Qualifier name="TelemetryLevel" value="3"/>
+        <VariableRef name="DataStoreReturnCode"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <Request>
+      <CommandMsg id="3" name="ReadDataBlock" description="Read a data block of specified size">
+        <VariableRef name="DataBlockSize"/>
+        <VariableRef name="DrainRate"/> <!-- 0 means use the natural throughput of data store -->   
+      </CommandMsg>    
+      <DataReplyMsg id="4" name="ReadDataBlockReply">
+        <Qualifier name="TelemetryLevel" value="3"/>
+        <VariableRef name="DataStoreReturnCode"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg id="5" name="StartDataDrain" description="Initiate draining of data at specified throughput">
+        <VariableRef name="DrainRate"/>      
+      </CommandMsg>
+      <DataReplyMsg id="6" name="StartDataDrainReply">
+        <Qualifier name="TelemetryLevel" value="3"/>
+        <VariableRef name="DataStoreReturnCode"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg id="7" name="StopDataDrain" description="Terminate draining of data at specified throughput">
+      </CommandMsg>
+      <DataReplyMsg id="8" name="StopDataDrainReply">
+        <Qualifier name="TelemetryLevel" value="3"/>
+        <VariableRef name="DataStoreReturnCode"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="DataStoreStatus" id="9" msgArrival="PERIODIC" msgRate="1">
+        <Qualifier name="TelemetryLevel" value="1"/>
+        <VariableRef name="FillLevel"/>
+        <VariableRef name="EquivalentImages"/>
+        <VariableRef name="StoredData" />
+        <VariableRef name="FillRate" />
+        <VariableRef name="DrainRate" />
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+</xTEDS>

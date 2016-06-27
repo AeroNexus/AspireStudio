@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="HPIU+Host_xTEDS" version="1.0">
+<Application name="HPIU+Host" version="1.0" kind="Host" />
+
+<!--=====================================================-->
+<!-- Interface 1: HPIU Management I/F: Status & Control  -->
+<!--=====================================================-->
+  <Interface name="iHpiuManagement" id="1">
+
+    <Variable name="AuthenticationString" kind="String" format="BUFFER" description="Authentication String for administrative access"/>
+    <Variable name="HostSatelliteName" kind="String" format="BUFFER" description="Name of Hosting Satellite"/>
+    <Variable name="HpiuLocation" kind="String" format="BUFFER" description="Description of HPIU Location on Host"/>
+    <Variable name="NumberOfPayloadSlots" kind="count" format="UINT08" description="Number of Payload Slots on HPIU Adapter"/>
+    <Variable name="NumberOfOccupiedSlots" kind="count" format="UINT08" description="Number of Slots Occupied"/>
+    <Variable name="DataStorageCapacity" kind="count" units="kBytes" format="UINT32" description="Capacity of HPIU Data Stores for Payload Data"/>
+    <Variable name="Timestamp" kind="time" units="seconds" format="FLOAT64" description="Timestamp of message" />
+    <Variable name="PowerSupplyTemperature" kind="temperature" format="FLOAT32" units="degC" description="Temperature - Power Supply"/>
+    <Variable name="ProcessorTemperature" kind="temperature" format="FLOAT32" units="degC" description="Temperature - Hpiu Processor"/>
+    <Variable name="PayloadInterfaceTemperature" kind="temperature" format="FLOAT32" units="degC" description="Temperature - Payload Interface Surface"/>
+    <Variable name="SpacewireRouterTemperature" kind="temperature" format="FLOAT32" units="degC" description="Temperature - Spacewire Router Subassembly"/>
+    <Variable name="HpiuVoltage" kind="voltage" format="FLOAT32" units="V" description="Voltage of HPIU (Volts)"/>
+    <Variable name="HpiuCurrrent" kind="current" format="FLOAT32" units="A" description="Current being drawn by HPIU (Amps)"/>
+    <Variable name="HpiuPower" kind="power" format="FLOAT32" units="W" description="Power being drawn by HPIU (Watts)"/>
+    <Variable name="DataStorageFillLevel" kind="fillLevel" format="FLOAT32" units="percent" description="Fill Level of HPIU Data Store"/>
+    <Variable name="PayloadLogicalId" kind="LogicalId" format="UINT16" description="Logical ID of a Payload"/>
+    <Variable name="ChangeType" kind="enum" format="UINT8" description="Payload Status Change Type">
+      <Drange name="ChangeTypeEnum">
+        <Option name="Disable" value="0"/>
+        <Option name="Enable" value="1"/>
+      </Drange>
+    </Variable>
+    <Variable name="ChangeReason" kind="enum" format="UINT8" description="Payload Status Change Reason">
+      <Drange name="ChangeReasonEnum">
+        <Option name="NominalGroundCommand" value="0"/>
+        <Option name="TimeTaggedCommand" value="1"/>
+        <Option name="TemperatureThreshold" value="2"/>
+        <Option name="PowerThreshold" value="3"/>
+        <Option name="LoadShedding" value="4"/>
+        <Option name="Babbling" value="5"/>
+        <Option name="SuspectDataInteractions" value="6"/>
+      </Drange>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="SoftReset" id="1" description="Performs a soft reset of the HPIU">
+        <VariableRef name="AuthenticationString"/>
+      </CommandMsg>
+    </Command>
+
+    <Request>
+      <CommandMsg name="GetInformation" id="2"/>
+      <DataReplyMsg name="GetInformationReply" id="3">
+        <VariableRef name="HostSatelliteName"/>
+        <VariableRef name="HpiuLocation"/>
+        <VariableRef name="NumberOfPayloadSlots"/>
+        <VariableRef name="NumberOfOccupiedSlots"/>
+        <VariableRef name="DataStorageCapacity"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="Housekeeping" id="4" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="PowerSupplyTemperature"/>
+        <VariableRef name="ProcessorTemperature"/>
+        <VariableRef name="PayloadInterfaceTemperature"/>
+        <VariableRef name="SpacewireRouterTemperature"/>
+        <VariableRef name="HpiuVoltage"/>
+        <VariableRef name="HpiuCurrrent"/>
+        <VariableRef name="DataStorageFillLevel"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="PayloadStatusChange" id="5" msgArrival="EVENT">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="PayloadLogicalId"/>
+        <VariableRef name="ChangeType"/>
+        <VariableRef name="ChangeReason"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>  
+  
+<!--========================================-->
+<!-- Interface 2: Host State Data -->
+<!--========================================-->
+<Interface name="iHostState" id="2" scope="Public">
+    <Variable name="GpsSeconds" kind="time" format="UINT32" units="sec" description="GPS seconds since Jan6, 1980"/>
+    
+    <Variable name="EphemTimestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Ephemerides"/>
+    <Variable name="Position" kind="vector" format="FLOAT64" length="3" units="m" description="J2000 position of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+    <Variable name="Velocity" kind="velocity" format="FLOAT64" length="3" units="m/s"  description="J2000 velocity of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+
+    <Variable name="AttitudeTimestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Attitude"/>
+    <Variable name="Attitude" kind="quaternion" format="FLOAT64" length="4" description="J2000 quaternion attitude of asset's body coordinate frame" >
+      <Qualifier name="Representation" value="quaternion"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="DVF"/>
+    </Variable>
+    <Variable name="AttitudeRate" kind="vector" format="FLOAT64" length="3" description="Attitude Rates in body coordinate frame" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="DVF"/>
+    </Variable>
+    
+    <Variable name="SunStatus" kind="enum" format="UINT8">
+      <Drange name="SunStatusEnum">
+        <Option name="InEclipse" value="0"/>
+        <Option name="InSun" value="1"/>
+      </Drange>
+    </Variable>
+
+    <Notification>
+      <DataMsg name="TimeMsg" id="1" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="GpsSeconds"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="AttitudeMsg" id="2" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Attitude"/>
+        <VariableRef name="AttitudeRate"/>
+        <VariableRef name="EphemTimestamp"/>
+      </DataMsg>
+    </Notification>
+    
+    <Notification>
+      <DataMsg name="EphemerisMsg" id="3" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Position"/>
+        <VariableRef name="Velocity"/>
+        <VariableRef name="EphemTimestamp"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="SunStatusMsg" id="4" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="SunStatus"/>
+      </DataMsg>
+    </Notification>
+	
+	</Interface>
+
+  
+</xTEDS>

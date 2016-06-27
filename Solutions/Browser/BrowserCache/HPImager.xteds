@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Aggregate_HostedPayload_xTEDS" version="1.0">
+<Application name="HPImager" version="1.0" kind="HostedPayload" />
+
+
+
+<!--=============================================-->
+<!-- Interface 1: Imager Data, Raw and Processed -->
+<!--=============================================-->
+  <Interface name="iImaging" id="1" scope="Public">
+    <Variable name="ImageTimestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Image"/>
+    <Variable name="Rows" kind="counter" format="UINT32" units="pixels" description="Rows in image (Y-dimension)"/>
+    <Variable name="Columns" kind="counter" format="UINT32" units="pixels" description="Columns in image (X-dimension)"/>
+    <Variable name="CameraFov" kind="counter" format="FLOAT32" units="degrees" description="The FOV of the camera"/>
+    <Variable name="ExposureTime" kind="duration" format="UINT32" units="microseconds" description="Exposure time (Range: 10 - 7000000)"/>
+    <Variable name="ImageData" kind="image" format="BUFFER"/>
+    <Variable name="CameraTemperature" kind="temperature" format="FLOAT32" units="degrees" description="The temperature of the camera electronics"/>
+    <Variable name="IsFlipped" kind="enum" format="UINT8">
+      <Drange name="FlippedEnum">
+        <Option name="No" value="0"/>
+        <Option name="Yes" value="1"/>
+      </Drange>
+    </Variable>    
+
+    <Command>
+      <CommandMsg  name="RequestImages" id="1" description="Initiate Delivery of Images"/>
+    </Command>
+    <Command>
+      <CommandMsg  name="CancelImages" id="2" description="Cancel Delivery of Images"/>
+    </Command>
+    <Command>
+      <CommandMsg  name="SetExposureTime" id="3" description="Set Exposure Time for CCD">
+        <VariableRef name="ExposureTime"/>
+      </CommandMsg>
+    </Command>
+    <Command>
+      <CommandMsg  name="SetHorizontalFlip" id="4" description="Flip the image vertically">
+        <VariableRef name="IsFlipped"/>
+      </CommandMsg>
+    </Command>
+    <Command>
+      <CommandMsg  name="SetVerticalFlip" id="5" description="Flip the image vertically">
+        <VariableRef name="IsFlipped"/>
+      </CommandMsg>
+    </Command>
+    
+    <Notification>
+      <DataMsg name="ImageDataMsg" id="6" msgArrival="EVENT">
+        <VariableRef name="ImageTimestamp"/>
+        <VariableRef name="Rows"/>
+        <VariableRef name="Columns"/>
+        <VariableRef name="CameraFov"/>
+        <VariableRef name="ImageData"/>
+      </DataMsg>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="CameraTemperatureMsg" id="7" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="CameraTemperature"/>
+      </DataMsg>
+    </Notification>
+
+    <Command>
+      <CommandMsg  name="StartVideo" id="8" description="Start Streaming Video"/>
+    </Command>
+    <Command>
+      <CommandMsg  name="StopVideo" id="9" description="Stop Streaming Video"/>
+    </Command>
+
+  </Interface>
+
+
+
+  <!--========================================-->
+  <!-- Standard Interface 20: Host Time       -->
+  <!--========================================-->
+  <Interface name="iHostTime" id="20" scope="Public">
+    <Variable name="GpsSeconds" kind="time" format="UINT32" units="sec" description="GPS seconds since Jan6, 1980"/>
+
+    <Command>
+      <CommandMsg name="TimeMsg" id="1">
+        <VariableRef name="GpsSeconds"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+  
+  
+</xTEDS>

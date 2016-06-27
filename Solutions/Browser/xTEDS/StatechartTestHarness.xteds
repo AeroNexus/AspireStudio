@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="StatechartTest_xTEDS" version="1.0">
+<Application name="StatechartTest" version="1.0" kind="TestHarness" description="xTEDS defining messages made available by Aspire Studio to support Rules Statechart Testing"/>
+	<Interface name="IStatechartTest" id="1" scope="Public">
+
+    <!-- Variables in state/status messages -->
+    <Variable name="StateOfHealth" kind="StateOfHealthEnum" format="UINT8" description="State of Health enumerated states">
+      <Drange name="StateOfHealthEnum">
+        <Option name="Unknown" value="1"/>
+        <Option name="Suspect" value="2"/>
+        <Option name="Known" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="ControllerState" kind="ControllerStateEnum" format="UINT8" description="ControllerState enumerated states">
+      <Drange name="ControllerStateEnum">
+        <Option name="Idle" value="1"/>
+        <Option name="Hybrid" value="2"/>
+        <Option name="Controlling" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" description="Zone Temperature"/>
+    <Variable name="NumberOfSensors" kind="count" format="INT8" defaultValue="-1" units="count" description="Number of Sensors in Zone"/>
+    
+    <!-- Event messages upon which Reference Statechart acts -->
+    <!-- AspireStudio should be able to publish these with a right-click option on the message in the Shell -->
+    <Notification>
+      <DataMsg name="S20F01" id="1" msgArrival="EVENT"/>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="S20F02" id="2" msgArrival="EVENT"/>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="S20F03" id="3" msgArrival="EVENT"/>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="S20AOK" id="4" msgArrival="EVENT"/>
+    </Notification>
+
+    <Notification>
+      <DataMsg name="XZINIT" id="5" msgArrival="EVENT"/>
+    </Notification>
+
+    <!-- Periodic messages that deliver status data -->
+    <Notification>
+      <DataMsg name="ControllerStateMsg" id="10" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="ControllerState"/>
+      </DataMsg>
+    </Notification>
+    <Notification>
+      <DataMsg name="ThermalStatusMsg" id="11" msgArrival="PERIODIC" msgRate="1">
+        <VariableRef name="Temperature"/>
+      </DataMsg>
+    </Notification>
+    <Notification>
+      <DataMsg name="ConfigurationData" id="12" msgArrival="EVENT">
+        <VariableRef name="NumberOfSensors"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Commands Representing External Function Calls -->
+    <!-- Aspire Studio's "shell" capability should be able to field these commands and indicate that they have arrived -->
+    <Command>
+      <CommandMsg name="Function1" id="20"/>
+    </Command>
+    
+    <Command>
+      <CommandMsg name="Function2" id="21"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function3" id="22"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function4" id="23"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function5" id="24"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function6" id="25"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function7" id="26"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function8" id="27"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function9" id="28"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function10" id="29"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="Function11" id="30"/>
+    </Command>
+
+    <!-- This is the only "non-generic" call -->
+    <Command>
+      <CommandMsg name="ClearZoneData" id="31"/>
+    </Command>
+
+    <!-- We are treating the "RTP Control Call" just like an External Function Call -->
+    <Command>
+      <CommandMsg name="ResetProcess" id="32"/>
+    </Command>
+
+
+    <!-- We are testing Aspire Requests in the top-level state, using it to provide an estimate of the StateOfHealth -->
+    <Request>
+      <CommandMsg name="EstimateZoneStateOfHealth" id="40">
+      </CommandMsg>
+      <DataReplyMsg name="EstimateZoneStateOfHealthReply" id="41">
+        <VariableRef name="StateOfHealth"/>
+      </DataReplyMsg>
+    </Request>
+
+	
+	</Interface>
+	
+
+</xTEDS>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS
+	 xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ 	 xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+  name="Aggregate_HostedPayload_xTEDS" version="1.0">
+<Application name="SpaceWeather" version="1.0" kind="HostedPayload" />
+
+  <!--=============================================-->
+  <!-- Interface 1: SpaceWeather Sensor                   -->
+  <!--=============================================-->
+  <Interface name="iParticleEnvironmentSensing" id="1" scope="Public">
+    <Variable name="Timestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of CEASE Minimum Packet"/>
+    <Variable name="FrameCounter" kind="count" format="UINT16" description="Rolling message counter"/>
+    <Variable name="BurstRequestFlag" kind="count" format="UINT8" description="Request burst data delivery"/>
+    <Variable name="SensorStatus" kind="StatusEnum" format="UINT8" description="CEASE sensor status">
+      <Drange name="SensorStatusEnum">
+        <Option name="PoweredOff" value="0"/>
+        <Option name="Calibrating" value="1"/>
+        <Option name="Acquiring" value="2"/>
+        <Option name="Failed" value="3"/>
+      </Drange>
+    </Variable>
+    <Variable name="HostDataStatus" kind="StatusEnum" format="UINT8" description="Host Satellite Data Status">
+      <Drange name="HostDataStatusEnum">
+        <Option name="NoData" value="0"/>
+        <Option name="ReceivingData" value="1"/>
+      </Drange>
+    </Variable>
+    <Variable name="HEPET_Active_Channels" kind="bitfield" format="UINT8" description="Bitfield containing active channel map"/>
+    <Variable name="CommandEcho" kind="character" format="UINT8" description="First character of last received command (A-Z)"/>
+    <Variable name="ValidCommandCount" kind="count" format="UINT8" description="Number of valid commands received"/>
+    <Variable name="InvalidCommandCount" kind="count" format="UINT8" description="Number of invalid commands received"/>
+    <Variable name="WatchdogResetCount" kind="count" format="UINT8" description="Number of watchdog reset actuations"/>
+    <Variable name="HousekeepingMUX" kind="count" format="UINT8" length="5" description="Array of Housekeeping MUX readings (0-4)"/>
+    <Variable name="LEPET_Livetime" kind="duration" format="UINT16" description="LEPET data collection period"/>
+    <Variable name="HEPET_Livetime" kind="duration" format="UINT16" description="HEPET data collection period"/>
+    <Variable name="ESA_Livetime" kind="duration" format="UINT16" description="ESA data collection period"/>
+    <Variable name="LEPET_E_Channel" kind="count" format="UINT8" length="10" description="LEPET electron count"/>
+    <Variable name="LEPET_P_Channel" kind="count" format="UINT8" length="10" description="LEPET proton count"/>
+    <Variable name="HEPET_E_Channel" kind="count" format="UINT8" length="10" description="HEPET electron count"/>
+    <Variable name="HEPET_P_Channel" kind="count" format="UINT8" length="10" description="HEPET proton count"/>
+    <Variable name="ESA_Status" kind="StatusEnum" format="UINT8" description="CEASE ESA status">
+      <Drange name="EsaStatusEnum">
+        <Option name="Disabled" value="0"/>
+        <Option name="Charging" value="1"/>
+        <Option name="Operational" value="2"/>
+      </Drange>
+    </Variable>
+    <Variable name="ESA_MUX" kind="duration" format="UINT16" description="ESA MUX. Refresh period of 80 seconds"/>
+    <Variable name="ESA_Data" kind="RawData" format="UINT8" length="36" description="ESA Data Array, Length of 36 elements"/>
+
+    <Notification>
+      <DataMsg name="SpaceWeatherMsg" id="1" msgArrival="PERIODIC" msgRate="0.2">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="FrameCounter"/>
+        <VariableRef name="BurstRequestFlag"/>
+        <VariableRef name="SensorStatus"/>
+        <VariableRef name="HostDataStatus"/>
+        <VariableRef name="HEPET_Active_Channels"/>
+        <VariableRef name="CommandEcho"/>
+        <VariableRef name="ValidCommandCount"/>
+        <VariableRef name="InvalidCommandCount"/>
+        <VariableRef name="WatchdogResetCount"/>
+        <VariableRef name="HousekeepingMUX"/>
+        <VariableRef name="LEPET_Livetime"/>
+        <VariableRef name="HEPET_Livetime"/>
+        <VariableRef name="ESA_Livetime"/>
+        <VariableRef name="LEPET_E_Channel"/>
+        <VariableRef name="LEPET_P_Channel"/>
+        <VariableRef name="HEPET_E_Channel"/>
+        <VariableRef name="HEPET_P_Channel"/>
+        <VariableRef name="ESA_Status"/>
+        <VariableRef name="ESA_MUX"/>
+        <VariableRef name="ESA_Data"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+  <!--========================================-->
+  <!-- Standard Interface 20: Host Time       -->
+  <!--========================================-->
+  <Interface name="iHostTime" id="20" scope="Public">
+    <Variable name="GpsSeconds" kind="time" format="UINT32" units="sec" description="GPS seconds since Jan6, 1980"/>
+
+    <Command>
+      <CommandMsg name="TimeMsg" id="1">
+        <VariableRef name="GpsSeconds"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+
+
+  <!--========================================-->
+  <!-- Standard Interface 21: Host Ephemeris  -->
+  <!--========================================-->
+  <Interface name="iHostEphemeris" id="21" scope="Public">
+
+    <Variable name="Timestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Ephemerides"/>
+    <Variable name="Position" kind="vector" format="FLOAT64" length="3" units="m" description="J2000 position of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+    <Variable name="Velocity" kind="velocity" format="FLOAT64" length="3" units="m/s"  description="J2000 velocity of asset's mass center">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="EphemerisMsg" id="1">
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="Position"/>
+        <VariableRef name="Velocity"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+
+
+  <!--========================================-->
+  <!-- Standard Interface 22: Host Attitude   -->
+  <!--========================================-->
+  <Interface name="iHostAttitude" id="22" scope="Public">
+
+    <Variable name="Timestamp" kind="Timestamp" format="FLOAT64" units="sec" description="Timestamp of Attitude"/>
+    <Variable name="Attitude" kind="quaternion" format="FLOAT64" length="4" description="J2000 quaternion attitude of asset's body coordinate frame" >
+      <Qualifier name="Representation" value="quaternion"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="DVF"/>
+    </Variable>
+    <Variable name="AttitudeRate" kind="vector" format="FLOAT64" length="3" description="Attitude Rates in body coordinate frame" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="SVF"/>
+      <Qualifier name="FrameResolved" value="DVF"/>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="AttitudeMsg" id="1" >
+        <VariableRef name="Timestamp"/>
+        <VariableRef name="Attitude"/>
+        <VariableRef name="AttitudeRate"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+
+
+  <!--========================================-->
+  <!-- Standard Interface 23: Host Sun Status -->
+  <!--========================================-->
+  <Interface name="iHostSunStatus" id="23" scope="Public">
+
+    <Variable name="SunStatus" kind="enum" format="UINT8">
+      <Drange name="SunStatusEnum">
+        <Option name="InEclipse" value="0"/>
+        <Option name="InSun" value="1"/>
+      </Drange>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="SunStatusMsg" id="1">
+        <VariableRef name="SunStatus"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+  
+  
+</xTEDS>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" 
+ name="Orbit_Analyzer_xTEDS" version="1.0">
+  
+	<Application name="OrbitAnalyzer" kind="OrbitAnalysis" description="Utility Application to accept timestamped ECI position data and determine TLE pairs"/>
+
+  <!-- Orbit Calculation Reporting Interface -->
+	<Interface name="iOrbitReport" id="1">
+		<Variable name="Time" kind="time" format="UINT32" units="s"/>
+		<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor= ".000001" scaleUnits="s"/>
+		<Variable name="ObjectCount" kind="count" format="UINT16" description="Number of objects in the list"/>
+		<Variable name="Index" kind="index" format="UINT16" description="Element index of an object within the list (1-based)"/>
+    <Variable name="Position" kind="position" units="m" format="FLOAT64" length="3" description="Position of the target">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="ECI"/>
+      <Qualifier name="FrameResolved" value="ECI"/>
+    </Variable>
+    <Variable name="PositionECEF" kind="position" units="m" format="FLOAT64" length="3" description="Position of the target in Earth Centered Earth Fixed">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="ECEF"/>
+      <Qualifier name="FrameResolved" value="ECEF"/>
+    </Variable>
+    <Variable name="Velocity" kind="speed" units="m/s" format="FLOAT64" length="3" >
+      <Qualifier name="Representation" value="vector" />
+      <Qualifier name="FrameMeasured" value="ECI"/>
+      <Qualifier name="FrameResolved" value="ECI"/>
+    </Variable>
+    <Variable name="TLE_1" kind="string" format="INT8" length="69" description="1st Line of TLE"/>
+    <Variable name="TLE_2" kind="string" format="INT8" length="69" description="2nd Line of TLE"/>
+		
+		<Notification>
+			<DataMsg  name="ObjectOrbit" msgArrival="EVENT" id="2" description="Object Orbit info">
+				<VariableRef name="Time"/>
+				<VariableRef name="SubS"/>
+        <VariableRef name="ObjectCount"/>
+				<VariableRef name="Index"/>
+        <VariableRef name="Position"/>
+        <VariableRef name="PositionECEF"/>
+        <VariableRef name="Velocity"/>
+				<VariableRef name="TLE_1"/>
+        <VariableRef name="TLE_2"/>
+			</DataMsg>
+		</Notification>
+	</Interface>
+
+  <Interface name="iLiveLog" id="2" description="Standard Interface for Live Logging from SDM Components">
+    <Variable name="LogItem" kind="string" format="INT8" length="80" description="ASCII Text Log Entry"/>
+    <Variable name="DebugLevel" kind="debugLevel" format="UINT8" defaultValue="0" description="Threshold level for message delivery (0-10)"/>
+
+    <Command>
+      <CommandMsg name="SetLogDebugLevel" id="1" description="Set the threshold level for delivery of log items">
+        <VariableRef name="DebugLevel"/>
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="LogMsg" id="2" msgArrival="EVENT" description="Log Entries delivered as event messages" >
+        <VariableRef name="LogItem"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+  
+</xTEDS>

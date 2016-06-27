@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="ProxyBrain_xTEDS" description="Proxy App to Generate USO Messages for testing" version="1.0">
+  
+  <Application name="ProxyBrain" kind="SsaSoftwareModule" />
+  <Interface name="iObservationTasking" id="2" description="Standard interface for observation tasking" scope="Public">
+
+    <Variable name="RequestorName" kind="String" format="STRING" description="Name of the component requesting observation support"/>
+    <Variable name="RequestTimestamp" kind="Time" format="FLOAT64" units="s" description="Time the request was made"/>
+    <Variable name="ObjectName" kind="String" format="STRING" description="Catalog name of the object"/>
+    <Variable name="ProxyName" kind="String" format="STRING" description="Proxy name to be used for an unidentified object"/>
+    <Variable name="StateEstimateTime" kind="Time" format="FLOAT64" units="s" description="GPS epoch seconds associated with object estimated state"/>
+    <Variable name="EstimatedPosition" kind="position" units="m" format="FLOAT64" length="3" description="Estimated ECI Position of object (J2000 frame)">
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="EstimatedPositionUncertainty" kind="position" units="m" format="FLOAT64" length="3" description="Estimated ECI Position uncertainty of object (J2000 frame)"/>
+    <Variable name="EstimatedVelocity" kind="speed" units="m/s" format="FLOAT64" length="3" description="Estimated ECI Velocity of object (J2000 frame)">
+      <Qualifier name="Representation" value="vector" />
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="ObjectLatitude" kind="latitude" format="FLOAT32" units="rad" description="Latitude of object"/>
+    <Variable name="ObjectLongitude" kind="longitude" format="FLOAT32" units="rad" description="Longitude of object"/>
+    <Variable name="ObjectAltitude" kind="distance" format="FLOAT32" units="m" description="Altitude of object"/>
+    <Variable name="LineOfSightToObject" kind="unitVector" units="" format="FLOAT64" length="3" description="Unit vector from observer to object (J2000 frame)" >
+      <Qualifier name="Representation" value="unitVector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="LineOfSightAngularRate" kind="Vector" units="rads/sec" format="FLOAT64" length="3" description="Angular rate of observed object in rads/sec (J2000 frame)" >
+      <Qualifier name="Representation" value="vector"/>
+      <Qualifier name="FrameMeasured" value="J2000"/>
+      <Qualifier name="FrameResolved" value="J2000"/>
+    </Variable>
+    <Variable name="Estimated_TLE_1" kind="string" format="INT8" length="69" description="1st Line of Estimated TLE"/>
+    <Variable name="Estimated_TLE_2" kind="string" format="INT8" length="69" description="2nd Line of Estimated TLE"/>
+    <Variable name="ObservationPriority" kind="TaskingPriority" format="FLOAT32" units="" description="Tasking Priority (0 - 100)"/>
+    <Variable name="ReportDeliveryMode" kind="ReportDeliveryModeEnum" format="UINT8" description="Defines behavior of object monitoring in response to tasking">
+      <Drange name="Report_Delivery_Mode_Enum">
+        <Option name="DELIVER_USO_ONLY" value="1"/>
+        <Option name="DELIVER_ALL_OBJECTS" value="2"/>
+      </Drange>
+    </Variable>
+
+    <!-- Observation Request for a GEO object not in the catalog -->
+    <!-- Request contains a proxy name (corresponding to an unidentified or missing object) -->
+    <Notification>
+      <DataMsg name="GeoObjectObservationsNeeded" id="3" msgArrival="EVENT" description="Observation needed for uncorrelated object">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="RequestTimestamp"/>
+        <VariableRef name="ProxyName"/>
+        <VariableRef name="ReportDeliveryMode"/>
+        <VariableRef name="ObjectLatitude"/>
+        <VariableRef name="ObjectLongitude"/>
+        <VariableRef name="ObjectAltitude"/>
+        <VariableRef name="StateEstimateTime"/>
+        <VariableRef name="EstimatedPosition"/>
+        <VariableRef name="EstimatedVelocity"/>
+        <VariableRef name="LineOfSightToObject"/>
+        <VariableRef name="LineOfSightAngularRate"/>
+      </DataMsg>
+    </Notification>
+
+    <!-- Observation Cancellation request for a GEO object not in the catalog -->
+    <!-- Request contains a proxy name (corresponding to an unidentified or missing object) -->
+    <Notification>
+      <DataMsg name="CancelObservations" id="4" msgArrival="EVENT" description="Terminate observations of object">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="RequestorName"/>
+        <VariableRef name="ObjectName"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+
+</xTEDS>

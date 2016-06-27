@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd" name="Rts_Bridge_xTeds" version="1.0">
+  
+  <Application name="RtsBridge" kind="bridge" id="1"/>
+  <Interface name="RtsBridge" id="1" description="Notional interface for controlling executive start/stop" scope="Public">
+
+    <Variable name="skillsString" kind="string" format="INT8" length="900" description="Skills string to be passsed into the AMP"/>
+    <Variable name="modificationTime" kind="Time" format="FLOAT64" units="s" description="When the modification request was issued"/>
+    <Variable name="allClearString" kind="string" format="INT8" length="900" description="All clear string"/>
+    <Variable name="allClearTime" kind="Time" format="FLOAT64" units="s" description="When the all clear was issued"/>
+
+    <Command>
+      <CommandMsg name="StartExecution" id="1"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="StopExecution" id="2"/>
+    </Command>
+
+    <!--Modify the planner's "skills" - augmenting the response or plan behavior-->
+    <Command>
+      <CommandMsg name="ModifySkills" id ="3" description="Modify the current planner's approach to threat response">
+        <VariableRef name="skillsString"/>
+        <VariableRef name="modificationTime"/>
+      </CommandMsg>
+    </Command>
+
+    <!-- All Clear -->
+    <Command>
+      <CommandMsg name="AllClear" id ="15" description="all clear has occured">
+        <VariableRef name="allClearString"/>
+        <VariableRef name="allClearTime"/>
+      </CommandMsg>
+    </Command>
+
+  </Interface>
+</xTEDS>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ToolBoxConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Category name="General" />
+  <Assembly name="AspireFramework" version="1.0.4972.12522">
+    <Type name="Clock" />
+  </Assembly>
+  <Assembly name="AspireCoreModels" version="1.0.4973.15340">
+    <Type name="Application" />
+    <Type name="AspireBrowser" />
+    <Type name="AspireShell" />
+    <Type name="AspireClock" />
+  </Assembly>
+  <Tool name="Clock" category="General" type="Clock" item="Clock" />
+  <Tool name="Application" category="General" type="Application" item="Application" />
+  <Tool name="AspireBrowser" category="General" type="AspireBrowser" item="AspireBrowser" />
+  <Tool name="AspireShell" category="General" type="AspireShell" item="AspireShell" />
+  <Tool name="AspireClock" category="General" type="AspireClock" item="AspireClock" />
+</ToolBoxConfig>

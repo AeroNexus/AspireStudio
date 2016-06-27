@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<Scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Browser List" running="true" >
+  <Clock displayFormat="UTC" initialTime="2010/11/29" >
+    <Model xsi:type="AspireClock" name="Aspire" SoftPps="true" TimeAtTone="true" />
+  </Clock>
+	<Model xsi:type="BrowserFactory" name="Aspire" />
+	<Model xsi:type="SignalGenerator" name="Signals" />
+</Scenario>

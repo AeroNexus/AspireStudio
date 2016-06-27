@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+ name="PowerHubXteds" version="2.0">
+
+<Device name="Gen2PowerHub" kind="PowerHub" description="Power and PPS management" />
+
+<Interface name="PowerHub" id="1" description="Power distribution hub">
+	<Variable name="Time" kind="time" units="s" format="UINT32"/>
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleUnits="s" scaleFactor=".000001"/>
+	<Variable name="Bus_Voltage" kind="voltage" units="counts" format="UINT16" scaleUnits="V" scaleFactor="0.1"/>
+	<Variable name="PPS_Source" kind="index" format="UINT08"/>
+
+	<Notification>
+		<DataMsg name="HubStatus" id="1" msgArrival="PERIODIC" msgRate="1" >
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="Bus_Voltage"/>
+			<VariableRef name="PPS_Source"/>
+		</DataMsg>
+	</Notification>
+
+	<Request>
+		<CommandMsg name="GetHubStatus" id="2" />
+		<DataReplyMsg name="HubStatusReply" id="3">
+			<VariableRef name="Bus_Voltage"/>
+			<VariableRef name="PPS_Source"/>
+		</DataReplyMsg>
+	</Request>
+
+</Interface>
+
+<Interface name="Endpoint" id="2" description="Endpoint power distribution">
+	<Qualifier name="MaxCurrent" value="4.5" units="A"/>
+	<Qualifier name="Object" value="EndPoint"/>
+	<Qualifier name="NumberEP" value="10" />
+	<Qualifier name="OpMode" value="Arm_Set" />
+	<Variable name="Time" kind="time" units="s" format="UINT32"/>
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleUnits="s" scaleFactor=".000001"/>
+	<Variable name="EP_ID" kind="index" format="UINT08">
+		<Drange name="EP_IDEnum" >
+			<Option name="Endpoint1" value="1" />
+			<Option name="Endpoint2" value="2" />
+			<Option name="Endpoint3" value="3" />
+			<Option name="Endpoint4" value="4" />
+			<Option name="Endpoint5" value="5" />
+			<Option name="Endpoint6" value="6" />
+			<Option name="Endpoint7" value="7" />
+			<Option name="Endpoint8" value="8" />
+			<Option name="Endpoint9" value="9" />
+			<Option name="Endpoint10" value="10" />
+		</Drange>
+	</Variable>
+	<Variable name="EP_Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="10" />
+	<Variable name="EP_TripCurrent" kind="tripCurrent" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="10" />
+	<Variable name="EP_PowerState" kind="enum" format="UINT08" defaultValue="1" length="10" >
+		<Drange name="EP_PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+		</Drange>
+	</Variable>
+	<Variable name="EP_ArmState" kind="enum" format="UINT08" defaultValue="1" length="10" >
+		<Drange name="EP_ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="PowerState" kind="enum" format="UINT08" defaultValue="1">
+		<Drange name="PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+		</Drange>
+	</Variable>
+	<Variable name="ArmState" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="FaultCode" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="FaultCodeEnum">
+			<Option name="OK" value="1"/>
+			<Option name="EP_Invalid" value="2" />
+			<Option name="Value_Invalid" value="3" />
+			<Option name="EP_Unavailable" value="4" />
+			<Option name="Not_Armed" value="5" />
+			<Option name="Busy" value="6" />
+		</Drange>
+	</Variable>
+	<Variable name="Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" />
+	<Variable name="TripCurrent" kind="tripCurrent" units="counts" format="INT16" scaleUnits="A" scaleFactor="0.01" />
+
+	<Notification>
+		<DataMsg name="EP_Status" id="1" msgArrival="PERIODIC" msgRate="1">
+            <Qualifier name="TelemetryModulo" value="10"  />
+  			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_PowerState"/>
+			<VariableRef name="EP_ArmState"/>
+			<VariableRef name="EP_Current"/>
+			<VariableRef name="EP_TripCurrent"/>
+		</DataMsg>
+	</Notification>
+	<Notification>
+		<DataMsg name="EP_Tripped" id="2" msgArrival="EVENT">
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="TripCurrent" />
+		</DataMsg>
+	</Notification>
+
+	<Request>
+		<CommandMsg name="GetStatus" id="3" >
+			<VariableRef name="EP_ID" />
+		</CommandMsg >
+		<DataReplyMsg name="GetStatusReply" id="4">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="ArmState"/>
+			<VariableRef name="Current"/>
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetTripCurrent" id="5">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="TripCurrent"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetTripCurrentReply" id="6">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetArmState" id="7">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="ArmState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetArmStateReply" id="8">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="ArmState"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetPowerState" id="9">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetPowerStateReply" id="10">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="PowerState"/>
+		</DataReplyMsg>
+	</Request>
+</Interface>
+
+<Interface name="HP_Endpoint" id="3" description="Endpoint high power distribution">
+	<Qualifier name="MaxCurrent" value="25.0" units="A"/>
+	<Qualifier name="Object" value="HighPower"/>
+	<Qualifier name="NumberEP" value="1" />
+	<Qualifier name="OpMode" value="Arm_Set" />
+	<Variable name="Time" kind="time" units="s" format="UINT32"/>
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleUnits="s" scaleFactor=".000001"/>
+	<Variable name="EP_ID" kind="index" format="UINT08">
+		<Drange name="EP_IDEnum" >
+			<Option name="HP_Endpoint1" value="1" />
+		</Drange>
+	</Variable>
+	<Variable name="EP_Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="2" />
+	<Variable name="EP_TripCurrent" kind="tripCurrent" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="2" />
+	<Variable name="EP_PowerState" kind="enum" format="UINT08" defaultValue="1" length="2" >
+		<Drange name="EP_PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+		</Drange>
+	</Variable>
+	<Variable name="EP_ArmState" kind="enum" format="UINT08" defaultValue="1" length="2" >
+		<Drange name="EP_ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="PowerState" kind="enum" format="UINT08" defaultValue="1">
+		<Drange name="PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+
+		</Drange>
+	</Variable>
+	<Variable name="ArmState" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="FaultCode" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="FaultCodeEnum">
+			<Option name="OK" value="1"/>
+			<Option name="EP_Invalid" value="2" />
+			<Option name="Value_Invalid" value="3" />
+			<Option name="EP_Unavailable" value="4" />
+			<Option name="Not_Armed" value="5" />
+			<Option name="Busy" value="6" />
+		</Drange>
+	</Variable>
+	<Variable name="Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" />
+	<Variable name="TripCurrent" kind="tripCurrent" units="counts" format="INT16" scaleUnits="A" scaleFactor="0.01" />
+
+	<Notification>
+		<DataMsg name="EP_Status" id="1" msgArrival="PERIODIC" msgRate="1">
+            <Qualifier name="TelemetryModulo" value="10"  />
+  			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_PowerState"/>
+			<VariableRef name="EP_ArmState"/>
+			<VariableRef name="EP_Current"/>
+			<VariableRef name="EP_TripCurrent"/>
+		</DataMsg>
+	</Notification>
+	<Notification>
+		<DataMsg name="EP_Tripped" id="2" msgArrival="EVENT">
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="TripCurrent" />
+		</DataMsg>
+	</Notification>
+
+	<Request>
+		<CommandMsg name="GetStatus" id="3" >
+			<VariableRef name="EP_ID" />
+		</CommandMsg >
+		<DataReplyMsg name="GetStatusReply" id="4">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="ArmState"/>
+			<VariableRef name="Current"/>
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetTripCurrent" id="5">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="TripCurrent"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetTripCurrentReply" id="6">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetArmState" id="7">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="ArmState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetArmStateReply" id="8">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="ArmState"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetPowerState" id="9">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetPowerStateReply" id="10">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="PowerState"/>
+		</DataReplyMsg>
+	</Request>
+</Interface>
+
+<Interface name="RouterEndpoint" id="4" description="Router power distribution">
+	<Qualifier name="MaxCurrent" value=".3" units="A"/>
+	<Qualifier name="Object" value="Router"/>
+	<Qualifier name="NumberEP" value="1" />
+	<Qualifier name="OpMode" value="Arm_Set" />
+	<Variable name="Time" kind="time" units="s" format="UINT32"/>
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleUnits="s" scaleFactor=".000001"/>
+	<Variable name="EP_ID" kind="index" format="UINT08">
+		<Drange name="EP_IDEnum" >
+			<Option name="Router_Endpoint" value="1" />
+		</Drange>
+	</Variable>
+	<Variable name="EP_Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="2" />
+	<Variable name="EP_TripCurrent" kind="tripCurrent" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" length="2" />
+	<Variable name="EP_PowerState" kind="enum" format="UINT08" defaultValue="1" length="2" >
+		<Drange name="EP_PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+		</Drange>
+	</Variable>
+	<Variable name="EP_ArmState" kind="enum" format="UINT08" defaultValue="1" length="2" >
+		<Drange name="EP_ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="PowerState" kind="enum" format="UINT08" defaultValue="1">
+		<Drange name="PowerStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="On" value="2"/>
+			<Option name="Reset" value="3" />
+			<Option name="Tripped" value="4"/>
+			<Option name="NotWorking" value="5"/>
+		</Drange>
+	</Variable>
+	<Variable name="ArmState" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="ArmStateEnum">
+			<Option name="Off" value="1"/>
+			<Option name="Armed" value="2" />
+		</Drange>
+	</Variable>
+	<Variable name="FaultCode" kind="enum" format="UINT08" defaultValue="1" >
+		<Drange name="FaultCodeEnum">
+			<Option name="OK" value="1"/>
+			<Option name="EP_Invalid" value="2" />
+			<Option name="Value_Invalid" value="3" />
+			<Option name="EP_Unavailable" value="4" />
+			<Option name="Not_Armed" value="5" />
+			<Option name="Busy" value="6" />
+		</Drange>
+	</Variable>
+	<Variable name="Current" kind="current" units="counts" format="UINT16" scaleUnits="A" scaleFactor="0.01" />
+	<Variable name="TripCurrent" kind="tripCurrent" units="counts" format="INT16" scaleUnits="A" scaleFactor="0.01" />
+
+	<Notification>
+		<DataMsg name="EP_Status" id="1" msgArrival="PERIODIC" msgRate="1">
+            <Qualifier name="TelemetryModulo" value="10"  />
+  			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_PowerState"/>
+			<VariableRef name="EP_ArmState"/>
+			<VariableRef name="EP_Current"/>
+			<VariableRef name="EP_TripCurrent"/>
+		</DataMsg>
+	</Notification>
+	<Notification>
+		<DataMsg name="EP_Tripped" id="2" msgArrival="EVENT">
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="TripCurrent" />
+		</DataMsg>
+	</Notification>
+
+	<Request>
+		<CommandMsg name="GetStatus" id="3" >
+			<VariableRef name="EP_ID" />
+		</CommandMsg >
+		<DataReplyMsg name="GetStatusReply" id="4">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+			<VariableRef name="ArmState"/>
+			<VariableRef name="EP_Current"/>
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetTripCurrent" id="5">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="TripCurrent"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetTripCurrentReply" id="6">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="TripCurrent"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetArmState" id="7">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="ArmState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetArmStateReply" id="8">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="ArmState"/>
+		</DataReplyMsg>
+	</Request>
+	<Request>
+		<CommandMsg name="SetPowerState" id="9">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="PowerState"/>
+		</CommandMsg>
+		<DataReplyMsg name="SetPowerStateReply" id="10">
+			<VariableRef name="EP_ID"/>
+			<VariableRef name="FaultCode" />
+			<VariableRef name="PowerState"/>
+		</DataReplyMsg>
+	</Request>
+</Interface>
+
+<Interface name="TemperatureSensing" id="5">
+	<Qualifier name="NumTemperatures" value="8"/>
+	<Variable name="Time" kind="time" units="s" format="UINT32"/>
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleUnits="s" scaleFactor=".000001"/>
+	<Variable name="Temp1" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp2" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp3" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp4" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp5" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp6" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp7" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+	<Variable name="Temp8" kind="temperature" units="counts" format="INT16" scaleUnits="degC" scaleFactor= ".1" >
+		<Qualifier name="Accuracy" value=".1" units="degC" />
+		<Location x="50" y="50" z="-1" units="cm"/>
+	</Variable>
+
+	<Notification>
+		<DataMsg name="TemperatureSensorValues" id="1" msgArrival="PERIODIC" msgRate="1">
+			<Qualifier name="TelemetryModulo" value="30"  />
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time"/>
+			<VariableRef name="SubS"/>
+			<VariableRef name="Temp1"/>
+			<VariableRef name="Temp2"/>
+			<VariableRef name="Temp3"/>
+			<VariableRef name="Temp4"/>
+			<VariableRef name="Temp5"/>
+			<VariableRef name="Temp6"/>
+			<VariableRef name="Temp7"/>
+			<VariableRef name="Temp8"/>
+		</DataMsg>
+	</Notification>
+</Interface>
+
+<Interface name="DeviceSafety" id="6">
+	<!-- Keep out temperatures -->
+	<Variable name="Time" kind="time" format="UINT32" units="s" />
+	<Variable name="SubS" kind="subSeconds" units="counts" format="UINT32" scaleFactor=".000001" scaleUnits="s" />
+	<Variable name="Temperature" kind="temperature" format="FLOAT32" units="degC" rLow="-20" yLow="-10" yHigh="50" rHigh="60"/>
+	<Variable name="Temp" kind="constraint" format="UINT08">
+		<Qualifier name="ConstraintType" value="Temperature" />
+		<Qualifier name="Static" value="True" />
+		<Qualifier name="Minimum" value="-20" units="degC" />
+		<Qualifier name="Maximum" value="60" units="degC" />
+	</Variable>
+
+	<Request>
+		<CommandMsg name="GetDeviceTemperature" id="1" />
+		<DataReplyMsg name="DeviceTemperatureReply" id="2">
+			<VariableRef name="Temperature"/>
+		</DataReplyMsg>
+	</Request>
+
+	<Notification>
+		<DataMsg name="DeviceTemperature" id="3" msgArrival="PERIODIC" msgRate="1">
+			<Qualifier name="TelemetryModulo" value="30" />
+			<Qualifier name="TelemetryLevel" value="1"/>
+			<VariableRef name="Time" />
+			<VariableRef name="SubS" />
+			<VariableRef name="Temperature"/>
+		</DataMsg>
+	</Notification>
+</Interface>
+
+<Interface name="ASIM" id="7">
+	<Variable name="CRCProgCode" kind="CRC" format="UINT16"/>
+	<Variable name="CRCxTEDS" kind="CRC" format="UINT16"/>
+	<Variable name="SWCoreLibRev" kind="index" format="UINT08"/>
+	<Variable name="HWFPGAFirmwareRev" kind="index" format="UINT08"/>
+	<Variable name="GUID" kind="GUID" format="BUFFER" />
+
+	<Request>
+		<CommandMsg name="GetVersionInfo" id="1" />
+		<DataReplyMsg name="VersionInfoReply" id="2">
+			<VariableRef name="CRCProgCode"/>
+			<VariableRef name="CRCxTEDS"/>
+			<VariableRef name="SWCoreLibRev"/>
+			<VariableRef name="HWFPGAFirmwareRev"/>
+			<VariableRef name="GUID" />
+		</DataReplyMsg>
+	</Request>
+</Interface>
+
+</xTEDS>

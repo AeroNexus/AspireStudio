@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+	xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+	name="MissionManagerXTEDS" description="MissionManager xTEDS" version="1.0">
+  
+  <Application name="MissionManager" kind="AutonomyFlightSoftware" description="Autonomous Mission Manager"/>
+
+  <Interface name="IActivityManager" id="1" description="Basic interface for scheduling activities and updating their status">
+  
+    <Variable name="ActivityId" kind="ID" format="UINT32"/>
+    <Variable name="ActivityName" kind="String" format="STRING"/>
+    <Variable name="ActivityPriority" kind="tbd" format="UINT8" rangeMin="0" rangeMax="255"/><!-- 0 is the lowest priority and 255 is the highest -->
+    <Variable name="ActivityBeginTime" kind="Time" format="FLOAT64" units="s" description="GPS epoch"/>
+    <Variable name="ActivityDuration" kind="Time" format="UINT32" units="s"/>
+    <Variable name="ActivityNotBeforeTime" kind="Time" format="FLOAT64" units="s"/><!-- Earliest begin time. 0.0 signifies now -->
+    <Variable name="ActivityNotAfterTime" kind="Time" format="FLOAT64" units="s"/><!-- Latest begin time. 0.0 signifies no limit -->
+    <Variable name="AllowConcurrentActivity" kind="boolean" format="UINT8">
+      <Drange name="ConcurrentActivityEnum">
+        <Option value="1" name="SEQUENTIAL"/>
+        <Option value="2" name="CONCURRENT"/>
+      </Drange>
+    </Variable>
+    <Variable name="ScheduleStatus" kind="Status" format="INT16">
+      <Drange name="ScheduleStatusEnum">
+        <Option value="4"  name="NOT_SCHEDULED"/><!-- The activity could not be scheduled as requested -->
+        <Option value="5"  name="SCHEDULED"/><!-- The activity has been inserted into the schedule -->
+        <Option value="19" name="INVALID_REQUEST"/><!-- The request parameters were invalid -->
+      </Drange>
+    </Variable>
+    <Variable name="ExecutionStatus" kind="Status" format="INT16">
+      <Drange name="ExecutionStatusEnum">
+        <Option value="7"  name="NOT_ENABLED"/><!-- The activity has not been enabled -->
+        <Option value="10" name="EXECUTING"/><!-- The activity is currently executing -->
+        <Option value="11" name="EXECUTION_FAILED"/><!-- The activity has completed abnormally or was aborted -->
+        <Option value="12" name="EXECUTION_SUCCEEDED"/><!-- The activity has completed normally -->
+      </Drange>
+    </Variable>
+    <Variable name="ActivityState" kind="State" format="INT16">
+      <Drange name="ActivityStateEnum">
+        <Option value="1"  name="NOT_CREATED"/><!-- An activity for the specified AcitvityId does not exist -->
+        <Option value="2"  name="NOT_VALIDATED"/><!-- The activity been created, but the parameters have not been validated -->
+        <Option value="3"  name="VALIDATED"/><!-- The activity parameters are valid -->
+        <Option value="4"  name="NOT_SCHEDULED"/><!-- The activity could not be scheduled as requested -->
+        <Option value="5"  name="SCHEDULED"/><!-- The activity has been inserted into the schedule -->
+        <Option value="6"  name="BUMPED"/><!-- The activity has been temporarily removed from the schedule due to conflict with a higher priority activity -->
+        <Option value="8"  name="ENABLED"/><!-- The activity has been sent a command to execute -->
+        <Option value="9"  name="TERMINATED"/><!-- The activity has been sent a command to abort -->
+        <Option value="10" name="EXECUTING"/><!-- The activity is currently executing -->
+        <Option value="11" name="EXECUTION_FAILED"/><!-- The activity has completed abnormally or was aborted -->
+        <Option value="12" name="EXECUTION_SUCCEEDED"/><!-- The activity has completed normally -->
+        <Option value="13" name="DELETED_INVALID"/><!-- The activity instance is deleted. The request parameters were invalid -->
+        <Option value="14" name="DELETED_NOT_SCHEDULED"/><!-- The activity instance is deleted. The activity could not be scheduled as requested -->
+        <Option value="15" name="DELETED_FROM_SCHEDULE"/><!-- The activity instance is deleted after being scheduled -->
+        <Option value="16" name="DELETED_EXECUTING"/><!-- The activity instance is deleted after being enabled -->
+        <Option value="17" name="DELETED_EXECUTION_COMPLETE"/><!-- The activity instance is deleted after completing execution -->
+      </Drange>
+    </Variable>
+
+    <Variable name="ScheduleRequests" kind="tbd" format="UINT16"/>
+    <Variable name="ValidRequests" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesNotScheduled" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesScheduled" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesCurrentlyScheduled" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesExecuted" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesExecuting" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesAborted" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesAborting" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesFailed" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesSucceeded" kind="tbd" format="UINT16"/>
+    <Variable name="ActivitiesDeleted" kind="tbd" format="UINT16"/>
+
+    <!-- Variables for resources required are tbd -->
+
+    <Request>
+      <CommandMsg name="ScheduleActivity" id="1" description="Schedule a mission or housekeeping activity">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="ActivityDuration"/>
+        <VariableRef name="AllowConcurrentActivity"/>
+        <VariableRef name="ActivityNotBeforeTime"/>
+        <VariableRef name="ActivityNotAfterTime"/>
+        <!-- VariableRefs for resources are tbd -->
+      </CommandMsg>
+      <DataReplyMsg name="ScheduleActivityReply" id="2">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ScheduleStatus"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <Request>
+      <CommandMsg name="UpdateActivity" id="3" description="Adjust the properties of a scheduled mission or housekeeping activity">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="ActivityDuration"/>
+        <VariableRef name="AllowConcurrentActivity"/>
+        <VariableRef name="ActivityNotBeforeTime"/>
+        <VariableRef name="ActivityNotAfterTime"/>
+        <!-- VariableRefs for resources are tbd -->
+      </CommandMsg>
+      <DataReplyMsg name="UpdateActivityReply" id="4">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ScheduleStatus"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <Command>
+      <CommandMsg name="UpdateActivityStatus" id="5" description="Update activity execution status">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ExecutionStatus"/>
+      </CommandMsg>
+    </Command>
+    
+    <Command>
+      <CommandMsg name="DeleteActivity" id="6" description="Delete a scheduled activity">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+    </Command>
+
+    <Request>
+      <CommandMsg name="GetActivityState" id="7" description="Get the Activity State">
+        <VariableRef name="ActivityId"/>
+      </CommandMsg>
+      <DataReplyMsg name="GetActivityStateReply" id="8">
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="ActivityBeginTime"/>
+        <VariableRef name="ActivityDuration"/>
+        <VariableRef name="AllowConcurrentActivity"/>
+        <VariableRef name="ActivityNotBeforeTime"/>
+        <VariableRef name="ActivityNotAfterTime"/>
+        <VariableRef name="ActivityState"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Request>
+      <CommandMsg name="GetStatistics" id="9" description="Get the MissionManager Statistics">
+      </CommandMsg>
+      <DataReplyMsg name="GetStatisticsReply" id="10">
+        <VariableRef name="ScheduleRequests"/>
+        <VariableRef name="ValidRequests"/>
+        <VariableRef name="ActivitiesNotScheduled"/>
+        <VariableRef name="ActivitiesScheduled"/>
+        <VariableRef name="ActivitiesCurrentlyScheduled"/>
+        <VariableRef name="ActivitiesExecuted"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesAborted"/>
+        <VariableRef name="ActivitiesAborting"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Command>
+      <CommandMsg name="ResetActivityManagerStatistics" id="11" description="Reset all statistics">
+      </CommandMsg>
+    </Command>
+
+    <Notification>
+      <DataMsg name="ActivityStateMsg" id="12" msgArrival="EVENT" description="Activity properties">
+        <Qualifier value="2" name="TelemetryLevel"/>
+        <VariableRef name="ActivityId"/>
+        <VariableRef name="ActivityName"/>
+        <VariableRef name="ActivityPriority"/>
+        <VariableRef name="ActivityBeginTime"/>
+        <VariableRef name="ActivityDuration"/>
+        <VariableRef name="AllowConcurrentActivity"/>
+        <VariableRef name="ActivityNotBeforeTime"/>
+        <VariableRef name="ActivityNotAfterTime"/>
+        <VariableRef name="ActivityState"/>
+      </DataMsg>
+    </Notification>
+    
+    <Notification>
+      <DataMsg name="ActivityManagerStatistics" id="13" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="ScheduleRequests"/>
+        <VariableRef name="ValidRequests"/>
+        <VariableRef name="ActivitiesNotScheduled"/>
+        <VariableRef name="ActivitiesScheduled"/>
+        <VariableRef name="ActivitiesCurrentlyScheduled"/>
+        <VariableRef name="ActivitiesExecuted"/>
+        <VariableRef name="ActivitiesExecuting"/>
+        <VariableRef name="ActivitiesAborted"/>
+        <VariableRef name="ActivitiesAborting"/>
+        <VariableRef name="ActivitiesFailed"/>
+        <VariableRef name="ActivitiesSucceeded"/>
+        <VariableRef name="ActivitiesDeleted"/>
+      </DataMsg>
+    </Notification>
+    
+  </Interface>
+  
+  <Interface name="MissionManagerScheduleInterface" id="2" description="Additional messages for schedule maintenance" >
+
+    <Variable name="ActivitiesXMLStringLength" kind="size" format="UINT16" description ="XML string length"/>
+    <Variable name="ActivitiesXMLString" kind="BLOB" format="INT8" length="8065" description ="A null terminated XML string"/>
+
+    <Command>
+      <CommandMsg name="DeleteAllActivities" id="1" description="Delete all scheduled activities"/>
+    </Command>
+
+    <Command>
+      <CommandMsg name="SendActivityStateMsgs" id="2" description="Send an ActivityStateMsg for each executing and scheduled activity"/>
+    </Command>
+
+    <Request>
+      <CommandMsg name="GetActivities" id="3" description="Get attributes for each executing and scheduled activity"/>
+      <DataReplyMsg name ="GetActivitiesReply" id ="4">
+        <VariableRef name ="ActivitiesXMLStringLength"/>
+        <VariableRef name ="ActivitiesXMLString"/>
+      </DataReplyMsg>
+    </Request>
+
+  </Interface>
+
+  <Interface name="ICSDebugInterface" id="3">
+  
+    <!--
+      Note: DebugLevel is a bit field with the following assigned values:
+        DEBUG_ENTRY_AND_EXIT   = 0x01,
+        DEBUG_ENTRY_PARAMETERS = 0x02,
+        DEBUG_EXIT_PARAMETERS  = 0x04,
+        DEBUG_LEVEL_LOW        = 0x08,
+        DEBUG_LEVEL_MEDIUM     = 0x10,
+        DEBUG_LEVEL_HIGH       = 0x20.
+      The values are OR'd to determine the debug information to be logged.
+    -->
+    
+    <Variable name="DebugLevel" kind="tbd" format="UINT16"/>
+    <Variable name="CurrentDebugLevel" kind="tbd" format="UINT16"/>
+  
+    <Variable name="SetDebugLevelReceived" kind="tbd" format="UINT16"/>
+    <Variable name="SetDebugLevelAccepted" kind="tbd" format="UINT16"/>
+    <Variable name="SetDebugLevelSuccess" kind="tbd" format="UINT16"/>
+    <Variable name="SetDebugLevelFailure" kind="tbd" format="UINT16"/>
+  
+    <Command>
+      <CommandMsg name="SetDebugLevel" id="1" description="Set the debug log verbosity level">
+        <VariableRef name="DebugLevel"/>
+      </CommandMsg>
+    </Command>
+  
+    <Request>
+      <CommandMsg name="GetDebugStatus" id="2" description="Get the Debug Level and statistics"/>
+      <DataReplyMsg name="GetDebugStatusReply" id="3">
+        <VariableRef name="CurrentDebugLevel"/>
+        <VariableRef name="SetDebugLevelReceived"/>
+        <VariableRef name="SetDebugLevelAccepted"/>
+        <VariableRef name="SetDebugLevelSuccess"/>
+        <VariableRef name="SetDebugLevelFailure"/>
+      </DataReplyMsg>
+    </Request>
+    
+    <Notification>
+      <DataMsg name="DebugStatus" id="4" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="CurrentDebugLevel"/>
+        <VariableRef name="SetDebugLevelReceived"/>
+        <VariableRef name="SetDebugLevelAccepted"/>
+        <VariableRef name="SetDebugLevelSuccess"/>
+        <VariableRef name="SetDebugLevelFailure"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+  
+  <Interface name="ICSTaskInterface" id="4">
+
+    <Variable name="TaskState" kind="State" format="UINT08">
+      <Drange name="TaskStateEnum">
+        <Option value="1"  name="RUNNING"/>
+          <!-- The task is initialized and running -->
+        <Option value="2"  name="TERMINATING"/>
+          <!-- The task is terminating -->
+      </Drange>
+    </Variable>
+
+    <Command>
+      <CommandMsg name="DestroyTask" id="1" description="Terminate the task"/>
+    </Command>
+  
+    <!-- Other possible commands include Suspend, Resume, SetPriority, and SetHeartBeatPeriod -->
+    <!-- Other possible requests include GetPriority, and GetHeartBeatCount -->
+
+    <Request>
+      <CommandMsg name="GetTaskState" id="2" description="Get the task state"/>
+      <DataReplyMsg name="GetTaskStateReply" id="3">
+        <VariableRef name="TaskState"/>
+      </DataReplyMsg>
+    </Request>
+
+    <Notification>
+      <DataMsg name="TaskStateMsg" id="4" msgArrival="EVENT">
+        <Qualifier value="1" name="TelemetryLevel"/>
+        <VariableRef name="TaskState"/>
+      </DataMsg>
+    </Notification>
+
+  </Interface>
+
+</xTEDS>

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E236DC25-FEF2-4CA1-81C1-89782ED31B3D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aspire.Core</RootNamespace>
+    <AssemblyName>AspireCore</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ApplicationProtocol.cs" />
+    <Compile Include="AppMessage.cs" />
+    <Compile Include="Continuation.cs" />
+    <Compile Include="ControlProtocol.cs" />
+    <Compile Include="MonarchRegistrationMgr.cs" />
+    <Compile Include="Messaging\IReliableTransport.cs" />
+    <Compile Include="Messaging\ITransport.cs" />
+    <Compile Include="Messaging\LoggingTransportDecorator.cs" />
+    <Compile Include="Messaging\TcpPeerToPeerClient.cs" />
+    <Compile Include="Messaging\TcpTransport.cs" />
+    <Compile Include="Messaging\TransportDecorator.cs" />
+    <Compile Include="Messaging\TransportFactory.cs" />
+    <Compile Include="StateMachine.cs" />
+    <Compile Include="PmStateMachine.cs" />
+    <Compile Include="DirectoryStateMachine.cs" />
+    <Compile Include="IApplication.cs" />
+    <Compile Include="LocalMessage.cs" />
+    <Compile Include="MessageHandler.cs" />
+    <Compile Include="Messaging\Address.cs" />
+    <Compile Include="Messaging\Address1.cs" />
+    <Compile Include="Messaging\Address2.cs" />
+    <Compile Include="Messaging\AddressServer.cs" />
+    <Compile Include="Messaging\Marshal.cs" />
+    <Compile Include="Messaging\Message.cs" />
+    <Compile Include="Messaging\Message1.cs" />
+    <Compile Include="Messaging\Message2.cs" />
+    <Compile Include="Messaging\MessageId.cs" />
+    <Compile Include="Messaging\Protocol.cs" />
+    <Compile Include="Messaging\ProtocolFactory.cs" />
+    <Compile Include="Messaging\ProtocolId.cs" />
+    <Compile Include="Messaging\SecondaryHeader.cs" />
+    <Compile Include="Messaging\Transport.cs" />
+    <Compile Include="Messaging\UdpTransport.cs" />
+    <Compile Include="MonarchProtocol.cs" />
+    <Compile Include="MonarchTypes.cs" />
+    <Compile Include="NativeProtocol.cs" />
+    <Compile Include="Parser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolMux.cs" />
+    <Compile Include="Publication.cs" />
+    <Compile Include="Query.cs" />
+    <Compile Include="RoutingTable.cs" />
+    <Compile Include="Subscription.cs" />
+    <Compile Include="Utilities\Clock.cs" />
+    <Compile Include="Utilities\ILogger.cs" />
+    <Compile Include="Utilities\Logger.cs" />
+    <Compile Include="Utilities\MarshaledBuffer.cs" />
+    <Compile Include="Utilities\MarshaledString.cs" />
+    <Compile Include="Utilities\MD5.cs" />
+    <Compile Include="Utilities\MsgConsole.cs" />
+    <Compile Include="Utilities\Primitives.cs" />
+    <Compile Include="Utilities\SecTime.cs" />
+    <Compile Include="Utilities\Timer.cs" />
+    <Compile Include="Utilities\Timing.cs" />
+    <Compile Include="Utilities\Uuid.cs" />
+    <Compile Include="Utilities\VariableLength.cs" />
+    <Compile Include="XtedsProtocol.cs" />
+    <Compile Include="Xteds\StructuredResponse.cs" />
+    <Compile Include="Xteds\IDataMessage.cs" />
+    <Compile Include="Xteds\IKnownMarshaler.cs" />
+    <Compile Include="Xteds\IPublisher.cs" />
+    <Compile Include="Xteds\IVariable.cs" />
+    <Compile Include="Xteds\IXteds.cs" />
+    <Compile Include="Xteds\QueryOps.cs" />
+    <Compile Include="Xteds\StructuredQuery.cs" />
+    <Compile Include="Xteds\Tokens.cs" />
+    <Compile Include="Xteds\VariableMarshaler.cs" />
+    <Compile Include="Xteds\XtedsInterface.cs" />
+    <Compile Include="Xteds\XtedsMessage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{3d0c3d1f-4e9f-4066-93cb-3fa8a1a29549}</Project>
+      <Name>Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy $(TargetFileName) $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+copy $(TargetName).pdb $(SolutionDir)AspireStudio\bin\$(ConfigurationName)
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

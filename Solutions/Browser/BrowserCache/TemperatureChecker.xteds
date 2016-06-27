@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xTEDS
+xmlns="http://www.PnPInnovations.com/Aspire/xTEDS"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+name="TemperatureChecker_xTEDS"
+version="1.0">
+<Application name="TemperatureChecker" kind="Software"/>
+<Interface name="IOperational" id="1">
+<Variable name="MessageId" kind="ordinal" format="INT8" description="Message frequency in use" />
+<Request>
+<CommandMsg name="UseMessage" id="1" >
+<VariableRef name="MessageId"/>
+</CommandMsg>
+<DataReplyMsg name="MessageInUse" id="2" >
+<VariableRef name="MessageId"/>
+</DataReplyMsg>
+</Request>
+</Interface>
+</xTEDS>

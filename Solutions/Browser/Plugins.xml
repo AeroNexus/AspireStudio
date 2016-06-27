@@ -1,0 +1,11 @@
+﻿<ConfigurationFile>
+  <Startup>
+    <Plugin name="Aspire Browsing User Interface">
+      <AssemblyPath>C:\Projects\AspireStudio0\trunk\AspireStudio\bin\Debug\Plugins\AspireBrowsingUI.dll</AssemblyPath>
+      <Type>ApplicationManager</Type>
+    </Plugin>
+  </Startup>
+  <PluginConfiguration>
+    <Plugin Title="Aspire Browsing User Interface" />
+  </PluginConfiguration>
+</ConfigurationFile>

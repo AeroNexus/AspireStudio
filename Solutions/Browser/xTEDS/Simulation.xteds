@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xTEDS xmlns="http://www.PnPInnovations.com/Aspire/xTEDS" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.PnPInnovations.com/Aspire/xTEDS ../Schema/xTEDS26.xsd"
+       name="Simulation_xTeds" version="1.0">
+  <Application name="Simulation" kind="Software"/>
+
+  <Interface name="ISimulation" id="1" scope="Public">
+		<Variable name="ApplySubS" kind="time" format="INT32" />
+		<Variable name="ApplyTime" kind="time" format="INT32" />
+		<Variable name="Attitude" kind="attitude" format="FLOAT64" length="4" 
+							description="ECI to body transform">
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameFrom" value="J2000"/>
+			<Qualifier name="FrameTo" value="SVF"/>
+		</Variable>
+		<Variable name="Characteristics" kind="ID" format="STRING"	description="Characteristics definition file name"/>
+		<Variable name="Class" kind="ID" format="STRING"	description="Class of component"/>
+		<Variable name="ComponentId" kind="ID" format="INT32"	description="Component ID within an entity: used for sub components"/>
+		<Variable name="DeltaV" kind="velocity" format="FLOAT64" length="3" units="m/s">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameResolved" value="J2000"/>
+		</Variable>
+		<Variable name="DeltaVStatus" kind="DeltaVStatusType" format="UINT8" >
+			<Drange name="DeltaVStatusType">
+				<Option name="Applied" value="1"/>
+				<Option name="Queued" value="2"/>
+			</Drange>
+		</Variable>
+		<Variable name="ElapsedSeconds" kind="time" format="FLOAT64"  units="s"
+							description="Elapsed seconds since the start of the scenario"/>
+		<Variable name="GpsSeconds" kind="time" format="FLOAT64"	description="GPS epoch seconds"/>
+		<Variable name="Id" kind="ID" format="INT32"	description="Entity identifier"/>
+		<Variable name="Location" kind="position" format="FLOAT64" length="3" units="cm"
+							description="Location of the device frame wrt the body frame">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameResolved" value="SVF"/>
+		</Variable>
+		<Variable name="LosBody" kind="direction" format="FLOAT64" length="3"
+							description="Line of sight">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameResolved" value="DVF"/>
+		</Variable>
+		<Variable name="ManeuverId" kind="ID" format="UINT8"/>
+		<Variable name="ManeuverState" kind="status" format="UINT8">
+			<Drange name="ManeuverStateType">
+				<Option name="Begin" value="1"/>
+				<Option name="Maneuvering" value="2"/>
+				<Option name="End" value="3"/>
+				<Option name="Error" value="4"/>
+			</Drange>
+		</Variable>
+		<!--Variable name="ModifiedJulianDate" kind="time" format="FLOAT64"  units="days"
+							description="JulianDate(days since January 1, 4713 BC Greenwich noon) - 2400000.5"/-->
+		<Variable name="Name" kind="ID" format="STRING"	description="Enity name in the scenario"/>
+		<Variable name="OpState" kind="status" format="UINT8" >
+			<Drange name="OpStateType">
+				<Option name="Off" value="1"/>
+				<Option name="On" value="2"/>
+			</Drange>
+		</Variable>
+		<Variable name="Position" kind="position" format="FLOAT64" length="3" units="m"
+							description="ECI Position">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameResolved" value="J2000"/>
+		</Variable>
+		<Variable name="PositionType" kind="PositionEnum" format="UINT8" description="How to interpret pos,vel,acc">
+			<Drange name="PositionEnum">
+				<Option name="ECI_TOD" value="1"/>
+				<Option name="ECI_FK5" value="2"/>
+				<Option name="ECI_J2000" value="3"/>
+				<Option name="ECEF" value="4"/>
+				<Option name="LLA" value="5"/>
+				<Option name="Local" value="6"/>
+			</Drange>
+		</Variable>
+		<Variable name="Quaternion" kind="rotation" format="FLOAT64" length="4"
+							description="Mount rotation">
+			<Qualifier name="Representation" value="quaternion"/>
+			<Qualifier name="FrameFrom" value="DVF"/>
+			<Qualifier name="FrameTo" value="SVF"/>
+		</Variable>
+		<Variable name="SimState" kind="status" format="UINT8" >
+			<Drange name="SimStateType">
+				<Option name="Execute" value="1"/>
+				<Option name="Increment" value="3"/>
+				<Option name="Rewind" value="6"/>
+				<Option name="Stop" value="7"/>
+			</Drange>
+		</Variable>
+		<Variable name="TimeRatio" kind="time" format="FLOAT64" 
+							description="Ratio of elapsed simulation time / elapsed wall clock time"/>
+		<Variable name="TleLine1" kind="specification" format="STRING" />
+		<Variable name="TleLine2" kind="specification" format="STRING" />
+		<Variable name="Velocity" kind="velocity" format="FLOAT64" length="3" units="m/s"
+							description="ECI Velocity">
+			<Qualifier name="Representation" value="vector"/>
+			<Qualifier name="FrameResolved" value="J2000"/>
+		</Variable>
+		<Variable name="WellKnownId" kind="ID" format="INT32"	description="Well known identifier"/>
+
+		<Notification>
+			<DataMsg name="Time" id="1" msgArrival="PERIODIC" msgRate="8">
+				<VariableRef name="GpsSeconds"/>
+				<VariableRef name="ElapsedSeconds"/>
+				<VariableRef name="TimeRatio"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="KinematicState" id="2" msgArrival="PERIODIC" msgRate="8">
+				<VariableRef name="Id"/>
+				<VariableRef name="PositionType"/>
+				<VariableRef name="GpsSeconds"/>
+				<VariableRef name="Position"/>
+				<VariableRef name="Velocity"/>
+				<VariableRef name="Attitude"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="SimulationState" id="3" msgArrival="EVENT" >
+				<VariableRef name="SimState"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="Configuration" id="4" msgArrival="EVENT"
+							 description="Multiple times for each component until ID = -1 at end" >
+				<VariableRef name="Id"/>
+				<VariableRef name="ComponentId"/>
+				<VariableRef name="WellKnownId"/>
+				<VariableRef name="Name"/>
+				<VariableRef name="Class"/>
+				<VariableRef name="Characteristics"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="Mount" id="5" msgArrival="EVENT" >
+				<VariableRef name="Id"/>
+				<VariableRef name="ComponentId"/>
+				<VariableRef name="Location"/>
+				<VariableRef name="Quaternion"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="OperationalState" id="6" msgArrival="EVENT" >
+				<VariableRef name="Id"/>
+				<VariableRef name="ComponentId"/>
+				<VariableRef name="OpState"/>
+			</DataMsg>
+		</Notification>
+
+		<Notification>
+			<DataMsg name="PositionMsg" id="7" msgArrival="PERIODIC" msgRate="8">
+				<VariableRef name="Id"/>
+				<VariableRef name="PositionType"/>
+				<VariableRef name="GpsSeconds"/>
+				<VariableRef name="Position"/>
+			</DataMsg>
+		</Notification>
+		
+		<Notification>
+			<DataMsg name="MajorCycleEnd" id="8" msgArrival="PERIODIC" msgRate="8"/>
+		</Notification>
+		
+		<Notification>
+			<DataMsg name="TleChanged" id="9" msgArrival="EVENT">
+				<VariableRef name="Name"/>
+				<VariableRef name="TleLine1"/>
+				<VariableRef name="TleLine2"/>
+			</DataMsg>
+		</Notification>
+		
+		<Command>
+			<CommandMsg name="Synchronize" id="10" />
+		</Command>
+		
+		<Request>
+		  <CommandMsg name="ApplyDeltaV" id="11">
+		    <VariableRef name="Id" />
+			<VariableRef name="ApplyTime" />
+			<VariableRef name="ApplySubS" />
+			<VariableRef name="DeltaV" />
+		  </CommandMsg>
+			<DataReplyMsg name="DeltaVReply" id="14">
+				<VariableRef name="Id" />
+				<VariableRef name="DeltaVStatus" />
+			</DataReplyMsg>
+		</Request>
+
+		<Notification>
+			<DataMsg name="ManeuverStateRequest" id="12" msgArrival="EVENT">
+				<VariableRef name="Id"/>
+				<VariableRef name="ManeuverId"/>
+				<VariableRef name="ManeuverState" />
+			</DataMsg>
+		</Notification>
+		<Command>
+		  <CommandMsg name="ManeuverStateReply" id="13">
+		    <VariableRef name="Id" />
+			  <VariableRef name="ManeuverState" />
+		  </CommandMsg>
+		</Command>
+		
+		<Command>
+			<CommandMsg name="SetOperationalState" id="15" >
+				<VariableRef name="Id"/>
+				<VariableRef name="ComponentId"/>
+				<VariableRef name="OpState"/>
+			</CommandMsg>
+		</Command>
+
+	</Interface>
+</xTEDS>

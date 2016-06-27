@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<topic id="6ef43462-7d85-4f44-92f0-4e2c6028010a" revisionNumber="1">
+	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<introduction>
+			<para>This is the Application Programming Interface reference for Aspire Studio.</para>
+		</introduction>
+
+		<section>
+			<title>Getting Started</title>
+			<content>
+        <para>This reference material is currently distributed in a .chm help file and will eventually be available to integrate with Visual Studio</para>
+			</content>
+		</section>
+
+		<relatedTopics>
+			<link xlink:href="f423fc67-7dff-4764-85b4-888dade1e58b" />
+		</relatedTopics>
+	</developerConceptualDocument>
+</topic>
