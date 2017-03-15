@@ -209,7 +209,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetDir)$(TargetName).* $(SolutionDir)AspireStudio\bin\$(Configuration)
+    <PostBuildEvent>md $(SolutionDir)AspireStudio\bin\$(Configuration)\Plugins
+copy $(TargetDir)$(TargetName).* $(SolutionDir)AspireStudio\bin\$(Configuration)
 copy $(TargetDir)$(TargetName).* $(SolutionDir)AspireStudio\bin\$(Configuration)\Plugins</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

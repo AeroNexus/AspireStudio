@@ -66,9 +66,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="ToolBox">
-      <HintPath>..\packages\ToolBox.dll</HintPath>
-    </Reference>
     <Reference Include="WeifenLuo.WinFormsUI.Docking, Version=2.9.0.0, Culture=neutral, PublicKeyToken=5cded1a1a0a7b481, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DockPanelSuite.2.9.0.0\lib\net40\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
@@ -390,6 +387,10 @@
     <ProjectReference Include="..\Framework\Framework.csproj">
       <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
       <Name>Framework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\thirdparty\ToolBox\ToolBox.csproj">
+      <Project>{d937e1f4-1b9f-4567-b28e-eed24aa31c9c}</Project>
+      <Name>ToolBox</Name>
     </ProjectReference>
     <ProjectReference Include="..\UiToolbox\UiToolbox.csproj">
       <Project>{082f6a94-fde9-4dba-8ac1-5e87dd609d3c}</Project>

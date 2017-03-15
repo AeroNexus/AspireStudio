@@ -341,7 +341,6 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>ApiReference.chm</td><td>{FC4355CF-FA91-4C25-B5B7-43622947C3CF}</td><td>INSTALLDIR</td><td>2</td><td/><td>apireference.chm</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AspireBrowsingUI.dll</td><td>{B50033EF-B683-4291-AC6C-84BC02A6DA8B}</td><td>PLUGINS</td><td>2</td><td/><td>aspirebrowsingui.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>AspireStudio.Primary_output</td><td>{EAACE888-44B8-4AFC-92A6-17BF2777C143}</td><td>INSTALLDIR</td><td>2</td><td/><td>aspirestudio.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>BrowsingUI.Primary_output</td><td>{0131264B-D3CE-443D-A6A7-9A21B490EC9F}</td><td>INSTALLDIR</td><td>2</td><td/><td>browsingui.primary_output</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -1908,7 +1907,6 @@
 	<table name="FeatureComponents">
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
-		<row><td>AlwaysInstall</td><td>ApiReference.chm</td></row>
 		<row><td>AlwaysInstall</td><td>AspireBrowsingUI.dll</td></row>
 		<row><td>AlwaysInstall</td><td>AspireStudio.Primary_output</td></row>
 		<row><td>AlwaysInstall</td><td>BrowsingUI.Primary_output</td></row>
@@ -1946,7 +1944,6 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>apireference.chm</td><td>ApiReference.chm</td><td>APIREF~1.CHM|ApiReference.chm</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\ApiReference\Help\ApiReference.chm</td><td>1</td><td/></row>
 		<row><td>aspirebrowser.asln</td><td>ISX_DEFAULTCOMPONENT7</td><td>ASPIRE~1.ASL|AspireBrowser.Asln</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\Solutions\Browser\AspireBrowser.Asln</td><td>1</td><td/></row>
 		<row><td>aspirebrowser.asln1</td><td>ISX_DEFAULTCOMPONENT3</td><td>ASPIRE~1.ASL|AspireBrowser.Asln</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\Solutions\Browser\AspireBrowser.Asln</td><td>1</td><td/></row>
 		<row><td>aspirebrowser.browser.dockin</td><td>ISX_DEFAULTCOMPONENT3</td><td>ASPIRE~1.XML|AspireBrowser.Browser.docking.xml</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\Solutions\Browser\AspireBrowser.Browser.docking.xml</td><td>1</td><td/></row>
@@ -1973,7 +1970,6 @@
 		<row><td>statecharttestharness.xteds1</td><td>ISX_DEFAULTCOMPONENT2</td><td>STATEC~1.XTE|StatechartTestHarness.xteds</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\Solutions\AspireStudio\xTEDS\StatechartTestHarness.xteds</td><td>1</td><td/></row>
 		<row><td>toolbox.config.xml</td><td>ISX_DEFAULTCOMPONENT</td><td>TOOLBO~1.XML|ToolBox.config.xml</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\AspireStudio\ToolBox.config.xml</td><td>1</td><td/></row>
 		<row><td>toolbox.xml</td><td>ISX_DEFAULTCOMPONENT</td><td>ToolBox.xml</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\AspireStudio\ToolBox.xml</td><td>1</td><td/></row>
-		<row><td>userguide.mht</td><td>ISX_DEFAULTCOMPONENT</td><td>USERGU~1.MHT|UserGuide.mht</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\AspireStudio\bin\Debug\UserGuide.mht</td><td>1</td><td/></row>
 		<row><td>utilities.primary_output</td><td>Utilities.Primary_output</td><td>Utilities.Primary output</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;Utilities&gt;|Built</td><td>3</td><td/></row>
 		<row><td>weifenluo.winformsui.docking</td><td>WeifenLuo.WinFormsUI.Docking.dll</td><td>WEIFEN~1.DLL|WeifenLuo.WinFormsUI.Docking.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Projects\AspireStudio\AspireStudio\bin\Debug\WeifenLuo.WinFormsUI.Docking.dll</td><td>1</td><td/></row>
 	</table>
@@ -2120,7 +2116,6 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>ApiReference.chm</td><td/><td/><td>_723131D5_6A96_408B_8083_C65F0F250BB8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AspireBrowsingUI.dll</td><td/><td/><td>_91BB48D8_9D66_4701_9A21_5272DF3E9F54_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>AspireStudio.Primary_output</td><td/><td/><td>_C8F58A21_B5AD_4BE5_85AF_98BA7CBD7B29_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>BrowsingUI.Primary_output</td><td/><td/><td>_C21E38E3_D401_4502_9332_5ED4B6784D1F_FILTER</td><td/><td/><td/><td/></row>
@@ -2733,7 +2728,7 @@
 		<col def="I2">Order</col>
 		<col def="I2">ISSetupLocation</col>
 		<col def="S255">ISReleaseFlags</col>
-		<row><td>_F69D6DE4_E200_429C_BE98_CA092F017D2C_</td><td>Microsoft .NET Framework 4.5 Web.prq</td><td/><td/><td/></row>
+		<row><td>_F69D6DE4_E200_429C_BE98_CA092F017D2C_</td><td>Microsoft .NET Framework 4.5 Web.prq</td><td/><td>2</td><td/></row>
 	</table>
 
 	<table name="ISSetupType">
@@ -4030,11 +4025,13 @@
 		<row><td>_67768557A4944375B414CE1294A0C12C.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_696AF907B7914E17B10CC853AA275565.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_6B49F48EC08A400FA9C88FEDDA4E4ADF.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_6DFA43DE10B74930B43E572690EAE210.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_70E1A12C48324ABEA79AD058A8A0D22D.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_79593DEE4AA240D8AFE524C823103C39.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_795CABD6F03141CB93ABBDCD16197429.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_809215680A6C475B9F7C23C0DF1E2E06.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_87C163D0C1204E78968D79D5E854C16B.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_8887D3FE9DA84C638E8A89E342451437.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_8CE08589258C4F88B2AF26FB96021D96.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_8D188F200F504F26AF34B210EE15B0EB.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_93451AC092F540A19F9E1DD716DDD421.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Debug\AspireStudio.exe</td><td>0</td></row>
