@@ -47,18 +47,18 @@ namespace Aspire.Core
 
 		public void Close()	{}
 
-		static SecTime maxWait = SecTime.Milliseconds(250);
-
-		/// <summary>
-		/// Field messages sent by other components to this Application-based component.
-		/// Blocks on the asynchronous listen transport for lesser of executePeriod/0.25s,
-		/// waiting for messages to arrive.
-		/// When they do, select the appropriate protocol and give the network buffer to
-		/// the protocol for appropriate action. Calls Execute() via a Timer. Blocks while
-		/// app has not closed
-		/// </summary>
-		/// <param name="application"></param>
-		public void FieldMessages()
+		static readonly SecTime maxWait = SecTime.Milliseconds(250);
+    
+    /// <summary>
+    /// Field messages sent by other components to this Application-based component.
+    /// Blocks on the asynchronous listen transport for lesser of executePeriod/0.25s,
+    /// waiting for messages to arrive.
+    /// When they do, select the appropriate protocol and give the network buffer to
+    /// the protocol for appropriate action. Calls Execute() via a Timer. Blocks while
+    /// app has not closed
+    /// </summary>
+    /// <param name="application"></param>
+    public void FieldMessages()
 		{
 			var now = new SecTime();
 
@@ -76,21 +76,31 @@ namespace Aspire.Core
 			}
 		}
 
-		public bool Parse(byte[] buffer, int length, Message parseHeader)
+    /// <summary>
+    /// We need to serialize access to protocol.Parse because data is shared among
+    /// multiple thread (at least when there are multiple Directories).
+    /// See ie AspireBrowser::mCompIdBuf. It is written by multiple threads via
+    /// Parse->mapped messages.
+    /// </summary>
+    static readonly object parseMutex = new object();
+    public bool Parse(byte[] buffer, int length, Message parseHeader)
 		{
-			byte protocolId = buffer[0];
-			if (protocolId < mProtocols.Count)
-			{
-				// Temporarily snag Monarch Local protocol. Need to move Aspire protocols up to 3,4,5
-				if (protocolId == 2 && buffer[1] >= 32 && buffer[1] <= 36)
-					protocolId = (byte)ProtocolId.Monarch;
-				Protocol protocol = mProtocols[protocolId];
-				if (protocol != null)
-					return protocol.Parse(buffer, length, parseHeader);
-			}
-			else if (HandleUnknownProtocol != null)
-				HandleUnknownProtocol(buffer, EventArgs.Empty);
-			return false;
+      lock (parseMutex)
+      {
+        byte protocolId = buffer[0];
+        if (protocolId < mProtocols.Count)
+        {
+          // Temporarily snag Monarch Local protocol. Need to move Aspire protocols up to 3,4,5
+          if (protocolId == 2 && buffer[1] >= 32 && buffer[1] <= 36)
+            protocolId = (byte)ProtocolId.Monarch;
+          Protocol protocol = mProtocols[protocolId];
+          if (protocol != null)
+            return protocol.Parse(buffer, length, parseHeader);
+        }
+        else if (HandleUnknownProtocol != null)
+          HandleUnknownProtocol(buffer, EventArgs.Empty);
+        return false;
+      }
 		}
 
 		byte[] pollBuffer = new byte[64*1024];
