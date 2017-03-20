@@ -270,12 +270,11 @@ namespace Aspire.Core.xTEDS
 						{
 							if (mType.IsEnum)
 							{
-								Array array = Enum.GetValues(mType);
-								int ndx = buffer[offset] - (int)array.GetValue(0); 
-								if (ndx >= 0 && ndx < array.Length)
-									value =  array.GetValue(ndx);
-								else
-									value =  array.GetValue(0);
+                int ival = buffer[offset]; // fixme do enums ever come in as > 1 byte?
+
+                // int constant to string, string to value. ugh.
+                string name = Enum.GetName(mType, ival);
+                value = Enum.Parse(mType, name);
 							}
 							else
 								value = (int)buffer[offset];
