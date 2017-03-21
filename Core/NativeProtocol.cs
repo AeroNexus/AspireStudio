@@ -443,7 +443,23 @@ namespace Aspire.Core
 
 		MessageId parseMessageId = new MessageId();
 		byte[] swap = new byte[8];
-		public override bool Parse(byte[] buffer, int len, Message parseMessage)
+
+        /// <summary>
+        /// Serialize access to NativeProtocol::Parse
+        /// 
+        /// Unfortunately there is static data that is modified here that makes the code non-thread safe.
+        /// See ie Xteds.Interface.currentInterface for an example
+        /// </summary>
+        private readonly static object parseMutex = new object();
+        public override bool Parse(byte[] buffer, int len, Message parseMessage)
+        {
+            lock(parseMutex)
+            {
+                return ParseInternal(buffer, len, parseMessage);
+            }
+        }
+
+        bool ParseInternal(byte[] buffer, int len, Message parseMessage)
 		{
 			if (parseMessage==null) parseMessage = mParseMessage;
 			int offset = parseMessage.Unmarshal(buffer, 0, len), value;
