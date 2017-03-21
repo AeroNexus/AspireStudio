@@ -347,7 +347,7 @@
             this.managePluginsToolStripMenuItem,
             this.pluginSettingsToolStripMenuItem});
       this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-      this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
+      this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
       this.toolsToolStripMenuItem.Text = "Tools";
       // 
       // preferencesToolStripMenuItem
@@ -643,6 +643,7 @@
       this.Controls.Add(this.dockPanel);
       this.Controls.Add(this.toolStripContainer1);
       this.Controls.Add(this.statusStrip1);
+      this.DoubleBuffered = true;
       this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
       this.IsMdiContainer = true;
       this.MainMenuStrip = this.menuStrip1;

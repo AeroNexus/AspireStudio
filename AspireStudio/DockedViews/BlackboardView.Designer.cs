@@ -30,7 +30,7 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BlackboardView));
-			this.mTreeView = new System.Windows.Forms.TreeView();
+			this.mTreeView = new BufferedTreeView();
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.copyPathToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.bindToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +103,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.TreeView mTreeView;
+		private BufferedTreeView mTreeView;
 		private System.Windows.Forms.ToolTip toolTip1;
 		private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem copyPathToClipboardToolStripMenuItem;
