@@ -130,6 +130,10 @@ namespace Aspire.Studio.DockedViews
 			mBlackboardMenuItems.Clear();
 
 			var item = node.Tag as Blackboard.Item;
+      if (item == null)
+        // i have no idea what BuilItemActions is supposed to do. i am seeing crashes with null tags
+        // here, though, on the Blackboard node.
+        return;
 
 			var type = item.Type;
 			bindToToolStripMenuItem.Visible =
