@@ -77,10 +77,11 @@ namespace Aspire.Core
 		}
 
     /// <summary>
-    /// We need to serialize access to protocol.Parse because data is shared among
-    /// multiple thread (at least when there are multiple Directories).
-    /// See ie AspireBrowser::mCompIdBuf. It is written by multiple threads via
-    /// Parse->mapped messages.
+    /// Serialize access to (all) message handlers to avoid cross-thread data access.
+    /// 
+    /// I now consider this parseMutex a temporary workaround until I understand
+    /// where the cross thread access is. I previously thought it was in the
+    /// variable mappings but that isn't the case.
     /// </summary>
     static readonly object parseMutex = new object();
     public bool Parse(byte[] buffer, int length, Message parseHeader)
