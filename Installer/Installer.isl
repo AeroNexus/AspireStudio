@@ -4025,10 +4025,12 @@
 		<row><td>_67768557A4944375B414CE1294A0C12C.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_696AF907B7914E17B10CC853AA275565.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_6B49F48EC08A400FA9C88FEDDA4E4ADF.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_6C2EE80945E74BC18A533FD8333FFBC0.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_6DFA43DE10B74930B43E572690EAE210.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_70E1A12C48324ABEA79AD058A8A0D22D.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_79593DEE4AA240D8AFE524C823103C39.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_795CABD6F03141CB93ABBDCD16197429.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_7E5D612C2F054B7DB75DD92CD3AE2834.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_809215680A6C475B9F7C23C0DF1E2E06.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_87C163D0C1204E78968D79D5E854C16B.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_8887D3FE9DA84C638E8A89E342451437.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
@@ -4046,6 +4048,7 @@
 		<row><td>_B1993607FB474FD0828B6063D8964E80.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_B38CF743200247B0838DF1B9F7E155A2.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_B65A9DA3C1894AD39ECA8662927EC4AB.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_B7E6A453BA8244BDB5B947D0349CA602.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_BB967D14FBA9401094C0D75859ABBE06.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_C0538322309241CC98BFBDE52356B624.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_C659AF01B6BE4D168D638B336276D09F.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
@@ -4175,8 +4178,8 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="a4f66fafb30885f14d732b73e196bba0">
-RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="de9f554a3bc05c12be9c31b998217995">
+UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 			</td></row>
 		<row><td>DefaultProductConfiguration</td><td>Express</td></row>
 		<row><td>EnableSwidtag</td><td>0</td></row>
@@ -4569,7 +4572,7 @@ RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]AspireStudio.Primary output</td><td/></row>
-		<row><td>ProductCode</td><td>{8EFED131-B79F-4781-85F1-F427484EB94C}</td><td/></row>
+		<row><td>ProductCode</td><td>{1EF85F09-AA85-4525-92B3-7EC8D7311707}</td><td/></row>
 		<row><td>ProductName</td><td>AspireStudio</td><td/></row>
 		<row><td>ProductVersion</td><td>1.3.1</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
@@ -4585,7 +4588,7 @@ RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
 		<row><td>SHOWLAUNCHPROGRAM</td><td>0</td><td/></row>
 		<row><td>SHOWLAUNCHREADME</td><td>0</td><td/></row>
-		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR</td><td/></row>
+		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;ISACTIONPROP1</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
 		<row><td>SetupType</td><td>Typical</td><td/></row>
 		<row><td>UpgradeCode</td><td>{0B39FA13-763F-4093-BB80-7B90169D6E88}</td><td/></row>
@@ -4859,6 +4862,7 @@ RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
 		<col def="s72">ActionProperty</col>
 		<col def="S72">ISDisplayName</col>
 		<row><td>{00000000-0000-0000-0000-000000000000}</td><td>***ALL_VERSIONS***</td><td></td><td></td><td>2</td><td/><td>ISFOUNDNEWERPRODUCTVERSION</td><td>ISPreventDowngrade</td></row>
+		<row><td>{0B39FA13-763F-4093-BB80-7B90169D6E88}</td><td></td><td>1.3.1</td><td></td><td>0</td><td/><td>ISACTIONPROP1</td><td>NewUpgradeEntry1</td></row>
 	</table>
 
 	<table name="Verb">
