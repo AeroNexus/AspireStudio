@@ -4015,6 +4015,7 @@
 		<row><td>_41F14E1B968D484EB09FF9847F4EF47A.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_470CFFC5CB044251B515674D9B992D18.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_489848FA4D8D46C2ACDC51B86716C9FA.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_4FBEC16BAECF407A9D562127A766FC69.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_507DC8A99AB84764AAB188940AECA2D7.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_53CD14E8DD7748808338238173B7B737.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_58D0E3804E5148ABA65E5D8C0545B92A.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
@@ -4056,6 +4057,7 @@
 		<row><td>_D7040611A4CC4D09AA0E96404AADF3C4.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_DAA0E67F06854261B46CB13ECC5AA55E.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_DE9E17DEA5E94A45ABA4026EDB4999A3.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_E0BF24929F9B4CE6B40D5B7F08137084.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_E4F09B7AFADD4173A549C589D8652672.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_F6241D7B98E8471A887245B253E2A4A0.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_FBA76F5DC8E047CD968B079605B2CE49.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
@@ -4571,7 +4573,7 @@ RABWAEQALQA1AAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]AspireStudio.Primary output</td><td/></row>
 		<row><td>ProductCode</td><td>{8EFED131-B79F-4781-85F1-F427484EB94C}</td><td/></row>
 		<row><td>ProductName</td><td>AspireStudio</td><td/></row>
-		<row><td>ProductVersion</td><td>1.2.47</td><td/></row>
+		<row><td>ProductVersion</td><td>1.3.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
