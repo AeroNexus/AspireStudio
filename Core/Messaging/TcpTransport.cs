@@ -2,89 +2,106 @@
 using System.Net;
 
 using Aspire.Core.Utilities;
+using System.Threading;
+using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace Aspire.Core.Messaging
 {
-	public partial class TcpTransport : Transport
-	{
-		int mPort;
-		TcpPeerToPeerClient mClient;
-		Address2 mListenAddress = new Address2("127.0.0.1");
+    public class TcpTransport : Transport
+    {
+        private int listenPort;
+        private bool isOpen = false;
+        private TcpPeerToPeerClient client;
+        public TcpTransport() : this(0) { }
 
-		public TcpTransport(int listenPort) :
-			base("tcp", new SecTime(1, 0), new SecTime(1, 0))
-		{
-			mPort = listenPort;
-			mClient = new TcpPeerToPeerClient(listenPort);
-			Open();
-		}
+        public TcpTransport(int port)
+            : base("tcp")
+        {
+            if (port < 0 || port > 65535)
+                throw new ArgumentOutOfRangeException("port");
+            this.listenPort = port;
+        }
 
-		~TcpTransport()
-		{
-			mClient.Stop();
-		}
 
-		public override int Open()
-		{
-			if (mClient.Start() != 0)
-				return -1;
+        public override int Open()
+        {
+            if (client != null)
+                throw new InvalidOperationException("cannot open");
+            client = new TcpPeerToPeerClient(listenPort);
+            int ret = client.Open();
+            if(ret == 0)
+            {
+                var ep = client.LocalEndpoint as IPEndPoint;
+                this.ListenAddress.Parse(string.Format("127.0.0.1:{0}", ep.Port));
+            }
+            return ret;
+        }
+      
+        public override int Close()
+        {
+            if (client == null)
+                return 0;
+            int ret = client.Close();
+            client = null;
+            return ret;
+        }
 
-			mListenAddress.SetAddressPort(0,mPort);
-			MsgConsole.WriteLine("TCP listening on {0}", mClient.Port);
-			return 0;
-		}
+        public override int Read(byte[] buffer, SecTime timeout)
+        {
+            // there are bugs in the rest of the code that send large negative values to mean essentially 'no delay'
+            // -1 is wait forever, so we map anything < -1 to 0, and pass other values unchanged
+            int ms = timeout.ToMilliSeconds;
+            ms = ms < -1 ? 0 : ms;
 
-		public override int Close()
-		{
-			return mClient.Stop();
-		}
+            return client.Read(buffer, ms);
+        }
 
-		public override int Read(byte[] buf, SecTime timeout)
-		{
-			int rlen;
-			lock (this)
-				rlen = mClient.Read(buf);
-			return rlen;
-		}
+        public override int Write(byte[] buffer, int offset, int length, Address destination, SecTime timeout)
+        {
+            // there are bugs in the rest of the code that send large negative values to mean essentially 'no delay'
+            // -1 is wait forever, so we map anything < -1 to 0, and pass other values unchanged
+            int ms = timeout.ToMilliSeconds;
+            ms = ms < -1 ? 0 : ms; 
 
-		public override int Write(byte[] buf, int offset, int length, Address destination, SecTime timeout)
-		{
-			long ip;
-			int port = destination.GetAddressPort(out ip);
+            Address2 addr = destination as Address2;
+            if (addr == null)
+                throw new ArgumentException("destination");
+            IPEndPoint ep = new IPEndPoint(
+                new IPAddress(addr.NetworkDependentAddress),
+                addr.Ndi
+            );
+            return client.Write(buffer, offset, length, ep, ms);
+        }
 
-			var endPoint = new IPEndPoint(ip, port);
-			int wlen;
-			lock (this)
-				wlen = mClient.Write(buf, offset, length, endPoint);
-			return wlen;
-		}
+        private readonly Address2 _listenAddress = new Address2();
+        public override Address ListenAddress { get { return this._listenAddress; } }
 
-		public override Address ListenAddress
-		{
-			get
-			{
-				if (mLocalAddress == null)
-				{
-					var endPoint = mClient.LocalEndpoint;
-					if (endPoint != null)
-					{
-						long addr = BitConverter.ToInt64(endPoint.Address.GetAddressBytes(), 0);
-						mLocalAddress = new Address2((uint)addr, (ushort)endPoint.Port);
-					}
-				}
-				return mLocalAddress;
-			}
-		} Address mLocalAddress;
+        public override string ListenAddressString
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+        public override bool SupportsBestEffortDelivery
+        {
+            get { return false; }
+        }
 
-		public override string ListenAddressString
-		{
-			get { return string.Format("127.0.0.1:{0}", mClient.Port); }
-		}
+        public override bool SupportsBroadcast
+        {
+            get { return false; }
+        }
 
-		public override bool SupportsReliableDelivery { get { return true; } }
-		public override bool SupportsBestEffortDelivery { get { return false; } }
-		public override bool SupportsBroadcast { get { return false; } }
-		public override bool SupportsMulticast { get { return false; } }
+        public override bool SupportsMulticast
+        {
+            get { return false; }
+        }
 
-	}
+        public override bool SupportsReliableDelivery
+        {
+            get { return true; }
+        }
+    }
 }

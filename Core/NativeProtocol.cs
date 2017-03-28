@@ -927,7 +927,7 @@ namespace Aspire.Core
 			offset += mSendBuffer.Marshal(buffer,offset);
 			mSendBuffer.Bytes = XtedsID.ToByteArray();
 			offset += mSendBuffer.Marshal(buffer,offset);
-			Send((int)msg.Registration_Hello,buffer,payload,offset-payload,destination);
+			Send((int)msg.Registration_Hello,buffer,payload,offset-payload,destination, SecTime.Milliseconds(1000));
 		}
 
 		public void SendHelloAck(Address destination, Reply replyStatus, Address previousAddress=null)

@@ -21,8 +21,10 @@ namespace Aspire.CoreModels
 		Thread mThread;
 		Transport mTransport;
 
+        readonly string transportName;
 		public BrowserFactory()
 		{
+            this.transportName = Config.TransportName;
 			CleanPublish = true;
 			//ExecutionPeriod = new SecTime(1);
 			Prefix = "__";
@@ -95,14 +97,8 @@ namespace Aspire.CoreModels
 
 		bool InitializeInternal()
 		{
-			string mTransportName = "udp";
 			int FixedPort = 0;
-			mTransport = TransportFactory.Create(mTransportName, FixedPort);
-			if (mTransport == null)
-			{
-				Logger.Log(1, "WARNING: USING DEFAULT UDP TRANSPORT");
-				mTransport = TransportFactory.Create("udp", FixedPort);
-			}
+			mTransport = TransportFactory.Create(transportName, FixedPort);
 
 			if (IoLoggingEnabled)
 				mTransport = new LoggingTransportDecorator(mTransport, this);

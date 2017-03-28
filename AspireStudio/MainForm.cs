@@ -58,6 +58,10 @@ namespace Aspire.Studio
 				StudioSettings.Default.FindComponentWithWholeAddress.ToString());
 
 			InitializeComponent();
+            ConfigureDialog dlg = new ConfigureDialog();
+            dlg.StartPosition = FormStartPosition.CenterScreen;
+            dlg.ShowDialog();
+            Aspire.Core.Config.TransportName = dlg.Transport.ToLower();
 
 			var size = StudioSettings.Default.Size;
 			if (size.Width > 100 && size.Height > 100)

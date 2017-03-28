@@ -33,28 +33,31 @@ namespace Aspire.CoreModels
 		Xteds mXteds;
 		XtedsProtocol mXtedsProtocol;
 
-		string mDomainName = "Default", mTransportName = "udp";
+        private string mTransportName;
+        string mDomainName = "Default";
 		int mLogLength=32, mPort;
 		bool mDontRegister, mRun = true, mStandaloneFromParameter;
 
-		public Application()
+
+        public Application(string compIdText)
+        {
+            if(!String.IsNullOrEmpty(compIdText))
+                mCompUid = new Uuid(compIdText);
+            mTransportName = Config.TransportName;
+            CleanPublish = true;
+            ExecutionPeriod = new SecTime(1, 0);
+
+            mExecutionTimer = Core.Utilities.Timer.Set(mExecutionPeriod,
+                Core.Utilities.Timer.Trigger.Periodic, PerformInternal, false);
+
+            
+            // The rest is in Discover so we have access to properties set in the XML
+        }
+
+        public Application() : this(null)
 		{
-			CleanPublish = true;
-			ExecutionPeriod = new SecTime(1, 0);
-			mExecutionTimer = Core.Utilities.Timer.Set(mExecutionPeriod,
-				Core.Utilities.Timer.Trigger.Periodic, PerformInternal, false);
-
-			var envTransport = Environment.GetEnvironmentVariable("ASPIRE_TRANSPORT");
-			if (envTransport != null)
-				mTransportName = envTransport;
-
-			// The rest is in Discover so we have access to properties set in the XML
 		}
 
-		public Application(string compIdText) : this()
-		{
-			mCompUid = new Uuid(compIdText);
-		}
 
 		#region Component implementation
 
@@ -109,10 +112,6 @@ namespace Aspire.CoreModels
 		bool InitializeInternal()
 		{
 			mTransport = TransportFactory.Create(mTransportName, FixedPort);
-			if (mTransport == null) {
-				Logger.Log(1, "WARNING: USING DEFAULT UDP TRANSPORT");
-				mTransport = TransportFactory.Create("udp", FixedPort);
-			}
 
 			if (IoLoggingEnabled)
 				mTransport = new LoggingTransportDecorator(mTransport,this,mLogLength);
@@ -449,7 +448,11 @@ namespace Aspire.CoreModels
 		[Category(connectivity)]
 		[Instanced]
 		[XmlAttribute("transport")]
-		public string TransportName { get { return mTransportName; } set { mTransportName = value; } }
+		public string TransportName
+        {
+            get { return mTransportName; }
+            set { mTransportName = value; }
+        }
 
 		[Category(category), XmlAttribute("commonXtedsDirectory"), DefaultValue("./xTEDS/")]
 		public static string CommonXtedsDirectory

@@ -73,6 +73,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppState.cs" />
+    <Compile Include="ConfigureDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigureDialog.Designer.cs">
+      <DependentUpon>ConfigureDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="DockedViews\BufferedTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -242,6 +248,9 @@
     <Compile Include="DockedViews\ToolWindow.Designer.cs">
       <DependentUpon>ToolWindow.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ConfigureDialog.resx">
+      <DependentUpon>ConfigureDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -387,6 +396,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{e236dc25-fef2-4ca1-81c1-89782ed31b3d}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Framework.csproj">
       <Project>{1f3c5ba3-5e33-4f5d-a922-66e5905bb809}</Project>
       <Name>Framework</Name>
