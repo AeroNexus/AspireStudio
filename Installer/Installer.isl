@@ -4572,9 +4572,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]AspireStudio.Primary output</td><td/></row>
-		<row><td>ProductCode</td><td>{38B9A721-1A5D-49E5-8943-377934F44DFB}</td><td/></row>
+		<row><td>ProductCode</td><td>{745AC7A5-C6BE-41A4-A821-536D84ADF831}</td><td/></row>
 		<row><td>ProductName</td><td>AspireStudio</td><td/></row>
-		<row><td>ProductVersion</td><td>1.3.2</td><td/></row>
+		<row><td>ProductVersion</td><td>1.3.3</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>
