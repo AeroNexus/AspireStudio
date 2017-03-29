@@ -8,6 +8,22 @@ using Aspire.Core.Utilities;
 
 namespace Aspire.Core.Messaging
 {
+    /// <summary>
+    /// TcpPeerToPeerClient implements message passing over TCP where the user has no desire
+    /// to track individual session. Messages are framed with a network-order int32 message
+    /// length header. Otherwise messages are passed as provided.
+    /// <para>
+    /// This is fairly close to the c++ design but not nearly as tuned or refined. There is still
+    /// plenty of room for improvement here, especially in startup/shutdown behavior, auditing the
+    /// resources to make sure the Sockets get disposed of properly, etc.
+    /// </para>
+    /// <para>
+    /// Synchronization is performed at the TcpPeerToPeerClient level using a mutex to protect the
+    /// mapping from IPEndPoint to TcpSession. Readable packets are currently signaled with a 
+    /// semaphore. Sessions are synchronized using a monitor that is pulsed on the 'interesting'
+    /// edge of state changes.
+    /// </para>
+    /// </summary>
 	public class TcpPeerToPeerClient
 	{
         private readonly object mutex = new object();

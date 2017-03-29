@@ -8,10 +8,15 @@ using System.Net.Sockets;
 
 namespace Aspire.Core.Messaging
 {
+    /// <summary>
+    /// TCP Transport implementation
+    /// 
+    /// Similar to the c++ version, it delegates to TcpPeerToPeer client after
+    /// conforming to the interface
+    /// </summary>
     public class TcpTransport : Transport
     {
-        private int listenPort;
-        private bool isOpen = false;
+        private readonly int listenPort;
         private TcpPeerToPeerClient client;
         public TcpTransport() : this(0) { }
 
