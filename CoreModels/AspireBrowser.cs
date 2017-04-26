@@ -78,7 +78,7 @@ namespace Aspire.CoreModels
 		}
 
 		public AspireBrowser(string parentPath, int debugLevel)
-			: base("{95EFF4EF-509C-4c65-BC2F-8C5C874DDAB2}")
+			: base(null)
 		{
 			mXtedsCache = XtedsCache.The;
 			mDebugLevel = debugLevel;

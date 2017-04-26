@@ -21,7 +21,7 @@ namespace Aspire.CoreModels
 		int leapSecondsGpsEpoch;
 		TimeSyncProtocol timeSync = null;
 
-		public AspireClock() : base("{746D5D6D-231D-4958-9B68-2BD5A2C2B729}")
+		public AspireClock() : base(null)
 		{
 			DontRegister = true;
 			theClock = this;

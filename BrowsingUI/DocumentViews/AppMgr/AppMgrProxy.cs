@@ -46,7 +46,7 @@ namespace Aspire.BrowsingUI.DocumentViews.AppMgr
 		}
 
 		public AppMgrProxy(IAppInfoClient client)
-			: base("{04F74C38-B42B-4017-91F9-8A5C3EA31B09}")
+			: base(null)
 		{
 			mClient = client;
 			//DontRegister = true;

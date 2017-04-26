@@ -20,7 +20,7 @@ namespace Aspire.CoreModels
 	public class Attitude : Application
 	{
 		public Attitude()
-			: base("{95EFF4EF-509C-4c65-BC2F-8C5C874DDAB2}")
+			: base(null)
 		{
 		}
 
