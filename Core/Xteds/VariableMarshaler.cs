@@ -273,8 +273,15 @@ namespace Aspire.Core.xTEDS
                                 int ival = buffer[offset]; // fixme do enums ever come in as > 1 byte?
 
                                 // int constant to string, string to value. ugh.
-                                string name = Enum.GetName(mType, ival);
-                                value = Enum.Parse(mType, name);
+                                try
+                                {
+                                    string name = Enum.GetName(mType, ival);
+                                    value = Enum.Parse(mType, name);
+                                }
+                                catch
+                                {
+                                    value = Enum.Parse(mType, "__INVALID__");
+                                }
                             }
                             else
                                 value = (int)buffer[offset];

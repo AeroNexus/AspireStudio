@@ -3113,7 +3113,7 @@ namespace Aspire.CoreModels
 
 							foreach (var opt in drange.Options)
 								enumBuilder.DefineLiteral(opt.Name, opt.Value);
-
+                            enumBuilder.DefineLiteral("__INVALID__", drange.Options.Select(x => x.Value).Max() + 1);
 							enumType = enumBuilder.CreateType();
 						}
 						return enumType;
