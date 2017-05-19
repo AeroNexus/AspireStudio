@@ -3111,9 +3111,16 @@ namespace Aspire.CoreModels
 							if ( drange.Options[0].Value != 0 )
 								enumBuilder.DefineLiteral("unset", 0);
 
-							foreach (var opt in drange.Options)
-								enumBuilder.DefineLiteral(opt.Name, opt.Value);
-                            enumBuilder.DefineLiteral("__INVALID__", drange.Options.Select(x => x.Value).Max() + 1);
+
+                            var browsableCtor = typeof(BrowsableAttribute).GetConstructor(new[] { typeof(bool) });
+                            CustomAttributeBuilder browsable = new CustomAttributeBuilder(browsableCtor, new[] { (object)true });
+                            CustomAttributeBuilder notBrowsable = new CustomAttributeBuilder(browsableCtor, new[] { (object)false });
+
+                            foreach (var opt in drange.Options)
+                                enumBuilder.DefineLiteral(opt.Name, opt.Value).SetCustomAttribute(browsable);
+
+                            // this value is used when parsing bad network data
+                            enumBuilder.DefineLiteral("__INVALID__", drange.Options.Select(x => x.Value).Max() + 1).SetCustomAttribute(notBrowsable);
 							enumType = enumBuilder.CreateType();
 						}
 						return enumType;

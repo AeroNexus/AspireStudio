@@ -5,6 +5,7 @@ using System.Drawing.Design;
 using System.Reflection;
 
 using Aspire.Utilities;
+using System.Linq;
 
 namespace Aspire.Framework
 {
@@ -621,6 +622,11 @@ namespace Aspire.Framework
 				return item.Type.IsEnum;
 			}
 
+            private bool IsBrowsable(Type enumType, object value)
+            {
+                var attr = enumType.GetMember(value.ToString())[0].GetCustomAttribute(typeof(BrowsableAttribute));
+                return attr == null || ((BrowsableAttribute)attr).Browsable;
+            }
 			/// <summary>
 			/// Handle special case of enums
 			/// </summary>
@@ -629,8 +635,13 @@ namespace Aspire.Framework
 			public override TypeConverter.StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
 			{
 				var item = context.Instance as Item;
-				if (item.Type.IsEnum)
-					return new StandardValuesCollection(Enum.GetValues(item.Type));
+                if (item.Type.IsEnum)
+                {
+                    var values = Enum.GetValues(item.Type).Cast<object>()
+                        .Where(x => IsBrowsable(item.Type, x))
+                        .ToList();
+                    return new StandardValuesCollection(values);
+                }
 				return null;
 			}
 		}
