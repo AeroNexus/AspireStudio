@@ -3993,6 +3993,7 @@
 		<row><td>_019A802B0F7F4A668C7CB371DA43A531.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_03E769B3B44440C49406596FBFA841D7.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_05A8A04EBF2943A88A8C0E906B3B238F.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
+		<row><td>_08595B08493B4078932D1A5D5EE0CC36.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\bin\Release\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_0941A15CC1CD4F79AC1AD5FFBB3406CB.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_0D43E2E5CA7148BEA41EC4AF152C6601.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
 		<row><td>_0F982FA06C364FC09D21B279D4FE74FA.exe</td><td/><td>C:\Projects\AspireStudio\AspireStudio\obj\Debug\AspireStudio.exe</td><td>0</td></row>
@@ -4572,9 +4573,9 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
 		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]AspireStudio.Primary output</td><td/></row>
-		<row><td>ProductCode</td><td>{C26B398A-E275-4E3C-8794-C738E84DAC34}</td><td/></row>
+		<row><td>ProductCode</td><td>{CF40DAE5-F6E1-4DC0-9AF1-E43EA3655FA4}</td><td/></row>
 		<row><td>ProductName</td><td>AspireStudio</td><td/></row>
-		<row><td>ProductVersion</td><td>1.3.5</td><td/></row>
+		<row><td>ProductVersion</td><td>1.4.0</td><td/></row>
 		<row><td>ProgressType0</td><td>install</td><td/></row>
 		<row><td>ProgressType1</td><td>Installing</td><td/></row>
 		<row><td>ProgressType2</td><td>installed</td><td/></row>

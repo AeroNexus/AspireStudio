@@ -66,7 +66,7 @@ namespace Aspire.Core.xTEDS
     {
       return string.Format(
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-    "<xTEDS xmlns=\"http://www.PnPInnovations.com/Aspire/xTEDS\"\n" +
+    "<xTEDS xmlns=\"https://github.com/AeroNexus/Aspire/tree/master/xteds\"\n" +
     " name=\"{0}_xTEDS\" version=\"1.0\">\n" +
       " <Application name=\"{0}\" kind=\"Software\" componentKey=\"{0}\"" +
     " architecture=\"Intel\" operatingSystem=\"dotNet\" version=\"1.0\"/>\n" +

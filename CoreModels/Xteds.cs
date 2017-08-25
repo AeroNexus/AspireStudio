@@ -46,15 +46,23 @@ namespace Aspire.CoreModels
 
 		static Xteds()
 		{
-			aspireSerializer.UnknownAttribute += new XmlAttributeEventHandler(UnknownAttribute);
-			aspireSerializer.UnknownElement += new XmlElementEventHandler(UnknownElement);
-			aspireSerializer.UnknownNode += new XmlNodeEventHandler(UnknownNode);
-			aspireSerializer.UnreferencedObject += new UnreferencedObjectEventHandler(UnreferencedObject);
+            // i'm not crazy about this. there is probably a better way to support multiple namespaces
+            aspireSerializer = new XmlSerializer(typeof(Xteds), "http://www.PnPInnovations.com/Aspire/xTEDS");
+            aspireSerializerAlt = new XmlSerializer(typeof(Xteds), "https://github.com/AeroNexus/Aspire/tree/master/xteds");
+
+            foreach(var serializer in new XmlSerializer[] { aspireSerializer, aspireSerializerAlt })
+            {
+                serializer.UnknownAttribute += new XmlAttributeEventHandler(UnknownAttribute);
+                serializer.UnknownElement += new XmlElementEventHandler(UnknownElement);
+                serializer.UnknownNode += new XmlNodeEventHandler(UnknownNode);
+                serializer.UnreferencedObject += new UnreferencedObjectEventHandler(UnreferencedObject);
+            }
 			IXteds.SetParseHandler(new ParseHandler(ParseTextCheck));
 		}
 		internal static int maxInterfaceId;
-		static XmlSerializer aspireSerializer = new XmlSerializer(typeof(Xteds), "http://www.PnPInnovations.com/Aspire/xTEDS");
-		static XmlSerializer ssmSerializer;
+		static XmlSerializer aspireSerializer;
+        static XmlSerializer aspireSerializerAlt;
+        static XmlSerializer ssmSerializer;
 
 		[XmlIgnore]
 		public IHostXteds Host{ get { return mLiteHost as IHostXteds; } }
@@ -342,6 +350,7 @@ namespace Aspire.CoreModels
 			else
 				text1 = text;
 			bool unexpectedNull = false;
+            bool useAltAspireSerializer = false;
 			Xteds xteds = null;
 
 			lock (mLoaderLock)
@@ -355,6 +364,10 @@ namespace Aspire.CoreModels
 						useSsm = false;
 						xteds = ssmSerializer.Deserialize(sr) as Xteds;
 					}
+                    else if(useAltAspireSerializer)
+                    {
+                        xteds = aspireSerializerAlt.Deserialize(sr) as Xteds;
+                    }
 					else
 						xteds = aspireSerializer.Deserialize(sr) as Xteds;
 				}
@@ -377,7 +390,17 @@ namespace Aspire.CoreModels
 						useSsm = true;
 						goto Again;
 					}
-					else
+                    else if(e.InnerException.Message.Contains("https://github.com/AeroNexus/Aspire/tree/master/xteds"))
+                    {
+                        useAltAspireSerializer = true;
+                        goto Again;
+                    }
+                    else if (e.InnerException.Message.Contains("http://www.PnPInnovations.com/Aspire/xTEDS"))
+                    {
+                        useAltAspireSerializer = false;
+                        goto Again;
+                    }
+                    else
 						MsgConsole.ReportException(string.Format("Xteds.Parse file:{0}", filePath), MsgLevel.Warning, e);
 					return null;
 				}
