@@ -1,0 +1,9 @@
+   AspireStudio
+
+   Copyright 2013-2017 AeroNexus Open Source project
+
+   Originally developed by Fred Eckert, PnP Innovations, Inc.
+
+   Released on GitHub as open source 27 June, 2016.
+
+   Licensed under the Apache License 2.0.
