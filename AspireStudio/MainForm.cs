@@ -19,9 +19,9 @@ using Aspire.Utilities;
 
 namespace Aspire.Studio
 {
-	public partial class MainForm : Form
+    public partial class MainForm : Form
 	{
-		const string DefaultDockingConfigFile = "AspireStudio.docking.xml";
+        const string DefaultDockingConfigFile = "AspireStudio.docking.xml";
 
 		AppState mAppState;
 		BlackboardView mBlackboardView;
@@ -55,15 +55,79 @@ namespace Aspire.Studio
 			AppState.InstallDirectory = rootDirectory;
 			Aspire.Framework.ApplicationInfo.InstallDirectory = rootDirectory;
 			Environment.SetEnvironmentVariable("FindComponentWithWholeAddress",
-				StudioSettings.Default.FindComponentWithWholeAddress.ToString());
+			StudioSettings.Default.FindComponentWithWholeAddress.ToString());
 
-			InitializeComponent();
-            ConfigureDialog dlg = new ConfigureDialog();
-            dlg.StartPosition = FormStartPosition.CenterScreen;
-            dlg.ShowDialog();
-            Aspire.Core.Config.TransportName = dlg.Transport.ToLower();
+            var args = Environment.GetCommandLineArgs();
 
-			var size = StudioSettings.Default.Size;
+            string solutionFileName = null;
+            string scenarioName = null;
+            string transportProtocol = null;
+
+            for (uint i = 1; i < args.Length; i++)
+            {
+                if (args[i].ToLower().Equals("-t"))
+                {
+                    if ((i + 1) >= args.Length)
+                    {
+                        // The '-t' flag was received, but there's no argument following. Stop
+                        // argument processing
+                        break;
+                    }
+
+                    // Increment past the current flag to get to its value
+                    i++;
+
+                    // Grab the transport protocol string from the next argument
+                    if ((args[i].ToLower() == "udp") || (args[i].ToLower() == "tcp"))
+                    {
+                        transportProtocol = args[i].ToLower();
+                    }
+                }
+                else if (args[i].ToLower().Equals("-h") || args[i].ToLower().Equals("--help"))
+                {
+                    // Print help and continue to process arguments
+                    Log.WriteLine("CLI usage: AspireStudio.exe [-h|--help] [-t udp|tcp] <solution> <scenario>");
+                }
+                else if (solutionFileName == null)
+                {
+                    // Populate with the first positional argument if it hasn't yet been set
+                    solutionFileName = args[i];
+                }
+                else if (scenarioName == null)
+                {
+                    // Populate with the second positional argument if it hasn't yet been set
+                    scenarioName = args[i];
+                }
+                else
+                {
+                    // Positional arguments have been populated and this doesn't match any of the
+                    // flags. Stop argument processing
+
+                    // Print help and quit
+                    Log.WriteLine("CLI usage: AspireStudio.exe [-h|--help] [-t udp|tcp] <solution> <scenario>");
+                    break;
+                }
+            }
+
+            InitializeComponent();
+
+            if (transportProtocol == null)
+            {
+                // Prompt for a transport protocol if none have been entered via command line argument
+                ConfigureDialog dlg = new ConfigureDialog();
+                dlg.StartPosition = FormStartPosition.CenterScreen;
+                dlg.ShowDialog();
+                Aspire.Core.Config.TransportName = dlg.Transport.ToLower();
+            }
+            else
+            {
+                // Get the transport protocol from the command line argument
+                Aspire.Core.Config.TransportName = transportProtocol;
+            }
+
+            Log.WriteLine("Using transport protocol: {0}", Aspire.Core.Config.TransportName);
+
+            var size = StudioSettings.Default.Size;
 			if (size.Width > 100 && size.Height > 100)
 				Size = size;
 
@@ -89,27 +153,32 @@ namespace Aspire.Studio
 			mBlackboardView.ObjectIsBrowsable += ObjectIsBrowsable;
 			mModelsView.ObjectIsBrowsable += ObjectIsBrowsable;
 
-			var args = Environment.GetCommandLineArgs();
-			//foreach (var arg in args) Log.WriteLine(arg);
-			if (args.Length > 1)
-				LoadSolution(args[1], args.Length > 2 ? args[2] : null);
-			else if (StudioSettings.Default.LoadLastSolution && StudioSettings.Default.LastSolutionFileName.Length > 0)
-			{
-				var fileName = StudioSettings.Default.LastSolutionFileName;
-				if (Path.IsPathRooted(fileName))
-					LoadSolution(fileName);
-				else
-					LoadSolution(Path.Combine(FileUtilities.TranslateSpecialPath(StudioSettings.Default.DefaultSolutionDirectory), fileName));
-			}
-			else
-			{
-				clock = new Clock();
-				ConfigureTimeDisplays();
-			}
+            if (solutionFileName != null)
+            {
+                LoadSolution(solutionFileName, scenarioName);
+            }
+            else if (StudioSettings.Default.LoadLastSolution && (StudioSettings.Default.LastSolutionFileName.Length > 0))
+            {
+                solutionFileName = StudioSettings.Default.LastSolutionFileName;
+
+                if (Path.IsPathRooted(solutionFileName))
+                {
+                    LoadSolution(solutionFileName, scenarioName);
+                }
+                else
+                {
+                    LoadSolution(Path.Combine(FileUtilities.TranslateSpecialPath(StudioSettings.Default.DefaultSolutionDirectory), solutionFileName), scenarioName);
+                }
+            }
+            else
+            {
+                clock = new Clock();
+                ConfigureTimeDisplays();
+            }
 
 			startDateTime = DateTime.Now;
 
-			toolStripStatusLabel1.Text = mSolution == null ? "Failed to Load" : "Loaded";
+			toolStripStatusLabel1.Text = (mSolution == null) ? "Failed to Load" : "Loaded";
 			SettingsDirty = false;
 			BuildNewTool();
 		}
@@ -334,7 +403,7 @@ namespace Aspire.Studio
 			timer1.Interval = (Math.Abs(executive.Scheduler.TimerPeriod)+999) / 1000;
 		}
 
-		private void LoadSolution(string fileName,string scenarioName=null)
+		private void LoadSolution(string fileName, string scenarioName=null)
 		{
 			if (mSolution != null)
 				mSolution.ActiveProjectChanged -= mSolution_ActiveProjectChanged;
