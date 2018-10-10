@@ -129,12 +129,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3E89191A846A41F2A561F41012CB123F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4D2762368099D9BF46A95E76DC4AD840"
         "OwnerKey" = "8:_124E0CC8C21C41709F6DDBFEB6090A84"
         "MsmSig" = "8:_UNDEFINED"
@@ -768,7 +762,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspireUtilities, Version=1.0.6857.24132, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspireUtilities, Version=1.0.6857.25448, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_02A33437E2BF52C13A503F31D93D29D1"
@@ -866,26 +860,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3E89191A846A41F2A561F41012CB123F"
-            {
-            "SourcePath" = "8:..\\Solutions\\Browser\\AspireBrowser.Asln"
-            "TargetName" = "8:AspireBrowser.Asln"
-            "Tag" = "8:"
-            "Folder" = "8:_A2211C84D3334E31B842221895AA72B4"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4D2762368099D9BF46A95E76DC4AD840"
             {
             "AssemblyRegister" = "3:1"
@@ -972,7 +946,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspireFramework, Version=1.0.6857.24132, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspireFramework, Version=1.0.6857.25448, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71EA4DAB94D5EE7E5483213E19631CA8"
@@ -1074,7 +1048,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspireCore, Version=1.0.6857.24132, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspireCore, Version=1.0.6857.25448, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_931306B1781424CC1A4BF934A29A3B8B"
@@ -1105,7 +1079,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspireCoreModels, Version=1.0.6857.24133, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspireCoreModels, Version=1.0.6857.25449, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_A4ACACFF2477C7FF38753879C804FAD0"
@@ -1187,7 +1161,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspirePrimitives, Version=1.0.6857.24132, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspirePrimitives, Version=1.0.6857.25448, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_C3554F91AA178AD4401BAFAB30FDD9A0"
@@ -1218,7 +1192,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:AspireStudio, Version=1.4.0.24133, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:AspireStudio, Version=1.4.0.25449, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_D1E69B88152D55EEED5364E5A4BA1450"
@@ -1541,7 +1515,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Installer"
         "ProductCode" = "8:{944F7079-D062-4EF0-B83D-83F92D01AA93}"
-        "PackageCode" = "8:{D5E2B3FB-DA73-4CAB-9663-ECF41A9C1BD2}"
+        "PackageCode" = "8:{EE4CBCD9-4701-4BFC-854F-F44F814DACD6}"
         "UpgradeCode" = "8:{8C37BC70-F631-46DF-A1FF-127A2862B25C}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
